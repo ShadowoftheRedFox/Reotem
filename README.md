@@ -22,7 +22,7 @@ CREATE USER 'reotem'@'localhost' IDENTIFIED BY '[PASSWORD]';
 GRANT ALL PRIVILEGES ON reotem.* TO 'reotem'@'localhost';
 quit
 
-mariadb -u reotem -p
+mysql -u reotem -p
 CREATE DATABASE reotem CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE reotem;
 SOURCE db/init.sql
