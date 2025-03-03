@@ -2,10 +2,10 @@
 
 Type:  
 Qui fait quoi:  
-- Hugo      : front (UI + gestion permissions et accès)
+- Hugo      : fullstack
 - Gédéon    : back (BDD en MongoDB)
 - Abhi      : front
-- Iskander  : back?
+- Iskander  : front
 - Nassym    : front
 
 # Répartition des tâches
