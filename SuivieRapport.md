@@ -1,6 +1,6 @@
 # Introduction et contexte
 
-Type:  
+Type: établissement  
 Qui fait quoi:  
 - Hugo      : fullstack
 - Gédéon    : back (BDD en MongoDB)
