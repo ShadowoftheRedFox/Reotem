@@ -1,5 +1,13 @@
 # Introduction et contexte
 
+Type:  
+Qui fait quoi:  
+- Hugo      : front (UI + gestion permissions et accès)
+- Gédéon    : back (BDD en MongoDB)
+- Abhi      : front
+- Iskander  : back?
+- Nassym    : front
+
 # Répartition des tâches
 
 # Étape réalisées

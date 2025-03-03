@@ -1,8 +1,0 @@
-# python compiled files
-__pycache__/
-
-# python environment
-/venv/
-
-# env file
-/.env
