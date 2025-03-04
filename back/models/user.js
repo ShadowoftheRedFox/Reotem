@@ -5,7 +5,7 @@ const maxYear = new Date().getFullYear() - 120;
 const userSchema = mongoose.Schema({
   mongo_id: mongoose.Schema.Types.ObjectId,
   userID: Number,
-  login: { type: String, required: true },
+  login: { type: String, required: true, unique: true},
   password: { type: String, required: true },
   first_name: { type: String, required: true },
   last_name: { type: String, required: true },
@@ -16,8 +16,8 @@ const userSchema = mongoose.Schema({
   },
   age: {
     type: Date,
-    minimum: [`${minYear}-01-01`],
-    maximum: [`${maxYear}-01-01`],
+    minimum: `${minYear}-01-01`,
+    maximum: `${maxYear}-01-01`,
     required: true,
   },
   type: {
