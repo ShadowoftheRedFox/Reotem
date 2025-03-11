@@ -47,7 +47,7 @@ app.post("/test/", upload.single("photo"), (req, res) => {
   user.photo = photoBuffer;
   res.send("Bravo vous êtes inscrit " + user.first_name + " " + user.last_name);
   console.log(user);
-  Reotem.addUser(user)
+  Reotem.addUser(user);
 });
 
 app.listen(port, () => {
