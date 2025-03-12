@@ -1,0 +1,8 @@
+<div [ngTemplateOutlet]="connection? signin : signup"></div>
+
+<ng-template #signin>
+    <app-signin (changeConnection)="changeConnection()"></app-signin>
+</ng-template>
+<ng-template #signup>
+    <app-signup (changeConnection)="changeConnection()"></app-signup>
+</ng-template>

@@ -1,0 +1,18 @@
+<div class="h-full">
+    <h2 mat-dialog-title>{{data.title}}</h2>
+    <mat-dialog-content class="mat-typography relative">
+        @if (data.text) {
+        <p [innerHTML]="data.text"></p>
+        }
+        @if (data.component) {
+        <ng-container *ngComponentOutlet="data.component; inputs: data.data;" />
+        }
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+        <button mat-button [mat-dialog-close]="-1">{{data.btnNotOk}}</button>
+        @if (data.btnOk) {
+        <button mat-flat-button (click)="validate()" cdkFocusInitial
+            [ngStyle]="data.warn? {'color':'white', 'background-color':'red'}: {}">{{data.btnOk}}</button>
+        }
+    </mat-dialog-actions>
+</div>

@@ -1,0 +1,286 @@
+// TODO:
+/*
+Mettre le titre de la side bar au nom du site (et animé)
+*/
+
+p {
+    margin: 0;
+}
+
+// pour pas que le badge notification soit coupé
+// ::ng-deep pour dire que c'est un element ajouté dynamiquement par angular
+::ng-deep span:has(mat-icon>span) {
+    overflow: visible !important;
+}
+
+// animation quand on passe la sourie sur une icone
+mat-icon {
+    transition: color 200ms ease-in-out;
+}
+
+// classes pour le changement de couleur
+.nav-red-hover {
+    &.mat-icon {
+        color: red !important;
+    }
+
+    & mat-icon {
+        color: red !important;
+    }
+}
+
+.nav-bug-hover {
+    &.mat-icon {
+        color: #4CAF50 !important;
+        --crawl: 45px;
+        animation: 0.3s bellShake linear infinite,
+            2s bugCrawl linear infinite;
+    }
+
+    & mat-icon {
+        color: #4CAF50 !important;
+        --crawl: 0px;
+        animation: 0.3s bellShake linear infinite,
+            2s bugCrawl linear infinite;
+        position: absolute;
+    }
+
+    & mat-icon+* {
+        margin-left: 34px;
+    }
+}
+
+@keyframes bugCrawl {
+    0% {
+        translate: var(--crawl) 0px;
+        opacity: 1;
+    }
+
+    50% {
+        translate: var(--crawl) -30px;
+        opacity: 0;
+    }
+
+    50.01% {
+        translate: var(--crawl) 30px;
+        opacity: 0;
+    }
+
+    0% {
+        translate: var(--crawl) 0px;
+        opacity: 1;
+    }
+}
+
+.nav-blue-hover {
+    &.mat-icon {
+        color: blue !important;
+    }
+
+    & mat-icon {
+        color: blue !important;
+    }
+}
+
+.nav-yellow-hover {
+    &.mat-icon {
+        color: #FFC107 !important;
+    }
+
+    & mat-icon {
+        color: #FFC107 !important;
+    }
+}
+
+.nav-bell-hover {
+    &.mat-icon {
+        // color: #FFC107 !important;
+        animation: 500ms bellShake;
+    }
+
+    & mat-icon {
+        // color: #FFC107 !important;
+        animation: 500ms bellShake;
+    }
+}
+
+@keyframes bellShake {
+    0% {
+        transform: rotate(0);
+    }
+
+    15% {
+        transform: rotate(5deg);
+    }
+
+    30% {
+        transform: rotate(-5deg);
+    }
+
+    45% {
+        transform: rotate(4deg);
+    }
+
+    60% {
+        transform: rotate(-4deg);
+    }
+
+    75% {
+        transform: rotate(2deg);
+    }
+
+    85% {
+        transform: rotate(-2deg);
+    }
+
+    92% {
+        transform: rotate(1deg);
+    }
+
+    100% {
+        transform: rotate(0);
+    }
+}
+
+.nav-gear-hover {
+    &.mat-icon {
+        // color: #FFC107 !important;
+        animation: 3s gearRotate linear infinite;
+    }
+
+    & mat-icon {
+        // color: #FFC107 !important;
+        animation: 3s gearRotate linear infinite;
+    }
+}
+
+@keyframes gearRotate {
+    from {
+        rotate: 0deg;
+    }
+
+    to {
+        rotate: 360deg;
+    }
+}
+
+.sidenav-container {
+    display: flex;
+    flex-direction: column;
+    height: 100dvh;
+    width: 100vw;
+    top: 0;
+    position: sticky;
+
+    &.sidenav-is-mobile {
+        position: relative;
+    }
+}
+
+.sidenav-toolbar button mat-icon {
+    transition: rotate 500ms cubic-bezier(0.39, 0.58, 0.57, 1);
+}
+
+mat-sidenav {
+    overflow: hidden;
+}
+
+.side-nav-show-icon {
+    visibility: visible !important;
+    display: block !important;
+    overflow: visible;
+
+    * {
+        overflow: unset !important;
+    }
+}
+
+.sidenav-is-mobile .side-nav-show-icon {
+    display: none !important;
+}
+
+.side-nav-show-icon-displaced {
+    position: absolute;
+    translate: 45px;
+    right: 0;
+    margin-top: 12px;
+
+    &.side-nav-account-image {
+        translate: 49px;
+    }
+}
+
+.sidenav-is-mobile .sidenav-toolbar {
+    // position: fixed;
+    /* Make sure the toolbar will stay on top of the content as it scrolls past. */
+    z-index: 2;
+}
+
+.sidenav-content-container {
+    /* When the sidenav is not fixed, stretch the sidenav container to fill the available space. This
+     causes `<mat-sidenav-content>` to act as our scrolling element for desktop layouts. */
+    flex: 1;
+}
+
+.sidenav-is-mobile .sidenav-content-container {
+    /* When the sidenav is fixed, don't constrain the height of the sidenav container. This allows the
+     `<body>` to be our scrolling element for mobile layouts. */
+    flex: 1 0 auto;
+}
+
+.side-nav-link-item {
+    min-width: 56px;
+}
+
+.sidenav-item {
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    align-items: stretch;
+    justify-content: flex-start;
+    align-items: center;
+    width: min-content;
+
+    & p {
+        margin-left: 10px;
+    }
+}
+
+.account-title {
+    display: flex;
+    flex-direction: column;
+    margin-left: 8px;
+
+    &>.side-nav-account-name {
+        font-weight: 500;
+    }
+
+    &>.side-nav-account-role {
+        font-size: x-small;
+        line-height: 10px;
+        opacity: 0.6;
+    }
+}
+
+.side-nav-account-image {
+    font-size: 32px;
+    height: 32px;
+    width: 32px;
+    overflow: unset;
+}
+
+.mat-drawer {
+    width: auto;
+}
+
+.side-nav-content {
+    margin-left: 64px;
+}
+
+h3 {
+    margin-left: 10px !important;
+}
+
+::ng-deep mat-sidenav>div {
+    display: inherit !important;
+}
