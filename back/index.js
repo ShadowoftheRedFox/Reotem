@@ -16,6 +16,7 @@ const app = express();
 
 // Apply JSON parsing and CORS with configured options as global middleware.
 app.use(express.json());
+app.use(express.urlencoded());
 app.use(cors(corsOptions));
 
 app.use(routes);
@@ -35,14 +36,19 @@ app.use(
                 message: 'missing authorization credentials',
             });
         } else if (err && err.errorCode) {
-            console.log(err);
+            console.error(err);
             res.status(err.errorCode).json({ message: err.message });
         } else if (err) {
-            console.log(err);
+            console.error(err);
             res.status(500).json({ message: err.message });
         }
     },
 );
+
+// 404: Not found
+app.use(function (req, res, next) {
+    res.json(404, { ERROR: 'Page not found.' });
+});
 
 app.listen(port, () => {
     console.log(`Server running on http://localhost:${port}/`);

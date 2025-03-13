@@ -11,7 +11,7 @@ const generateToken = (id) => {
 
 const checkUserUniqueness = async (email, username) => {
     const DB = JSON.parse(fs.readFileSync(DB_PATH, 'utf8'));
-    DB.users.forEach(user => {
+    Object.values(DB.users).forEach(user => {
         if (user.email == email) {
             throw new HttpException(422, {
                 errors: {
@@ -49,18 +49,18 @@ const createUser = async (input) => {
 
     await checkUserUniqueness(email, username);
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(password, bcrypt.genSaltSync(10));
 
     const DB = JSON.parse(fs.readFileSync(DB_PATH, 'utf8'));
     const user = {
-        _id: DB.users.length,
+        _id: Object.keys(DB.users).length,
         first_name: username,
         last_name: username,
         login: email,
         password: hashedPassword,
     };
 
-    DB.users.push(user);
+    DB.users[user._id] = user;
     fs.writeFileSync(DB_PATH, JSON.stringify(DB));
 
     delete user.password;
@@ -84,7 +84,7 @@ const loginUser = async (userPayload) => {
     }
 
     const DB = JSON.parse(fs.readFileSync(DB_PATH, 'utf8'));
-    const user = DB.users.find(u => u.email = email);
+    const user = Object.values(DB.users).find(u => u.email == email);
 
     if (user) {
         const match = await bcrypt.compare(password, user.password);
@@ -99,16 +99,12 @@ const loginUser = async (userPayload) => {
         }
     }
 
-    throw new HttpException(403, {
-        errors: {
-            'email or password': ['is invalid'],
-        },
-    });
+    throw new HttpException(403, { errors: { 'email or password': ['is invalid'] } });
 };
 
 const getCurrentUser = async (id) => {
     const DB = JSON.parse(fs.readFileSync(DB_PATH, 'utf8'));
-    const user = DB.users.find(u => u._id = id);
+    const user = DB.users[id];
 
     if (!user) return {};
 
@@ -122,7 +118,7 @@ const getCurrentUser = async (id) => {
 
 const updateUser = async (userPayload, id) => {
     const DB = JSON.parse(fs.readFileSync(DB_PATH, 'utf8'));
-    const user = DB.users.find(u => u._id = id);
+    const user = DB.users[id];
 
     if (!user) return {};
 

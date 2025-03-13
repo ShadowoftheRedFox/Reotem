@@ -1,1 +1,12 @@
-{"users":[{"_id":0,"first_name":"Ploof","last_name":"Ploof","login":"test","password":"$2b$10$hKW6cZAmLwsbi4Vpyb2bZ.agJ8LeMCXrEQ7RbM6hJ1sbO.QqoHdZK"}]}
+{
+    "users": {
+        "0": {
+            "_id": 0,
+            "first_name": "Ploof",
+            "last_name": "Ploof",
+            "login": "test",
+            "password": "$2b$10$hKW6cZAmLwsbi4Vpyb2bZ.agJ8LeMCXrEQ7RbM6hJ1sbO.QqoHdZK"
+        }
+    },
+    "sessions": {}
+}
