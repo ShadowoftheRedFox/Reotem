@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "dev": "nodemon index.js --config nodemon.json"
   },
   "author": "",
   "license": "ISC",
@@ -15,5 +16,9 @@
     "express": "^4.21.2",
     "mongoose": "^8.11.0",
     "node-mailjet": "^6.0.8"
+  },
+  "type": "commonjs",
+  "devDependencies": {
+    "nodemon": "^3.1.9"
   }
 }

@@ -3,8 +3,8 @@ import { Subject } from 'rxjs';
 
 /**
  *
- * Utilisé pour comminuqer entre les services avec principalement des subjects,
- * Sans avoir l'erreur d'inclusion circulaire
+ * Used to send events between services and component withou having circular depencies.
+ * SHOULD NEVER INCLUDE A SERVICE IN HIMSELF.
  *
  */
 
@@ -15,17 +15,11 @@ export class CommunicationService {
 
     constructor() { }
 
-    // lanceur d'événement quand les notifications change (message, like, notification, récompense...)
-    NotifGeneralUpdate = new Subject<number>();
-    NotifRewardUpdate = new Subject<number>();
-    NotifMessageUpdate = new Subject<number>();
-    NotifLikeUpdate = new Subject<number>();
+    // event launcher when receiving a notification
+    NotifUpdate = new Subject<number>();
 
-    // lanceur d'événement quand le compte change (connexion ou déconnexion)
+    // event launcher to tell if we connect or disconnect
     AuthAccountUpdate = new Subject<boolean>();
-    // lanceur d'événement quand on reçoit le token
+    // event launcher on session token received
     AuthTokenUpdate = new Subject<string>();
-
-    // pour se reconnecter au server websocket
-    SocketReconnect = new Subject<any>();
 }

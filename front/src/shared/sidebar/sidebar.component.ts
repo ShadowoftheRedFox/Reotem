@@ -86,14 +86,11 @@ export class SidebarComponent implements OnDestroy {
         return null;
     }
 
-    // lance les écoutes de tout les changements possible
+    // listen to every event needed
     initUpdate() {
         const decoObj = this.getItem("DéconnexionObj");
         const compteObj = this.getItem("CompteObj");
-        const msgObj = this.getItem("MessagesObj");
-        const likeObj = this.getItem("LikesObj");
         const notifObj = this.getItem("NotificationsObj");
-        const recompenseObj = this.getItem("RécompensesObj");
         const paramObj = this.getItem("ParamètresObj");
         const adminObj = this.getItem("AdminObj")
         // update at each connection/disconnection
@@ -130,9 +127,17 @@ export class SidebarComponent implements OnDestroy {
                 }
             }
         });
+
+        this.com.NotifUpdate.subscribe((res) => {
+            if (notifObj) {
+                const num = res > 99 ? "99+" : "" + res;
+                notifObj.notifications = !res ? undefined : num;
+                notifObj.tooltip = res > 0 ? res + ` notification${res > 1 ? "s" : ""} non lue${res > 1 ? "s" : ""}` : "Notifications reçues";
+            }
+        });
     }
 
-    // récupère la fonction qui déclenche l'animation
+    // get the animation function
     @ViewChildren(MatSidenav) snav!: QueryList<MatSidenav>
 
     SideNavItemsTop: SideNavItem[] = [
@@ -145,32 +150,6 @@ export class SidebarComponent implements OnDestroy {
             id: "AccueilObj",
         },
         {
-            title: "Messages",
-            link: "/message",
-            icon: "chat",
-            aria: "Lien pour accéder à sa messagerie",
-            tooltip: "Messagerie",
-            id: "MessagesObj",
-            hoverClass: "nav-blue-hover",
-        }, {
-            title: "Messages",
-            link: "/message",
-            icon: "chat",
-            aria: "Lien pour accéder à sa messagerie",
-            tooltip: "Messagerie admin",
-            id: "MessagesObj",
-            hoverClass: "nav-blue-hover",
-        },
-        {
-            title: "Likes",
-            link: "/like",
-            icon: "favorite",
-            aria: "Lien pour découvrir les personnes qui vous ont likés",
-            tooltip: "Voir vos likes",
-            id: "LikesObj",
-            hoverClass: "nav-red-hover",
-        },
-        {
             title: "Notifications",
             link: "/notification",
             icon: "notifications",
@@ -178,30 +157,12 @@ export class SidebarComponent implements OnDestroy {
             tooltip: "Notifications reçues",
             id: "NotificationsObj",
             hoverClass: "nav-bell-hover",
-        },
-        {
-            title: "Récompenses",
-            link: "/reward",
-            icon: "star",
-            aria: "Lien pour voir vos avantages et futures récompense",
-            tooltip: "Avantages et récompenses",
-            id: "RécompensesObj",
-            hoverClass: "nav-yellow-hover",
-        },
-        {
-            title: "Paramètres",
-            link: "/user/0/settings",
-            icon: "settings",
-            aria: "Lien pour aller dans les paramètres",
-            tooltip: "Paramètres",
-            id: "ParamètresObj",
-            hoverClass: "nav-gear-hover",
-        },
+        }
     ];
 
     SideNavItemsBottom: SideNavItem[] = [
         {
-            // uniquement quand l'utilisateur est admin
+            // only when user has admin permissions
             title: "Administration",
             link: "/administration",
             icon: "security",
@@ -212,7 +173,7 @@ export class SidebarComponent implements OnDestroy {
             hidden: true,
         },
         {
-            // uniquement quand on développe l'application
+            // only when developping the app
             title: "Test",
             link: "/test",
             icon: "bug_report",
@@ -222,7 +183,7 @@ export class SidebarComponent implements OnDestroy {
             hoverClass: "nav-bug-hover",
             hidden: !isDevMode()
         },
-        { // TODO Dans le footer?
+        {
             title: "Support",
             link: "/support",
             icon: "help",
@@ -257,7 +218,7 @@ export class SidebarComponent implements OnDestroy {
         },
     ];
 
-    // gère les cas téléphone
+    // manage mobile screen sizes
     private _mobileQueryListener: () => void;
     mobileQuery: MediaQueryList;
 
@@ -265,7 +226,7 @@ export class SidebarComponent implements OnDestroy {
         this.mobileQuery.removeEventListener("change", this._mobileQueryListener);
     }
 
-    // pour l'animation de rotation du bouton
+    // buttons animations
     toggled = false;
     toggleSideNav() {
         this.snav.first.toggle();
@@ -286,7 +247,7 @@ export class SidebarComponent implements OnDestroy {
         });
 
         dialogRef.afterClosed().subscribe(result => {
-            // 0 == oui, -1 == non, undefined == annuler
+            // 0 == yes, -1 == no, undefined == cancel (escaped or clicked OOB)
             if (result !== undefined && result >= 0) {
                 this.api.auth.disconnect();
             }

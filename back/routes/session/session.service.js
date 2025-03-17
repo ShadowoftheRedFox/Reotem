@@ -1,6 +1,6 @@
 const bcrypt = require("bcryptjs");
 const crypto = require("crypto");
-const HttpException = require("../../models/HttpException").default;
+const HttpException = require("../../models/HttpException");
 const fs = require("fs");
 const path = require("path");
 

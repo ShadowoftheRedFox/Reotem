@@ -3,6 +3,7 @@ import { environment } from '../environments/environment';
 import { MainComponent } from './main/main.component';
 import { ErrorComponent } from './error/error.component';
 import { ConnectionComponent } from './connection/connection.component';
+import { LostComponent } from './connection/lost/lost.component';
 
 const TITLE_POSTFIX = " - " + environment.title;
 
@@ -15,7 +16,14 @@ export const routes: Routes = [
     {
         path: "connection",
         title: "Connection" + TITLE_POSTFIX,
-        component: ConnectionComponent
+        component: ConnectionComponent,
+        children: [
+            {
+                path: "lost",
+                title: "Identifiant oublié" + TITLE_POSTFIX,
+                component: LostComponent
+            }
+        ]
     },
     {
         path: "**",
