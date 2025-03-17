@@ -102,14 +102,14 @@ export class SidebarComponent implements OnDestroy {
                 decoObj.hidden = !isConnected;
             }
             if (compteObj) {
-                if (isConnected) {
-                    compteObj.title = /* this.auth.client.SURNAME + " " + */ this.auth.client?.first_name || "Name";
+                if (isConnected && this.auth.client) {
+                    compteObj.title = this.auth.client.first_name;
                     compteObj.image = "Icone";
                     compteObj.tooltip = "Accéder à votre profil";
                     compteObj.aria = "Lien vers votre page de profil";
-                    compteObj.link = ["/user", this.auth.client?._id + ''];
+                    compteObj.link = ["/user", this.auth.client._id + ''];
                     if (paramObj) {
-                        paramObj.link = ["/user", this.auth.client?._id + "", "settings"];
+                        paramObj.link = ["/user", this.auth.client._id + "", "settings"];
                         paramObj.hidden = !isConnected;
                     }
                     // if (adminObj) {

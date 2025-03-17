@@ -1,14 +1,1 @@
-{
-    "users": {
-        "0": {
-            "_id": 0,
-            "first_name": "Ploof",
-            "last_name": "Ploof",
-            "login": "ploof@test.com",
-            "password": "$2b$10$KHLrZv25/nMQPWUZkgpYa.fMN8aI/4wmmOr8iSBkmATeqCsbjLn0a"
-        }
-    },
-    "sessions": {
-        "g1RhFKWzUEWsmCs579ylhAL4": 0
-    }
-}
+{"users":{"0":{"_id":0,"first_name":"Ploof","last_name":"Ploof","login":"ploof@test.com","password":"$2b$10$KHLrZv25/nMQPWUZkgpYa.fMN8aI/4wmmOr8iSBkmATeqCsbjLn0a"}},"sessions":{"3P9vuSCJ1xCufoQVLsR2mY44":0}}

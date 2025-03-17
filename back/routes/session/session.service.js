@@ -32,7 +32,6 @@ const getSession = (id) => {
 };
 
 const createSession = (mail, hash) => {
-    console.log(`[BACK] mail: ${mail}, hash: ${hash}`)
     if (!mail) {
         throw new HttpException(422, { errors: { mail: ["can't be blank"] } });
     }
@@ -145,10 +144,11 @@ const deleteSession = (id, session) => {
     // session must match the id in DB.sessions
 
     const DB = JSON.parse(fs.readFileSync(DB_PATH, 'utf8'));
-    if (!DB.sessions[session] != id) return;
+    if (DB.sessions[session] != id) return false;
 
     delete DB.sessions[session];
     fs.writeFileSync(DB_PATH, JSON.stringify(DB));
+    return true;
 };
 
 module.exports = { createSession, getSession, deleteSession };

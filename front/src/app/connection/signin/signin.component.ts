@@ -38,22 +38,7 @@ export class SigninComponent {
         private router: Router,
         private auth: AuthentificationService,
         private com: CommunicationService,
-    ) {
-        // arrete d'écouter quand le composant n'est plus montré
-        this.signin.controls.email.valueChanges.pipe(takeUntilDestroyed()).subscribe(res => {
-            // check si c'est un email valide
-            if (res) {
-                // le validators s'en occupe
-            }
-        });
-        this.signin.controls.password.valueChanges.pipe(takeUntilDestroyed()).subscribe(res => {
-            // check si le password est valide
-            // TODO nombre d'essais?
-            if (res) {
-
-            }
-        });
-    }
+    ) { }
 
     mailErrorMessage() {
         if (this.signin.controls.email.hasError('required')) {
@@ -104,48 +89,16 @@ export class SigninComponent {
                     }
                 }
             }));
-            // this.api.signin(this.signin.controls.email.value, this.signin.controls.password.value).subscribe({
-            //     next: res => {
-            //         if (res.success) {
-            //             if (res.data == 0) {
-            //                 // incorrect
-            //                 // TODO un timeout ici ou via l'api?
-            //                 setTimeout(() => {
-            //                     this.signin.setErrors({ invalid: true });
-            //                 }, 3000);
-            //             } else if (res.data == -1) {
-            //                 // timeout
-            //                 // TODO un spinner/décompte ici et sur l'API
-            //                 this.signin.setErrors({ timeout: true });
-            //             } else if (res.data != null && res.data >= 1) {
-            //                 this.api.sidUpdate.next("");
-            //                 this.com.AuthAccountUpdate.next(false);
-            //                 this.api.sidUpdate.next(res.sid);
-            //                 // se connecter: récupérer le nom etc
-            //                 this.api.authenticate(res.data);
-            //                 // se reconnecte au websocket pour le token
-            //                 this.socket.socketReconnect();
-            //                 // redirige à la page pricipale
-            //                 this.router.navigate(["/"], {
-            //                     preserveFragment: true,
-            //                 });
-            //             }
-            //         }
-            //     },
-            //     error: err => {
-            //         // console.error(err);
-            //     }
-            // });
         }
     }
 
     hidePassword(event: MouseEvent) {
         this.passwordHidden = !this.passwordHidden;
-        // empeche les autres objetsqui devrait l'avoir de l'avoir
+        // prevent other element from catching the event
         event.stopPropagation();
     }
 
-    oublie() {
+    forgotCredentials() {
         // TODO
     }
 }
