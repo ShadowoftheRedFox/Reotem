@@ -28,6 +28,6 @@
         <button mat-flat-button type="button" (click)="testSignin()" [disabled]="!signin.valid">Se connecter</button>
     </form>
     <button mat-raised-button (click)="changeConnection.emit()">Inscription</button>
-    <button mat-button (click)="oublie()">Email ou mot de passe oublié</button>
+    <button mat-button (click)="forgotCredentials()">Email ou mot de passe oublié</button>
     <!-- TODO submit si on appuie sur entré dans un des input? si on appuie sur entré dans mail alors mettre dans mot de passe -->
 </div>

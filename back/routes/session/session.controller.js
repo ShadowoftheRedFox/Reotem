@@ -19,10 +19,6 @@ router.get('/signin/:id', async (req, res, next) => {
     }
 });
 
-/*
-Test the route with a fetch: node ./testPost.js
-*/
-
 router.post('/signin', async (req, res, next) => {
     try {
         console.log(`creating sessions ${JSON.stringify(req.body)}`); // expect id and an optional hash
@@ -36,8 +32,12 @@ router.post('/signin', async (req, res, next) => {
 router.delete('/disconnect/:id', async (req, res, next) => {
     try {
         console.log(`deleting session ${req.params.id}`);
-        deleteSession(req.params.id, req.body.session);
-        res.status(200);
+        // BUG doesn't return request
+        if (deleteSession(req.params.id, req.body.session)) {
+            res.status(200);
+        } else {
+            res.status(400);
+        }
     } catch (error) {
         next(error);
     }

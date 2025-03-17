@@ -43,34 +43,12 @@ export class SignupComponent {
         private route: Router,
         private com: CommunicationService,
     ) {
-        // écoute les changement et lance la fonction si le dernier changement date d'il y a 300ms
-        // arrete d'écouter quand le composant n'est plus montré
-        this.signup.controls.name.valueChanges.pipe(delay(300), takeUntilDestroyed()).subscribe(res => {
-            // check si la combinaison name + surname existe déjà
-            if (res) {
-                // api.checkPrenomNom(res).subscribe(apires => {
-                //     if (apires.success) {
-                //         if (apires.data === false) {
-                //             this.signup.controls.name.setErrors({ taken: true });
-                //         }
-                //     }
-                // });
-            }
-        });
+        // take until destro to prevent multiple listener when component is hidden
+        // no need to check if username and/or mail is unique, api do that when creating the account
+        // they would only know though when hitting create
+        this.signup.controls.name.valueChanges.pipe(delay(300), takeUntilDestroyed()).subscribe(res => { });
+        this.signup.controls.email.valueChanges.pipe(delay(300), takeUntilDestroyed()).subscribe(res => { });
 
-        this.signup.controls.email.valueChanges.pipe(delay(300), takeUntilDestroyed()).subscribe(res => {
-            // check si c'est un email valide (le validators s'en occupe)
-            if (res && this.signup.controls.email.valid) {
-                // vérifie qu'il n'est déjà pas utilisé
-                // api.checkMail(res).subscribe(apires => {
-                //     if (apires.success) {
-                //         if (apires.data === false) {
-                //             this.signup.controls.email.setErrors({ taken: true });
-                //         }
-                //     }
-                // });
-            }
-        });
         this.signup.controls.password.valueChanges.pipe(delay(300), takeUntilDestroyed()).subscribe(res => {
             // check si le mdp est valide (maj, chiffre, char spé...)
             if (res) {

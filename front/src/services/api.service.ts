@@ -73,11 +73,11 @@ export class APIService {
             case "POST":
                 return this.http.post<T>(baseUrl + endpoint, parameters);
             case "PUT":
-                return this.http.put<T>(baseUrl + endpoint, urlParameters, { headers: headers });
+                return this.http.put<T>(baseUrl + endpoint, parameters, { headers: headers });
             case "PATCH":
-                return this.http.patch<T>(baseUrl + endpoint, urlParameters, { headers: headers });
+                return this.http.patch<T>(baseUrl + endpoint, parameters, { headers: headers });
             case "DELETE":
-                return this.http.delete<T>(baseUrl + endpoint, { headers: headers, body: urlParameters });
+                return this.http.delete<T>(baseUrl + endpoint, { body: parameters });
         }
 
 
