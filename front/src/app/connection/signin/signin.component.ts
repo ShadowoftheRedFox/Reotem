@@ -88,6 +88,22 @@ export class SigninComponent {
         if (!this.signin.valid) return;
 
         if (this.signin.controls.email.value && this.signin.controls.password.value) {
+            this.api.auth.login(this.signin.controls.email.value, this.signin.controls.password.value).then(ob => ob.subscribe({
+                next: res => {
+                    const session = res.session_id;
+                    this.com.AuthTokenUpdate.next(session);
+                    this.com.AuthAccountUpdate.next(true);
+                    this.api.auth.get(session).subscribe(res => {
+                        this.auth.client = res;
+                        this.router.navigate(["/"]);
+                    });
+                }, error: err => {
+                    console.log(err)
+                    if ((err.error.message as string).includes("credentials")) {
+                        this.signin.setErrors({ invalid: true });
+                    }
+                }
+            }));
             // this.api.signin(this.signin.controls.email.value, this.signin.controls.password.value).subscribe({
             //     next: res => {
             //         if (res.success) {

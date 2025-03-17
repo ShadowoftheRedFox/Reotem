@@ -11,21 +11,14 @@ export class AuthentificationService {
     isOnline = true;
 
     connected = false;
-    perms = 0;
 
-    // si les cookie sont activés
+    // if cookies are enabled
     cookieEnables = navigator.cookieEnabled;
-    // si l'utilisateur authorise les cookies
+    // if users consented to cookies
     cookiesConsent = false;
 
     client: User | null = null;
-    clientPerms: number = 0;
     clientToken = "";
-    // nouveau token à chaque sessions
-    clientTokenID = this.generateToken(8);
-    clientDisabled = false;
-    clientBanned = false;
-    clientDidPresentation = true;
 
     constructor(
         @Inject(DOCUMENT) private document: Document,
@@ -36,11 +29,8 @@ export class AuthentificationService {
             this.connected = res;
             if (!this.connected) {
                 this.client = null;
-                this.clientPerms = 0;
-                this.clientDisabled = false;
-                this.clientBanned = false;
+                this.deleteCookie("session");
                 this.deleteCookie("UID");
-                this.deleteCookie("APISID");
             } else if (this.client) {
                 this.setCookie("UID", this.client._id + "", CookieTime.Day, "/");
             }
@@ -48,33 +38,9 @@ export class AuthentificationService {
 
         com.AuthTokenUpdate.subscribe(res => {
             this.clientToken = res;
+            this.setCookie("session", res, CookieTime.Year, "/");
         });
     }
-
-    private token() {
-        return Math.random().toString(Math.floor(Math.random() * 25) + 11).substring(2);
-    }
-
-    public generateToken(n: number) {
-        if (!n || n <= 0) n = 3;
-        let t = "";
-        for (let i = 0; i < n; i++) {
-            t += this.token();
-        }
-        return t.substring(0, 255);
-    }
-
-    // public hasAllPermissions(...perm: ComptePermissions[]) {
-    //     return hasAllPermissions(this.clientPerms, ...perm);
-    // }
-
-    // public hasOnePermission(...perm: ComptePermissions[]) {
-    //     return hasOnePermission(this.clientPerms, ...perm);
-    // }
-
-    // public hasMorePermissions(perm: ComptePermissions) {
-    //     return hasMorePermissions(this.clientPerms, perm);
-    // }
 
     public getCookie(name: string) {
         let ca: Array<string> = this.document.cookie.split(';');

@@ -16,7 +16,13 @@ const app = express();
 
 // Apply JSON parsing and CORS with configured options as global middleware.
 app.use(express.json());
-app.use(express.urlencoded());
+app.use(express.urlencoded({
+    extended: true,
+    inflate: true,
+    limit: "1mb",
+    parameterLimit: 5000,
+    type: "application/x-www-form-urlencoded",
+}));
 app.use(cors(corsOptions));
 
 app.use(routes);
@@ -47,7 +53,7 @@ app.use(
 
 // 404: Not found
 app.use(function (req, res, next) {
-    res.json(404, { ERROR: 'Page not found.' });
+    res.status(404).json({ ERROR: 'Page not found.' });
 });
 
 app.listen(port, () => {

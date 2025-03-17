@@ -3,7 +3,7 @@ class HttpException extends Error {
         errorCode,
         message,
     ) {
-        super(message);
+        super(JSON.stringify(message));
         this.errorCode = errorCode;
     }
 }

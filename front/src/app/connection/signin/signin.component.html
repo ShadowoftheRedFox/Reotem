@@ -1,6 +1,6 @@
 <div class="flex justify-center flex-col items-center flex-nowrap">
     <h1>Connexion</h1>
-    <form [formGroup]="signin" class="flex flex-col items-center justify-center flex-nowrap">
+    <form [formGroup]="signin" class="flex flex-col items-stretch justify-center flex-nowrap">
         <mat-form-field>
             <mat-label>Addresse email</mat-label>
             <input matInput placeholder="pat@example.com" formControlName="email" required type="email" autofocus
@@ -22,12 +22,12 @@
             <mat-error>{{passwordErrorMessage()}}</mat-error>
             }
         </mat-form-field>
-        <button mat-button (click)="oublie()">Email ou mot de passe oublié</button>
-        @if (signin.invalid) {
+        @if (signin.hasError("invalid") || signin.hasError("timeout")) {
         <mat-error>{{formErrorMessage()}}</mat-error>
         }
         <button mat-flat-button type="button" (click)="testSignin()" [disabled]="!signin.valid">Se connecter</button>
     </form>
     <button mat-raised-button (click)="changeConnection.emit()">Inscription</button>
+    <button mat-button (click)="oublie()">Email ou mot de passe oublié</button>
     <!-- TODO submit si on appuie sur entré dans un des input? si on appuie sur entré dans mail alors mettre dans mot de passe -->
 </div>

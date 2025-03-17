@@ -22,17 +22,31 @@ const getSession = (id) => {
     }
 
     const DB = JSON.parse(fs.readFileSync(DB_PATH, 'utf8'));
-    if (!DB.sessions[id]) return undefined;
 
-    return DB.sessions[id];
+    const user = DB.users[DB.sessions[id]];
+    if (user == undefined) throw new HttpException(404);
+
+    delete user.password;
+
+    return { ...user };
 };
 
-const createSession = (id, hash) => {
-    if (!id) {
-        throw new HttpException(422, { errors: { id: ["can't be blank"] } });
+const createSession = (mail, hash) => {
+    console.log(`[BACK] mail: ${mail}, hash: ${hash}`)
+    if (!mail) {
+        throw new HttpException(422, { errors: { mail: ["can't be blank"] } });
     }
 
     const DB = JSON.parse(fs.readFileSync(DB_PATH, 'utf8'));
+
+    let id = -1
+    // find id with mail
+    for (u in Object.values(DB.users)) {
+        if (DB.users[u].login == mail) {
+            id = DB.users[u]._id;
+            break;
+        }
+    }
 
     /*
     asso_id = g.args.get('asso')
@@ -50,7 +64,7 @@ const createSession = (id, hash) => {
     if not asso:
         return api.error('Invalid asso', 400)
     */
-    if (!DB.users[id]) {
+    if (id == -1) {
         throw new HttpException(400);
     }
     const user = DB.users[id];
@@ -106,10 +120,10 @@ const createSession = (id, hash) => {
             DB.sessions[session_id] = id;
 
             delete user.challenge;
-            DB.users[user._id] = user;
+            DB.users[id] = user;
             fs.writeFileSync(DB_PATH, JSON.stringify(DB));
 
-            return { session_id: session_id, id: id };
+            return { session_id: session_id };
         }
     }
 
@@ -119,15 +133,21 @@ const createSession = (id, hash) => {
     throw new HttpException(401, { error: "invalid credentials" });
 };
 
-const deleteSession = (id) => {
+const deleteSession = (id, session) => {
     if (!id) {
         throw new HttpException(422, { errors: { id: ["can't be blank"] } });
     }
 
-    const DB = JSON.parse(fs.readFileSync(DB_PATH, 'utf8'));
-    if (!DB.sessions[id]) return;
+    if (!session) {
+        throw new HttpException(422, { errors: { session: ["can't be blank"] } });
+    }
 
-    delete DB.sessions[id];
+    // session must match the id in DB.sessions
+
+    const DB = JSON.parse(fs.readFileSync(DB_PATH, 'utf8'));
+    if (!DB.sessions[session] != id) return;
+
+    delete DB.sessions[session];
     fs.writeFileSync(DB_PATH, JSON.stringify(DB));
 };
 

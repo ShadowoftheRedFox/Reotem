@@ -4,9 +4,11 @@
             "_id": 0,
             "first_name": "Ploof",
             "last_name": "Ploof",
-            "login": "test",
-            "password": "$2b$10$hKW6cZAmLwsbi4Vpyb2bZ.agJ8LeMCXrEQ7RbM6hJ1sbO.QqoHdZK"
+            "login": "ploof@test.com",
+            "password": "$2b$10$KHLrZv25/nMQPWUZkgpYa.fMN8aI/4wmmOr8iSBkmATeqCsbjLn0a"
         }
     },
-    "sessions": {}
+    "sessions": {
+        "g1RhFKWzUEWsmCs579ylhAL4": 0
+    }
 }

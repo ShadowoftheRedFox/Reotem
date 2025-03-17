@@ -16,6 +16,8 @@ import { Router, RouterLink } from '@angular/router';
 import { ThemeService } from '../../services/theme.service';
 import { environment } from '../../environments/environment';
 import { DialogComponent, DialogDataType } from '../dialog/dialog.component';
+import { AuthentificationService } from '../../services/authentification.service';
+import { CommunicationService } from '../../services/communication.service';
 
 const SiteName = environment.title;
 
@@ -56,6 +58,8 @@ export class SidebarComponent implements OnDestroy {
     constructor(
         private readonly dialog: MatDialog,
         private api: APIService,
+        private auth: AuthentificationService,
+        private com: CommunicationService,
         public theme: ThemeService,
         private router: Router,
         changeDetectorRef: ChangeDetectorRef,
@@ -92,70 +96,40 @@ export class SidebarComponent implements OnDestroy {
         const recompenseObj = this.getItem("RécompensesObj");
         const paramObj = this.getItem("ParamètresObj");
         const adminObj = this.getItem("AdminObj")
-        // // met à jour si le compte change (connexion ou déconnexion d'un compte)
-        // this.com.AuthAccountUpdate.subscribe((isConnected) => {
-        //     if (decoObj) {
-        //         decoObj.hidden = !isConnected;
-        //     }
-        //     if (compteObj) {
-        //         if (isConnected && this.auth.client) {
-        //             compteObj.title = /* this.auth.client.SURNAME + " " + */ this.auth.client.name;
-        //             compteObj.image = "Icone";
-        //             compteObj.tooltip = "Accéder à votre profil";
-        //             compteObj.aria = "Lien vers votre page de profil";
-        //             compteObj.link = ["/user", this.auth.client.id + ''];
-        //             if (paramObj) {
-        //                 paramObj.link = ["/user", this.auth.client.id + "", "settings"];
-        //                 paramObj.hidden = !isConnected;
-        //             }
-        //             if (adminObj) {
-        //                 adminObj.hidden = !this.auth.hasMorePermissions(ComptePermissions.ADMIN);
-        //             }
-        //         } else {
-        //             compteObj.title = "Compte";
-        //             compteObj.link = "/connection";
-        //             compteObj.icon = "account_circle";
-        //             compteObj.aria = "Lien pour retourner se connecter";
-        //             compteObj.tooltip = "Se connecter";
-        //             if (paramObj) {
-        //                 paramObj.hidden = !isConnected;
-        //             }
-        //             if (adminObj) {
-        //                 adminObj.hidden = true;
-        //             }
-        //         }
-        //     }
-        // });
-
-        // // met à jour les notifications
-        // this.com.NotifMessageUpdate.subscribe((res) => {
-        //     if (msgObj) {
-        //         const num = res > 99 ? "99+" : "" + res;
-        //         msgObj.notifications = !res ? undefined : num;
-        //         msgObj.tooltip = res > 0 ? res + ` message${res > 1 ? "s" : ""} non lu${res > 1 ? "s" : ""}` : "Messagerie";
-        //     }
-        // });
-        // this.com.NotifLikeUpdate.subscribe((res) => {
-        //     if (likeObj) {
-        //         const num = res > 99 ? "99+" : "" + res;
-        //         likeObj.notifications = !res ? undefined : num;
-        //         likeObj.tooltip = res > 0 ? res + ` nouveau${res > 1 ? "x" : ""} like${res > 1 ? "s" : ""}` : "Voir vos likes";
-        //     }
-        // });
-        // this.com.NotifGeneralUpdate.subscribe((res) => {
-        //     if (notifObj) {
-        //         const num = res > 99 ? "99+" : "" + res;
-        //         notifObj.notifications = !res ? undefined : num;
-        //         notifObj.tooltip = res > 0 ? res + ` notification${res > 1 ? "s" : ""} non lue${res > 1 ? "s" : ""}` : "Notifications reçues";
-        //     }
-        // });
-        // this.com.NotifRewardUpdate.subscribe((res) => {
-        //     if (recompenseObj) {
-        //         const num = res > 99 ? "99+" : "" + res;
-        //         recompenseObj.notifications = !res ? undefined : num;
-        //         recompenseObj.tooltip = res > 0 ? res + ` récompense${res > 1 ? "s" : ""} non réclamée${res > 1 ? "s" : ""}` : "Avantages et récompenses";
-        //     }
-        // });
+        // update at each connection/disconnection
+        this.com.AuthAccountUpdate.subscribe((isConnected) => {
+            if (decoObj) {
+                decoObj.hidden = !isConnected;
+            }
+            if (compteObj) {
+                if (isConnected) {
+                    compteObj.title = /* this.auth.client.SURNAME + " " + */ this.auth.client?.first_name || "Name";
+                    compteObj.image = "Icone";
+                    compteObj.tooltip = "Accéder à votre profil";
+                    compteObj.aria = "Lien vers votre page de profil";
+                    compteObj.link = ["/user", this.auth.client?._id + ''];
+                    if (paramObj) {
+                        paramObj.link = ["/user", this.auth.client?._id + "", "settings"];
+                        paramObj.hidden = !isConnected;
+                    }
+                    // if (adminObj) {
+                    //     adminObj.hidden = !this.auth.hasMorePermissions(ComptePermissions.ADMIN);
+                    // }
+                } else {
+                    compteObj.title = "Compte";
+                    compteObj.link = "/connection";
+                    compteObj.icon = "account_circle";
+                    compteObj.aria = "Lien pour retourner se connecter";
+                    compteObj.tooltip = "Se connecter";
+                    if (paramObj) {
+                        paramObj.hidden = !isConnected;
+                    }
+                    if (adminObj) {
+                        adminObj.hidden = true;
+                    }
+                }
+            }
+        });
     }
 
     // récupère la fonction qui déclenche l'animation
@@ -304,7 +278,7 @@ export class SidebarComponent implements OnDestroy {
             maxWidth: "90dvw",
             data: {
                 title: "Déconnexion",
-                text: "Voulez vous vraiment vous déconnecter? Vous ne receverez plus les notifications.",
+                text: "Voulez vous vraiment vous déconnecter?",
                 btnNotOk: "Annuler",
                 btnOk: "Me déconnecter",
                 warn: true,
@@ -313,9 +287,9 @@ export class SidebarComponent implements OnDestroy {
 
         dialogRef.afterClosed().subscribe(result => {
             // 0 == oui, -1 == non, undefined == annuler
-            // if (result !== undefined && result >= 0) {
-            //     this.api.disconnect();
-            // }
+            if (result !== undefined && result >= 0) {
+                this.api.auth.disconnect();
+            }
         });
     }
 }
