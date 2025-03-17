@@ -1,0 +1,10 @@
+{
+    "recommendations": [
+        "angular.ng-template",
+        "bradlc.vscode-tailwindcss",
+        "gruntfuggly.todo-tree",
+        "wayou.vscode-todo-highlight",
+        "usernamehw.errorlens",
+        "editorconfig.editorconfig"
+    ]
+}
