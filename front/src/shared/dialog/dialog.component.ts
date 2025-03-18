@@ -10,7 +10,7 @@ export interface DialogDataType {
     text?: string;
     component?: Type<unknown>;
     warn?: boolean;
-    data?: unknown;
+    data?: never;
 };
 
 @Component({
