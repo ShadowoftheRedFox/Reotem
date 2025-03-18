@@ -4,31 +4,31 @@ Projet dev web CYTech 2024-2025
 # Logiciels nécéssaires
 
 - NodeJS
-- MySQL
-- ????
 
 # Installation
 
-Installation d'angular CLI:
+## Frontend
+
+Installation d'angular CLI et des modules:
 ```sh
 cd ./front
 npm install -g @angular/cli
+npm install
 ```
 
-Création des bases de données (il peut être nécéssaire d'activer le service MySQL sous Linux):
+Vous pouvez modifier les variables d'environnements du frontend avec:  
+- [environments.ts](front\src\environments\environment.ts) pour la production.
+- [environments.developments.ts](front\src\environments\environment.development.ts) pour le dévelopement.
+
+## Backend
+
+Installation des modules:
 ```sh
-mysql -u root -p
-CREATE USER 'reotem'@'localhost' IDENTIFIED BY '[PASSWORD]';
-GRANT ALL PRIVILEGES ON reotem.* TO 'reotem'@'localhost';
-quit
-
-mysql -u reotem -p
-CREATE DATABASE reotem CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE reotem;
-SOURCE db/init.sql
-#SOURCE db/sample.sql # pour avoir des données d'exemple
-SHOW TABLES;
+cd ./back
+npm install
 ```
+
+Vous devez créer une copie du fichier [.env.example](back\.env.example), et le renommer en **.env**, afin de remplir le nécéssaire. Un compte [MailJet](https://www.mailjet.com) est nécéssaire pour l'envoie de mail.  
 
 # Lancer le projet
 
@@ -41,19 +41,20 @@ ng serve
 Lancer le back:
 ```sh
 cd ./back
-????
+npm run start
+# npm run dev # redémarre automatiquement lors de changement de fichier
 ```
 
 # Todo list
 
-- [ ] page de connexion
-- [ ] page inscription
+- [x] page de connexion
+- [x] page inscription
 - [ ] page du profil
 - [ ] Système de points et niveaux en backend a stocker et frontend a afficher7
 - [ ] module du tableau de bord (pour chaque utilisateur):
-  - [ ] s'inscrire
-  - [ ] valider son inscription (par mail ou autre)
-  - [ ] envoie de mail au(x) membre(s)
+  - [x] s'inscrire
+  - [x] valider son inscription (par mail ou autre)
+  - [x] envoie de mail au(x) membre(s)
   - [ ] modifier le profil d'un membre
   - [ ] log des connexions
   - [ ] changer le niveau d'un membre
