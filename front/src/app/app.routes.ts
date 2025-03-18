@@ -14,16 +14,14 @@ export const routes: Routes = [
         component: MainComponent
     },
     {
+        path: "connection/lost",
+        title: "Identifiant oublié" + TITLE_POSTFIX,
+        component: LostComponent,
+    },
+    {
         path: "connection",
         title: "Connection" + TITLE_POSTFIX,
         component: ConnectionComponent,
-        children: [
-            {
-                path: "lost",
-                title: "Identifiant oublié" + TITLE_POSTFIX,
-                component: LostComponent
-            }
-        ]
     },
     {
         path: "**",

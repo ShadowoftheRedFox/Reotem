@@ -11,6 +11,19 @@ export type User = {
     age: number;
 }
 
+export const UserMaxAge = 120;
+export const UserMinAge = 18;
+
+export const UserSexe = [
+    "Homme", "Femme", "Autre"
+];
+export type UserSexe = "Homme" | "Femme" | "Autre";
+
+export const UserRole = [
+    "Employé"
+];
+export type UserRole = "Employé";
+
 export type LoginChallenge = {
     challenge: string;
     salt: string;

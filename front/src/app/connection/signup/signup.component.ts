@@ -10,6 +10,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { MatSelectModule } from "@angular/material/select"
+import { UserMaxAge, UserMinAge, UserRole, UserSexe } from '../../../models/api.model';
 
 @Component({
     selector: 'app-signup',
@@ -19,6 +21,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
         MatButtonModule,
         MatFormFieldModule,
         MatInputModule,
+        MatSelectModule,
         ReactiveFormsModule,
     ],
     templateUrl: './signup.component.html',
@@ -27,9 +30,18 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 export class SignupComponent {
     @Output() changeConnection = new EventEmitter<void>();
 
+    userRole = UserRole;
+    userSexe = UserSexe;
+    userMinAge = UserMinAge;
+    userMaxAge = UserMaxAge;
+
     signup = new FormGroup({
-        name: new FormControl("", [Validators.required]),
+        firstname: new FormControl("", [Validators.required]),
+        lastname: new FormControl("", [Validators.required]),
         email: new FormControl("", [Validators.required, Validators.email]),
+        sexe: new FormControl("", [Validators.required]),
+        age: new FormControl(18, [Validators.required, Validators.min(UserMinAge), Validators.max(UserMaxAge)]),
+        role: new FormControl("", [Validators.required]),
         password: new FormControl("", [Validators.required]),
         passwordConfirm: new FormControl("", [Validators.required]),
     });
@@ -46,17 +58,18 @@ export class SignupComponent {
         // take until destro to prevent multiple listener when component is hidden
         // no need to check if username and/or mail is unique, api do that when creating the account
         // they would only know though when hitting create
-        this.signup.controls.name.valueChanges.pipe(delay(300), takeUntilDestroyed()).subscribe(res => { });
+        this.signup.controls.firstname.valueChanges.pipe(delay(300), takeUntilDestroyed()).subscribe(res => { });
+        this.signup.controls.lastname.valueChanges.pipe(delay(300), takeUntilDestroyed()).subscribe(res => { });
         this.signup.controls.email.valueChanges.pipe(delay(300), takeUntilDestroyed()).subscribe(res => { });
 
         this.signup.controls.password.valueChanges.pipe(delay(300), takeUntilDestroyed()).subscribe(res => {
-            // check si le mdp est valide (maj, chiffre, char spé...)
+            // check password strength
             if (res) {
 
             }
         });
         this.signup.controls.passwordConfirm.valueChanges.pipe(takeUntilDestroyed()).subscribe(res => {
-            // check si le mdp est valide (maj, chiffre, char spé...)
+            // check password equals
             if (res != this.signup.controls.password.value && res != null && res.length > 0) {
                 this.signup.controls.passwordConfirm.setErrors({ confirm: true });
             }
@@ -75,13 +88,31 @@ export class SignupComponent {
         }
     }
 
-    nameErrorMessage() {
-        if (this.signup.controls.name.hasError('required')) {
-            return 'Nom requis';
-        } else if (this.signup.controls.name.hasError('taken')) {
-            return 'Nom déjà utilisé'
+    firstnameErrorMessage() {
+        if (this.signup.controls.firstname.hasError('required')) {
+            return 'Prénom requis';
+        } else if (this.signup.controls.firstname.hasError('taken')) {
+            return 'Prénom/Nom déjà utilisés'
         } else {
             return '';
+        }
+    }
+
+    lastnameErrorMessage() {
+        if (this.signup.controls.firstname.hasError('required')) {
+            return 'Nom requis';
+        } else if (this.signup.controls.firstname.hasError('taken')) {
+            return 'Prénom/Nom déjà utilisés'
+        } else {
+            return '';
+        }
+    }
+
+    ageErrorMessage() {
+        if (this.signup.controls.age.errors != null) {
+            return "Âge invalide";
+        } else {
+            return "";
         }
     }
 
@@ -94,10 +125,14 @@ export class SignupComponent {
     }
 
     passwordConfirmErrorMessage() {
-        if (this.signup.controls.passwordConfirm.hasError('required')) {
-            return 'Vous devez confirmer votre mot de passe';
+        if (
+            this.signup.controls.passwordConfirm.hasError('required') &&
+            this.signup.controls.password.value != null &&
+            this.signup.controls.password.value.length > 0
+        ) {
+            return 'Confirmez votre mot de passe';
         } else if (this.signup.controls.passwordConfirm.hasError('confirm')) {
-            return 'Les mots de passe ne sont pas identiques';
+            return 'Mots de passe différents';
         } else {
             return '';
         }
@@ -105,21 +140,15 @@ export class SignupComponent {
 
     testSignup() {
         if (!this.signup.valid) return;
-        if (this.signup.value.email && this.signup.value.password && this.signup.value.name) {
-            // this.api.signup(this.signup.value.name, this.signup.value.email, this.signup.value.password).subscribe(res => {
-            //     if (res.success && res.data) {
-            //         this.auth.client = {
-            //             id: res.data,
-            //             name: this.signup.value.name!,
-            //             createdDate: new Date(),
-            //         }
-            //         this.auth.clientPerms = ComptePermissions.MEMBER;
-            //         this.com.AuthAccountUpdate.next(true);
-            //         this.route.navigate(["/"]);
-            //         // TODO lancer le questionnaire
-            //     }
-            // });
-        }
+        this.api.auth.create(
+            this.signup.value.firstname!,
+            this.signup.value.lastname!,
+            this.signup.value.email!,
+            this.signup.value.age!,
+            this.signup.value.role as UserRole,
+            this.signup.value.sexe as UserSexe,
+            this.signup.value.password!,
+        )
     }
 
     hidePassword(event: MouseEvent) {

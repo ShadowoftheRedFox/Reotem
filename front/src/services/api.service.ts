@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import * as bcrypt from "bcryptjs";
-import { baseUrl, Login, LoginChallenge, User } from '../models/api.model';
+import { baseUrl, Login, LoginChallenge, User, UserSexe, UserRole } from '../models/api.model';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { lastValueFrom } from 'rxjs';
 import { AuthentificationService } from './authentification.service';
@@ -36,6 +36,9 @@ export class APIService {
 
             //the user send the hash of the challenge and the password
             return this.sendApiRequest<Login>("POST", "signin", { mail: mail, hash: hash_challenge }, "Authenticating");
+        },
+        create(firstname: string, lastname: string, mail: string, age: number, role: UserRole, sexe: UserSexe, password: string) {
+
         },
         get: (session_id: string) => {
             return this.sendApiRequest<User>("GET", "signin/" + session_id, undefined, "Getting account");
