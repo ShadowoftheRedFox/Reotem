@@ -100,7 +100,7 @@ export class SidebarComponent implements OnDestroy {
             }
             if (compteObj) {
                 if (isConnected && this.auth.client) {
-                    compteObj.title = this.auth.client.first_name;
+                    compteObj.title = this.auth.client.firstname;
                     compteObj.image = "Icone";
                     compteObj.tooltip = "Accéder à votre profil";
                     compteObj.aria = "Lien vers votre page de profil";

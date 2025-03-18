@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import * as bcrypt from "bcryptjs";
-import { baseUrl, Login, LoginChallenge, User, UserSexe, UserRole } from '../models/api.model';
+import { baseUrl, Login, LoginChallenge, User, UserSexe, UserRole, NewUser } from '../models/api.model';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { lastValueFrom } from 'rxjs';
 import { AuthentificationService } from './authentification.service';
@@ -37,8 +37,8 @@ export class APIService {
             //the user send the hash of the challenge and the password
             return this.sendApiRequest<Login>("POST", "signin", { mail: mail, hash: hash_challenge }, "Authenticating");
         },
-        create(firstname: string, lastname: string, mail: string, age: number, role: UserRole, sexe: UserSexe, password: string) {
-
+        create: (firstname: string, lastname: string, email: string, age: number, role: UserRole, sexe: UserSexe, password: string) => {
+            return this.sendApiRequest<NewUser>("POST", "signup/", { firstname: firstname, lastname: lastname, email: email, age: age, role: role, sexe: sexe, password: password }, "Creating account");
         },
         get: (session_id: string) => {
             return this.sendApiRequest<User>("GET", "signin/" + session_id, undefined, "Getting account");
@@ -59,11 +59,17 @@ export class APIService {
                     console.error(err);
                 }
             });
+        },
+        validate: (token: string, session: string) => {
+            return lastValueFrom(this.sendApiRequest<boolean>("POST", "signup/validating", { token: token, session: session }))
+        },
+        tokenExists: async (token: string) => {
+            return lastValueFrom(this.sendApiRequest<boolean>("POST", "signup/token", { token: token }));
         }
     }
 
     private sendApiRequest<T>(method: "GET" | "POST" | "PUT" | "DELETE" | "PATCH", endpoint: String, parameters: Object = {}, message: String | undefined = undefined) {
-        const urlParameters = JSON.stringify(parameters);
+        const urlParameters = (parameters != undefined && Object.keys(parameters).length > 0) ? "?data=" + JSON.stringify(parameters) : "";
         const headers = new HttpHeaders({ "Content-Type": "application/x-www-form-urlencoded" });
 
         if (message !== undefined) {
@@ -72,7 +78,7 @@ export class APIService {
 
         switch (method) {
             case "GET":
-                return this.http.get<T>(baseUrl + endpoint + (parameters != undefined ? "?data=" + urlParameters : ""));
+                return this.http.get<T>(baseUrl + endpoint + urlParameters);
             case "POST":
                 return this.http.post<T>(baseUrl + endpoint, parameters);
             case "PUT":

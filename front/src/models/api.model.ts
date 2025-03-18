@@ -4,11 +4,19 @@ export const baseUrl = environment.api_url;
 
 export type User = {
     _id: number;
-    first_name: string;
-    last_name: string;
-    login: string;
-    password: string;
+    firstname: string;
+    lastname: string;
+    email: string;
     age: number;
+    role: number;
+    sexe: number;
+    validated?: false;
+    //TODO missing the user image
+}
+
+export type NewUser = {
+    user: User;
+    session: string;
 }
 
 export const UserMaxAge = 120;

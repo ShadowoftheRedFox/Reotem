@@ -99,9 +99,9 @@ export class SignupComponent {
     }
 
     lastnameErrorMessage() {
-        if (this.signup.controls.firstname.hasError('required')) {
+        if (this.signup.controls.lastname.hasError('required')) {
             return 'Nom requis';
-        } else if (this.signup.controls.firstname.hasError('taken')) {
+        } else if (this.signup.controls.lastname.hasError('taken')) {
             return 'Prénom/Nom déjà utilisés'
         } else {
             return '';
@@ -148,7 +148,28 @@ export class SignupComponent {
             this.signup.value.role as UserRole,
             this.signup.value.sexe as UserSexe,
             this.signup.value.password!,
-        )
+        ).subscribe({
+            next: res => {
+                this.com.AuthTokenUpdate.next(res.session);
+                this.auth.client = res.user;
+                this.com.AuthAccountUpdate.next(true);
+                this.route.navigate(["user", res.user._id]);
+            },
+            error: err => {
+                if (!err.error.message) {
+                    return console.error(err);
+                }
+                const error = JSON.parse(err.error.message).errors;
+                console.log(error);
+                if (error.email) {
+                    this.signup.controls.email.setErrors({ taken: true });
+                }
+                if (error.name) {
+                    this.signup.controls.firstname.setErrors({ taken: true });
+                    this.signup.controls.lastname.setErrors({ taken: true });
+                }
+            }
+        });
     }
 
     hidePassword(event: MouseEvent) {

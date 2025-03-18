@@ -12,7 +12,7 @@ router.get('/signin/:id', async (req, res, next) => {
         if (session != undefined) {
             res.status(200).json(session);
         } else {
-            res.status(404);
+            res.status(404).json();
         }
     } catch (error) {
         next(error);
@@ -34,9 +34,9 @@ router.delete('/disconnect/:id', async (req, res, next) => {
         console.log(`deleting session ${req.params.id}`);
         // BUG doesn't return request
         if (deleteSession(req.params.id, req.body.session)) {
-            res.status(200);
+            res.status(200).json();
         } else {
-            res.status(400);
+            res.status(400).json();
         }
     } catch (error) {
         next(error);

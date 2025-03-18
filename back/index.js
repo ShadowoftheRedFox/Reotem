@@ -42,10 +42,10 @@ app.use(
                 message: 'missing authorization credentials',
             });
         } else if (err && err.errorCode) {
-            console.error(err);
+            if (err.interalLog === true) { console.error(err); } else { console.log("Error for user generated."); }
             res.status(err.errorCode).json({ message: err.message });
         } else if (err) {
-            console.error(err);
+            console.log(err);
             res.status(500).json({ message: err.message });
         }
     },
