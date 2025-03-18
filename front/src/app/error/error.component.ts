@@ -8,5 +8,5 @@ import { Component } from '@angular/core';
     styleUrl: './error.component.scss'
 })
 export class ErrorComponent {
-
+    directory = window.location.pathname.split("/").pop()?.trim();
 }

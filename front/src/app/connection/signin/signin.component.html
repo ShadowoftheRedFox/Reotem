@@ -1,0 +1,33 @@
+<div class="flex justify-center flex-col items-center flex-nowrap">
+    <h1>Connexion</h1>
+    <form [formGroup]="signin" class="flex flex-col items-stretch justify-center flex-nowrap">
+        <mat-form-field>
+            <mat-label>adresse email</mat-label>
+            <input matInput placeholder="pat@example.com" formControlName="email" required type="email" autofocus
+                autocomplete="email" />
+            <mat-icon matSuffix>alternate_email</mat-icon>
+            @if (signin.controls.email.invalid) {
+            <mat-error>{{mailErrorMessage()}}</mat-error>
+            }
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>Mot de passe</mat-label>
+            <input matInput placeholder="password" formControlName="password"
+                [type]="passwordHidden ? 'password' : 'text'" autocomplete="current-password" />
+            <button mat-icon-button matSuffix (pointerdown)="hidePassword($event)"
+                [attr.aria-label]="'Cacher le mot de passe'" [attr.aria-pressed]="passwordHidden">
+                <mat-icon>{{passwordHidden ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+            @if (signin.controls.password.invalid) {
+            <mat-error>{{passwordErrorMessage()}}</mat-error>
+            }
+        </mat-form-field>
+        @if (signin.hasError("invalid") || signin.hasError("timeout")) {
+        <mat-error>{{formErrorMessage()}}</mat-error>
+        }
+        <button mat-flat-button type="button" (click)="testSignin()" [disabled]="!signin.valid">Se connecter</button>
+    </form>
+    <button mat-raised-button (click)="changeConnection.emit()">Inscription</button>
+    <button mat-button (click)="forgotCredentials()">Email ou mot de passe oublié</button>
+    <!-- TODO submit si on appuie sur entré dans un des input? si on appuie sur entré dans mail alors mettre dans mot de passe -->
+</div>
