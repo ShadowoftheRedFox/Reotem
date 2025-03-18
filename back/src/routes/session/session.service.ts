@@ -1,14 +1,13 @@
-const bcrypt = require("bcryptjs");
-const crypto = require("crypto");
-const HttpException = require("../../models/HttpException");
-const fs = require("fs");
-const path = require("path");
-const { generateToken } = require("../../util/crypt");
-const { parseUser } = require("../../util/parser");
+import crypto from "crypto";
+import HttpException from "../../models/HttpException";
+import fs from "fs";
+import path from "path";
+import { generateToken } from "../../util/crypt";
+import { parseUser } from "../../util/parser";
 
 const DB_PATH = path.join(__dirname, "..", "..", "db.json");
 
-const getSession = (id) => {
+export const getSession = (id: string) => {
     if (!id) {
         throw new HttpException(422, { errors: { id: ["can't be blank"] } });
     }
@@ -23,7 +22,7 @@ const getSession = (id) => {
     return { ...user };
 };
 
-const createSession = (mail, hash) => {
+export const createSession = (mail: string, hash: string) => {
     if (!mail) {
         throw new HttpException(422, { errors: { mail: ["can't be blank"] } });
     }
@@ -32,9 +31,9 @@ const createSession = (mail, hash) => {
 
     let id = -1;
     // find id with mail
-    Object.values(DB.users).forEach(u => {
-        if (u.email.toLowerCase() == mail.toLowerCase()) {
-            id = u._id;
+    Object.values(DB.users as { [key: string]: string | number | unknown }[]).forEach((u) => {
+        if ((u.email as string).toLowerCase() == mail.toLowerCase()) {
+            id = u._id as number;
         }
     });
 
@@ -82,7 +81,7 @@ const createSession = (mail, hash) => {
     throw new HttpException(401, { error: "invalid credentials" });
 };
 
-const deleteSession = (id, session) => {
+export const deleteSession = (id: number, session: string) => {
     if (!id) {
         throw new HttpException(422, { errors: { id: ["can't be blank"] } });
     }
@@ -100,5 +99,3 @@ const deleteSession = (id, session) => {
     fs.writeFileSync(DB_PATH, JSON.stringify(DB));
     return true;
 };
-
-module.exports = { createSession, getSession, deleteSession };

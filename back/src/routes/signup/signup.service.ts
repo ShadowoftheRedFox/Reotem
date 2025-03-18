@@ -1,25 +1,25 @@
-const bcrypt = require("bcryptjs");
-const HttpException = require("../../models/HttpException");
-const fs = require("fs");
-const path = require("path");
-const { UserModel, UserMaxAge, UserMinAge, UserRole, UserSexe } = require("../../models/user");
-const { generateToken } = require("../../util/crypt");
-const { parseUser } = require("../../util/parser");
-const { sendMail, template } = require("../../util/mailer");
+import bcrypt from "bcryptjs";
+import HttpException from "../../models/HttpException";
+import fs from "fs";
+import path from "path";
+import { UserMaxAge, UserMinAge, UserRole, UserSexe } from "../../models/user";
+import { generateToken } from "../../util/crypt";
+import { parseUser } from "../../util/parser";
+import { sendMail, template } from "../../util/mailer";
 
 const DB_PATH = path.join(__dirname, "..", "..", "db.json");
 
-const checkUserUniqueness = async (email, firstname, lastname) => {
+const checkUserUniqueness = async (email: string, firstname: string, lastname: string) => {
     const DB = JSON.parse(fs.readFileSync(DB_PATH, 'utf8'));
-    Object.values(DB.users).forEach(user => {
-        if (user.email.toLowerCase() == email.toLowerCase()) {
+    Object.values(DB.users as { [key: string]: unknown }[]).forEach((user) => {
+        if ((user.email as string).toLowerCase() == email.toLowerCase()) {
             throw new HttpException(422, {
                 errors: {
                     email: ['has already been taken'],
                 },
             });
         }
-        if (user.firstname.toLowerCase() == firstname.toLowerCase() && user.lastname.toLowerCase() == lastname.toLowerCase()) {
+        if ((user.firstname as string).toLowerCase() == firstname.toLowerCase() && (user.lastname as string).toLowerCase() == lastname.toLowerCase()) {
             throw new HttpException(422, {
                 errors: {
                     name: ['has already been taken'],
@@ -29,14 +29,14 @@ const checkUserUniqueness = async (email, firstname, lastname) => {
     });
 };
 
-const createUser = async (input) => {
-    const firstname = input.firstname;
-    const lastname = input.lastname;
-    const email = input.email;
-    const age = input.age;
-    const role = input.role;
-    const sexe = input.sexe;
-    const password = input.password;
+export const createUser = async (input: { [key: string]: never }) => {
+    const firstname = input.firstname as string;
+    const lastname = input.lastname as string;
+    const email = input.email as string;
+    const age = input.age as number;
+    const role = input.role as string; //TODO inherit type from the model in the front?
+    const sexe = input.sexe as string;
+    const password = input.password as string;
 
     if (!email) {
         throw new HttpException(422, { errors: { email: ["can't be blank"] } });
@@ -99,7 +99,7 @@ const createUser = async (input) => {
     DB.validating[user.validated] = user._id;
     fs.writeFileSync(DB_PATH, JSON.stringify(DB));
 
-    user = parseUser(user);
+    user = parseUser(user as never) as never;
 
     const username = user.firstname + " " + user.lastname;
 
@@ -110,9 +110,9 @@ const createUser = async (input) => {
     return { user: user, session: session_id };
 };
 
-const getCurrentUser = async (id) => {
+export const getCurrentUser = async (id: number) => {
     const DB = JSON.parse(fs.readFileSync(DB_PATH, 'utf8'));
-    const user = DB.users[id];
+    let user = DB.users[id];
 
     if (!user) return {};
 
@@ -124,7 +124,7 @@ const getCurrentUser = async (id) => {
     };
 };
 
-const validateUser = async (token, session) => {
+export const validateUser = async (token: string, session: string) => {
     // 400 because important route, we don't want to tell what went wrong
     if (!token || !session) {
         throw new HttpException(400);
@@ -147,12 +147,10 @@ const validateUser = async (token, session) => {
     return true;
 };
 
-const checkTokenExists = async (token) => {
+export const checkTokenExists = async (token: string) => {
     if (!token) throw new HttpException(404);
 
     const DB = JSON.parse(fs.readFileSync(DB_PATH, 'utf8'));
     if (DB.validating[token] == undefined) throw new HttpException(404);
     return true;
 };
-
-module.exports = { validateUser, createUser, getCurrentUser, checkTokenExists };

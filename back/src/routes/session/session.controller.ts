@@ -1,8 +1,7 @@
-const { deleteSession, getSession, createSession } = require("./session.service");
+import { Router } from "express";
+import { deleteSession, getSession, createSession } from "./session.service";
 
-const Router = require("express").Router;
-
-const router = Router();
+export const router = Router();
 
 router.get('/signin/:id', async (req, res, next) => {
     try {
@@ -32,7 +31,7 @@ router.post('/signin', async (req, res, next) => {
 router.delete('/disconnect/:id', async (req, res, next) => {
     try {
         console.log(`deleting session ${req.params.id}`);
-        if (deleteSession(req.params.id, req.body.session)) {
+        if (deleteSession(Number(req.params.id), req.body.session)) {
             res.status(200).json();
         } else {
             res.status(400).json();
@@ -41,5 +40,3 @@ router.delete('/disconnect/:id', async (req, res, next) => {
         next(error);
     }
 });
-
-module.exports = router;

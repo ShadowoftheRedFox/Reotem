@@ -1,7 +1,7 @@
-const Router = require("express").Router;
-const { createUser, checkTokenExists, validateUser } = require("./signup.service");
+import { Router } from "express";
+import { createUser, checkTokenExists, validateUser } from "./signup.service";
 
-const router = Router();
+export const router = Router();
 
 router.post('/signup', async (req, res, next) => {
     try {
@@ -32,5 +32,3 @@ router.post("/signup/validating", async (req, res, next) => {
         next(error);
     }
 });
-
-module.exports = router;
