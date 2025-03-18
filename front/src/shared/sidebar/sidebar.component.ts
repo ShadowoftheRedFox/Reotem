@@ -11,7 +11,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MediaMatcher } from '@angular/cdk/layout';
-import { NgClass, NgStyle } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { ThemeService } from '../../services/theme.service';
 import { environment } from '../../environments/environment';
@@ -21,7 +21,7 @@ import { CommunicationService } from '../../services/communication.service';
 
 const SiteName = environment.title;
 
-type SideNavItem = {
+interface SideNavItem {
     title: string;
     link: string | string[] | null;
     icon?: string;
@@ -78,8 +78,7 @@ export class SidebarComponent implements OnDestroy {
     getItem(id: string): SideNavItem | null {
         const total = [...this.SideNavItemsBottom, ...this.SideNavItemsTop];
 
-        for (let i = 0; i < total.length; i++) {
-            const item = total[i];
+        for (const item of total) {
             if (item.id == id) return item;
         }
 

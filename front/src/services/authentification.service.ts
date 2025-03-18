@@ -43,12 +43,12 @@ export class AuthentificationService {
     }
 
     public getCookie(name: string) {
-        let ca: Array<string> = this.document.cookie.split(';');
-        let caLen: number = ca.length;
-        let cookieName = `${name}=`;
+        const ca: string[] = this.document.cookie.split(';');
+        const caLen: number = ca.length;
+        const cookieName = `${name}=`;
         let c: string;
 
-        for (let i: number = 0; i < caLen; i += 1) {
+        for (let i = 0; i < caLen; i += 1) {
             c = ca[i].replace(/^\s+/g, '');
             if (c.indexOf(cookieName) == 0) {
                 return c.substring(cookieName.length, c.length);
@@ -61,12 +61,12 @@ export class AuthentificationService {
         this.setCookie(name, '', -1);
     }
 
-    public setCookie(name: string, value: string, expireSeconds: number, path: string = '') {
+    public setCookie(name: string, value: string, expireSeconds: number, path = '') {
         if (value == undefined) return;
-        let d: Date = new Date();
+        const d: Date = new Date();
         d.setTime(d.getTime() + expireSeconds * 1000);
-        let expires: string = `expires=${d.toUTCString()}`;
-        let cpath: string = path ? `; path=${path}` : '';
+        const expires = `expires=${d.toUTCString()}`;
+        const cpath: string = path ? `; path=${path}` : '';
         this.document.cookie = `${name}=${value}; ${expires}${cpath};`; //SameSite=None; seulement sur https
     }
 

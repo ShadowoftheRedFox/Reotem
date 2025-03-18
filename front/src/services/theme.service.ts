@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-export type ThemePalette = {
+export interface ThemePalette {
     name: string;
     icon: string;
     trigger: () => void;

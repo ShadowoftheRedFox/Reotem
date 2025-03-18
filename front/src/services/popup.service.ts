@@ -2,7 +2,7 @@ import { AriaLivePoliteness } from '@angular/cdk/a11y';
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-type PopupOptions = {
+interface PopupOptions {
     message?: string;
     action?: string;
     /** En milisecondes */

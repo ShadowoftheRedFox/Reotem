@@ -3,14 +3,14 @@ import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/materia
 import { MatButton } from '@angular/material/button';
 import { NgComponentOutlet, NgStyle } from '@angular/common';
 
-export type DialogDataType = {
+export interface DialogDataType {
     btnOk?: string;
     btnNotOk?: string;
     title?: string;
     text?: string;
-    component?: Type<any>;
+    component?: Type<unknown>;
     warn?: boolean;
-    data?: any;
+    data?: unknown;
 };
 
 @Component({
@@ -28,16 +28,16 @@ export type DialogDataType = {
 export class DialogComponent {
     constructor(
         @Inject(MAT_DIALOG_DATA) public data: DialogDataType,
-        private dialogRef: MatDialogRef<DialogComponent, any>
+        private dialogRef: MatDialogRef<DialogComponent, unknown>
     ) {
         if (!data) data = {};
         if (!data.btnNotOk) data.btnNotOk = "Fermer";
         if (!data.title) data.title = "Dialog";
     }
 
-    output: any = undefined;
+    output: unknown = undefined;
 
-    getOuput(o: any) {
+    getOuput(o: unknown) {
         this.output = o;
     }
 

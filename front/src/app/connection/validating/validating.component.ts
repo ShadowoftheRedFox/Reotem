@@ -3,7 +3,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { APIService } from '../../../services/api.service';
 import { AuthentificationService } from '../../../services/authentification.service';
 import { MatButtonModule } from '@angular/material/button';
-import { MatFormFieldModule } from '@angular/material/form-field';
 import { CommunicationService } from '../../../services/communication.service';
 
 @Component({
@@ -33,7 +32,7 @@ export class ValidatingComponent implements OnInit {
 
     launchValidation() {
         // check if token is the one with the session token
-        this.api.auth.validate(this.token, this.auth.clientToken).then(res => {
+        this.api.auth.validate(this.token, this.auth.clientToken).then(() => {
             this.router.navigate([""]);
         });
     }

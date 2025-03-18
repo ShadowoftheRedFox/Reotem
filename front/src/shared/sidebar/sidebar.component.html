@@ -13,7 +13,7 @@
             </button>
             <mat-menu #themeMenu>
                 @for (item of theme.themeList; track $index) {
-                <button mat-menu-item [style.display]="$index==theme.themeChoosen?'none':'block'"
+                <button mat-menu-item [style.display]="$index===theme.themeChoosen?'none':'block'"
                     (click)="item.trigger()">{{item.name}}</button>
                 }
             </mat-menu>
@@ -29,8 +29,8 @@
                     @if (menu.icon && !menu.hidden) {
                     @if (menu.notifications && menu.notifications.length>0) {
                     <mat-icon aria-hidden="false" (mouseleave)="menu.hover=false" (mouseover)="menu.hover=true"
-                        [ngClass]="menu.hover? menu.hoverClass || '' : ''" [matBadge]="menu.notifications"
-                        [matTooltip]="menu.tooltip" (click)="toggleSideNav()"
+                        (focus)="menu.hover=true" [ngClass]="menu.hover? menu.hoverClass || '' : ''"
+                        [matBadge]="menu.notifications" [matTooltip]="menu.tooltip" (click)="toggleSideNav()"
                         class="side-nav-show-icon-displaced">{{menu.icon}}</mat-icon>
                     } @else {
                     <mat-icon aria-hidden="false" (mouseleave)="menu.hover=false" (mouseover)="menu.hover=true"
@@ -39,16 +39,17 @@
                     }
                     }
                     <a mat-list-item (mouseleave)="menu.hover=false" (mouseover)="menu.hover=true"
-                        [ngClass]="menu.hover? menu.hoverClass || '' : ''" [routerLink]="menu.link"
-                        [ariaLabel]="menu.aria" [matTooltip]="menu.tooltip" [style.display]="menu.hidden? 'none': ''"
-                        class="side-nav-link-item">
+                        (focus)="menu.hover=true" [ngClass]="menu.hover? menu.hoverClass || '' : ''"
+                        [routerLink]="menu.link" [ariaLabel]="menu.aria" [matTooltip]="menu.tooltip"
+                        [style.display]="menu.hidden? 'none': ''" class="side-nav-link-item">
                         <div class="sidenav-item">
                             @if (menu.notifications && menu.notifications.length>0) {
                             <mat-icon aria-hidden="false" (mouseleave)="menu.hover=false" (mouseover)="menu.hover=true"
-                                [ngClass]="menu.hover? menu.hoverClass || '' : ''"
+                                (focus)="menu.hover=true" [ngClass]="menu.hover? menu.hoverClass || '' : ''"
                                 [matBadge]="menu.notifications">{{menu.icon}}</mat-icon>
                             } @else {
                             <mat-icon aria-hidden="false" (mouseleave)="menu.hover=false" (mouseover)="menu.hover=true"
+                                (focus)="menu.hover=true"
                                 [ngClass]="menu.hover? menu.hoverClass || '' : ''">{{menu.icon}}</mat-icon>
                             }
                             <p>{{menu.title}}</p>
@@ -59,26 +60,27 @@
                 <div>
                     @for (menu of SideNavItemsBottom; track $index) {
                     @if (menu.icon && !menu.hidden) {
-                    @if ($index == SideNavItemsBottom.length-1){
+                    @if ($index === SideNavItemsBottom.length-1){
                     <mat-icon aria-hidden="false" (mouseleave)="menu.hover=false" (mouseover)="menu.hover=true"
-                        [ngClass]="menu.hover? menu.hoverClass || '' : ''" [matTooltip]="menu.tooltip"
-                        (click)="toggleSideNav()"
+                        (focus)="menu.hover=true" [ngClass]="menu.hover? menu.hoverClass || '' : ''"
+                        [matTooltip]="menu.tooltip" (click)="toggleSideNav()"
                         class="side-nav-show-icon-displaced side-nav-account-image">{{menu.icon}}</mat-icon>
                     }@else{
                     <mat-icon aria-hidden="false" (mouseleave)="menu.hover=false" (mouseover)="menu.hover=true"
-                        [ngClass]="menu.hover? menu.hoverClass || '' : ''" [matTooltip]="menu.tooltip"
-                        (click)="toggleSideNav()" class="side-nav-show-icon-displaced">{{menu.icon}}</mat-icon>
+                        (focus)="menu.hover=true" [ngClass]="menu.hover? menu.hoverClass || '' : ''"
+                        [matTooltip]="menu.tooltip" (click)="toggleSideNav()"
+                        class="side-nav-show-icon-displaced">{{menu.icon}}</mat-icon>
                     }
                     }
                     <a mat-list-item (mouseleave)="menu.hover=false" (mouseover)="menu.hover=true"
-                        [ngClass]="menu.hover? menu.hoverClass || '' : ''" [routerLink]="menu.link"
-                        (mousedown)="menu.callback?menu.callback():null" [ariaLabel]="menu.aria"
-                        [matTooltip]="menu.tooltip" [style.display]="menu.hidden? 'none': ''">
+                        (focus)="menu.hover=true" [ngClass]="menu.hover? menu.hoverClass || '' : ''"
+                        [routerLink]="menu.link" (mousedown)="menu.callback?menu.callback():null"
+                        [ariaLabel]="menu.aria" [matTooltip]="menu.tooltip" [style.display]="menu.hidden? 'none': ''">
                         <div class="sidenav-item">
-                            @if (menu.id == "CompteObj"){
+                            @if (menu.id === "CompteObj"){
                             @if (menu.icon) {
                             <mat-icon aria-hidden="false" (mouseleave)="menu.hover=false" (mouseover)="menu.hover=true"
-                                [ngClass]="menu.hover? menu.hoverClass || '' : ''"
+                                (focus)="menu.hover=true" [ngClass]="menu.hover? menu.hoverClass || '' : ''"
                                 class="side-nav-account-image">{{menu.icon}}</mat-icon>
                             }
                             <div class="account-title">

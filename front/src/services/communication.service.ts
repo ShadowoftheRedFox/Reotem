@@ -13,8 +13,6 @@ import { Subject } from 'rxjs';
 })
 export class CommunicationService {
 
-    constructor() { }
-
     // event launcher when receiving a notification
     NotifUpdate = new Subject<number>();
 

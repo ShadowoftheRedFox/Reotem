@@ -30,9 +30,9 @@ export class APIService {
             const challenge: string = res.challenge;
             const salt: string = res.salt;
 
-            let hash_password = await bcrypt.hash(password, salt);
+            const hash_password = await bcrypt.hash(password, salt);
 
-            let hash_challenge = await this.hash(challenge + hash_password);
+            const hash_challenge = await this.hash(challenge + hash_password);
 
             //the user send the hash of the challenge and the password
             return this.sendApiRequest<Login>("POST", "signin", { mail: mail, hash: hash_challenge }, "Authenticating");
@@ -48,7 +48,7 @@ export class APIService {
             const session = this.authis.clientToken;
             const id = this.authis.client._id;
             this.sendApiRequest("DELETE", "disconnect/" + id, { session: session }, "Disconnecting").subscribe({
-                next: res => {
+                next: () => {
                     this.authis.deleteCookie("session");
                     this.authis.deleteCookie("UID");
                     this.com.AuthAccountUpdate.next(false);
@@ -67,7 +67,7 @@ export class APIService {
         }
     }
 
-    private sendApiRequest<T>(method: "GET" | "POST" | "PUT" | "DELETE" | "PATCH", endpoint: String, parameters: Object = {}, message: String | undefined = undefined) {
+    private sendApiRequest<T>(method: "GET" | "POST" | "PUT" | "DELETE" | "PATCH", endpoint: string, parameters: object = {}, message: string | undefined = undefined) {
         const urlParameters = (parameters != undefined && Object.keys(parameters).length > 0) ? "?data=" + JSON.stringify(parameters) : "";
         const headers = new HttpHeaders({ "Content-Type": "application/x-www-form-urlencoded" });
 
@@ -100,7 +100,7 @@ export class APIService {
 
     private authenticate() {
         // auth is managed by a session with the api
-        let session = this.authis.getCookie("session");
+        const session = this.authis.getCookie("session");
         if (session.length == 0) return;
         this.auth.get(session).subscribe({
             next: res => {
@@ -108,7 +108,7 @@ export class APIService {
                 this.authis.client = res;
                 this.com.AuthAccountUpdate.next(true);
             },
-            error: err => {
+            error: () => {
                 console.warn("Unknown token, removing");
                 this.authis.deleteCookie("session");
             }

@@ -10,7 +10,7 @@ export const httpInterceptor: HttpInterceptorFn = (req, next) => {
 
     return next(req).pipe(
         // si il n'y a pas d'erreur, vas dans tap
-        tap(event => {
+        tap(() => {
             /* if (event.type === HttpEventType.Response) {
                 console.log(req.url, 'returned a response with status', event.status);
             } */
