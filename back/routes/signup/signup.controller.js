@@ -5,7 +5,7 @@ const router = Router();
 
 router.post('/signup', async (req, res, next) => {
     try {
-        console.log("creating user...")
+        console.log("creating user...");
         const user = await createUser({ ...req.body });
         res.status(201).json(user);
     } catch (error) {

@@ -30,7 +30,7 @@ const createSession = (mail, hash) => {
 
     const DB = JSON.parse(fs.readFileSync(DB_PATH, 'utf8'));
 
-    let id = -1
+    let id = -1;
     // find id with mail
     Object.values(DB.users).forEach(u => {
         if (u.email.toLowerCase() == mail.toLowerCase()) {

@@ -1,4 +1,4 @@
-const bcrypt = require("bcryptjs")
+const bcrypt = require("bcryptjs");
 const HttpException = require("../../models/HttpException");
 const fs = require("fs");
 const path = require("path");
@@ -153,6 +153,6 @@ const checkTokenExists = async (token) => {
     const DB = JSON.parse(fs.readFileSync(DB_PATH, 'utf8'));
     if (DB.validating[token] == undefined) throw new HttpException(404);
     return true;
-}
+};
 
 module.exports = { validateUser, createUser, getCurrentUser, checkTokenExists };

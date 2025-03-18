@@ -4,6 +4,6 @@ const sessionRouter = require("./session/session.controller");
 
 const api = Router()
     .use(signupRouter)
-    .use(sessionRouter)
+    .use(sessionRouter);
 
 module.exports = Router().use('/', api);

@@ -9,13 +9,13 @@ const template = {
 <p>Ne donnez jamais vos informations personnelles. Nous ne vous demanderons jamais vos données personnelles, tel que vos numéros de carte bancaire, mot de passes, lieu de résidance, RIB...</p>
 `;
     }
-}
+};
 
 const sendMail = (target, title, description, html, username = "You") => {
     const mailjet = require('node-mailjet').Client.apiConnect(
         process.env.MJ_APIKEY_PUBLIC,
         process.env.MJ_APIKEY_PRIVATE
-    )
+    );
     const request = mailjet.post('send', { version: 'v3.1' }).request({
         Messages: [
             {
@@ -34,7 +34,7 @@ const sendMail = (target, title, description, html, username = "You") => {
                 HTMLPart: html
             },
         ],
-    })
+    });
     request
         .then(result => {
             console.log(`Sent mail to ${target} about ${title}`);
@@ -43,7 +43,7 @@ const sendMail = (target, title, description, html, username = "You") => {
         .catch(err => {
             console.log("error");
             console.log(err);
-        })
-}
+        });
+};
 
 module.exports = { sendMail, template };

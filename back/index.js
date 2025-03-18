@@ -27,7 +27,7 @@ app.use(cors(corsOptions));
 
 app.use(routes);
 
-mongoose.init()
+mongoose.init();
 
 app.use(
     (
