@@ -32,12 +32,11 @@ const createSession = (mail, hash) => {
 
     let id = -1
     // find id with mail
-    for (u in Object.values(DB.users)) {
-        if (DB.users[u].login == mail) {
-            id = DB.users[u]._id;
-            break;
+    Object.values(DB.users).forEach(u => {
+        if (u.email.toLowerCase() == mail.toLowerCase()) {
+            id = u._id;
         }
-    }
+    });
 
     if (id == -1) {
         throw new HttpException(400);
@@ -62,6 +61,13 @@ const createSession = (mail, hash) => {
 
         if (hash == hash_server) {
             const session_id = generateToken(24);
+
+            // deleting old session
+            Object.keys(DB.sessions).forEach(s => {
+                if (DB.sessions[s] == user._id) {
+                    delete DB.sessions[s];
+                }
+            });
 
             DB.sessions[session_id] = id;
 

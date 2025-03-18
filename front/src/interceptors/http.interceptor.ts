@@ -26,7 +26,7 @@ export const httpInterceptor: HttpInterceptorFn = (req, next) => {
         // sinon vas ici
         catchError((error: HttpErrorResponse) => {
             // on ne popup pas les bad request (400)
-            if (error.status != 400) {
+            if (error.status != 400 && error.status != 404) {
                 if (isDevMode()) {
                     popup.openSnackBar({ message: "Erreur lors de la requête: " + error.message + " " + error.statusText, action: "Fermer", duration: 10000 });
                 } else {

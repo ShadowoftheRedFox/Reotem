@@ -49,7 +49,6 @@ export class APIService {
             const id = this.authis.client._id;
             this.sendApiRequest("DELETE", "disconnect/" + id, { session: session }, "Disconnecting").subscribe({
                 next: res => {
-                    console.log(res);
                     this.authis.deleteCookie("session");
                     this.authis.deleteCookie("UID");
                     this.com.AuthAccountUpdate.next(false);
