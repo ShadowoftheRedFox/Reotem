@@ -17,8 +17,8 @@ npm install
 ```
 
 Vous pouvez modifier les variables d'environnements du frontend avec:  
-- [environments.ts](front\src\environments\environment.ts) pour la production.
-- [environments.developments.ts](front\src\environments\environment.development.ts) pour le dévelopement.
+- [environments.ts](front/src/environments/environment.ts) pour la production.
+- [environments.developments.ts](front/src/environments/environment.development.ts) pour le dévelopement.
 
 ## Backend
 
@@ -28,7 +28,7 @@ cd ./back
 npm install
 ```
 
-Vous devez créer une copie du fichier [.env.example](back\.env.example), et le renommer en **.env**, afin de remplir le nécéssaire. Un compte [MailJet](https://www.mailjet.com) est nécéssaire pour l'envoie de mail.  
+Vous devez créer une copie du fichier [.env.example](back/.env.example), et le renommer en **.env**, afin de remplir le nécéssaire. Un compte [MailJet](https://www.mailjet.com) est nécéssaire pour l'envoie de mail.  
 
 # Lancer le projet
 
