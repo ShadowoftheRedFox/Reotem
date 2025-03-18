@@ -10,8 +10,6 @@ export interface ThemePalette {
     providedIn: 'root'
 })
 export class ThemeService {
-    // TODO ici se trouvera le script qui changera les themes
-
     public themeChoosen = 0;
 
     public themeList: ThemePalette[] = [

@@ -104,6 +104,7 @@ const createUser = async (input) => {
     const username = user.firstname + " " + user.lastname;
 
     // send the mail with the link to validate
+    // TEST if it works
     sendMail(user.email, "Vérification de votre adresse mail", `À l'attention de ${username}`, template.validate(username, user.validated), username);
 
     return { user: user, session: session_id };
@@ -123,7 +124,6 @@ const getCurrentUser = async (id) => {
     };
 };
 
-//TODO test if creating account works, send the mail andd make the validation
 const validateUser = async (token, session) => {
     // 400 because important route, we don't want to tell what went wrong
     if (!token || !session) {

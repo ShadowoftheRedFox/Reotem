@@ -32,7 +32,6 @@ router.post('/signin', async (req, res, next) => {
 router.delete('/disconnect/:id', async (req, res, next) => {
     try {
         console.log(`deleting session ${req.params.id}`);
-        // BUG doesn't return request
         if (deleteSession(req.params.id, req.body.session)) {
             res.status(200).json();
         } else {
