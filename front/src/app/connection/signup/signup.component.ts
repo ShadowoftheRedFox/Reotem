@@ -158,7 +158,7 @@ export class SignupComponent {
                 if (!err.error.message) {
                     return console.error(err);
                 }
-                const error = JSON.parse(err.error.message).errors;
+                const error = err.error.message;
                 console.log(error);
                 if (error.email) {
                     this.signup.controls.email.setErrors({ taken: true });

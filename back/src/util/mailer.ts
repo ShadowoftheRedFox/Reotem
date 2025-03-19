@@ -4,10 +4,11 @@ require('dotenv').config();
 import { Client } from "node-mailjet"
 
 export const template = {
+    // a span in the url to trick the gmail parser
     validate: (username: string, token: string) => {
         return `<h3>${username} ,vérifiez votre adresse mail.</h3>
 <p>Cliquez sur le lien suivant pour valider votre adresse email.</p>
-<a href="${process.env.FRONT_URL}connection/validating/${token}" target="_blank">Vérifiez</a>
+<a href="${process.env.FRONT_URL}<span>connection/validating/${token}</span>" target="_blank">Vérifiez</a>
 <p>Si vous n'êtes pas le destinataire de ce message, veuillez l'ignorer.</p>
 <p>Ne donnez jamais vos informations personnelles. Nous ne vous demanderons jamais vos données personnelles, tel que vos numéros de carte bancaire, mot de passes, lieu de résidance, RIB...</p>
 `;

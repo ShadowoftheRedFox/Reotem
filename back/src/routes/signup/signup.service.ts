@@ -14,18 +14,10 @@ const checkUserUniqueness = async (email: string, firstname: string, lastname: s
     const DB = JSON.parse(fs.readFileSync(DB_PATH, 'utf8'));
     Object.values(DB.users as { [key: string]: unknown }[]).forEach((user) => {
         if ((user.email as string).toLowerCase() == email.toLowerCase()) {
-            throw new HttpException(422, {
-                errors: {
-                    email: ['has already been taken'],
-                },
-            });
+            throw new HttpException(422, { email: 'has already been taken', });
         }
         if ((user.firstname as string).toLowerCase() == firstname.toLowerCase() && (user.lastname as string).toLowerCase() == lastname.toLowerCase()) {
-            throw new HttpException(422, {
-                errors: {
-                    name: ['has already been taken'],
-                },
-            });
+            throw new HttpException(422, { name: 'has already been taken' });
         }
     });
 };
@@ -35,45 +27,46 @@ export const createUser = async (input: { [key: string]: never }) => {
     const lastname = input.lastname as string;
     const email = input.email as string;
     const age = input.age as number;
-    const role = input.role as string; //TODO inherit type from the model in the front?
+    const role = input.role as string;
     const sexe = input.sexe as string;
     const password = input.password as string;
+    const photo = input.photo as string | null;
 
     if (!email) {
-        throw new HttpException(422, { errors: { email: ["can't be blank"] } });
+        throw new HttpException(422, { email: "can't be blank" });
     }
 
     if (!firstname) {
-        throw new HttpException(422, { errors: { firstname: ["can't be blank"] } });
+        throw new HttpException(422, { firstname: "can't be blank" });
     }
 
     if (!lastname) {
-        throw new HttpException(422, { errors: { lastname: ["can't be blank"] } });
+        throw new HttpException(422, { lastname: "can't be blank" });
     }
 
     if (!password) {
-        throw new HttpException(422, { errors: { password: ["can't be blank"] } });
+        throw new HttpException(422, { password: "can't be blank" });
     }
 
     if (!age) {
-        throw new HttpException(422, { errors: { age: ["can't be blank"] } });
+        throw new HttpException(422, { age: "can't be blank" });
     }
     if (age < UserMinAge || age > UserMaxAge) {
-        throw new HttpException(422, { errors: { age: ["invalid"] } });
+        throw new HttpException(422, { age: "invalid" });
     }
 
     if (!role) {
-        throw new HttpException(422, { errors: { role: ["can't be blank"] } });
+        throw new HttpException(422, { role: "can't be blank" });
     }
     if (!UserRole.includes(role)) {
-        throw new HttpException(422, { errors: { role: ["invalid"] } });
+        throw new HttpException(422, { role: "invalid" });
     }
 
     if (!sexe) {
-        throw new HttpException(422, { errors: { sexe: ["can't be blank"] } });
+        throw new HttpException(422, { sexe: "can't be blank" });
     }
     if (!UserSexe.includes(sexe)) {
-        throw new HttpException(422, { errors: { sexe: ["invalid"] } });
+        throw new HttpException(422, { sexe: "invalid" });
     }
 
     await checkUserUniqueness(email, firstname, lastname);
@@ -90,12 +83,11 @@ export const createUser = async (input: { [key: string]: never }) => {
         age: age,
         role: role,
         sexe: sexe,
-        validated: generateToken(64)
+        validated: generateToken(64),
+        photo: typeof photo != "string" ? null : photo
     };
 
     const sessionid = generateToken(24);
-
-
 
     DB.sessions[sessionid] = user.id;
     DB.users[user.id] = user;
@@ -109,7 +101,6 @@ export const createUser = async (input: { [key: string]: never }) => {
     const username = user.firstname + " " + user.lastname;
 
     // send the mail with the link to validate
-    // TEST if it works
     sendMail(user.email, "Vérification de votre adresse mail", `À l'attention de ${username}`, template.validate(username, user.validated), username);
 
     return { user: user, session: sessionid };

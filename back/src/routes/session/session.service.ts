@@ -9,7 +9,7 @@ const DB_PATH = path.join(__dirname, "..", "..", "..", "db.json");
 
 export const getSession = (id: string) => {
     if (!id) {
-        throw new HttpException(422, { errors: { id: ["can't be blank"] } });
+        throw new HttpException(422, { id: "can't be blank" });
     }
 
     const DB = JSON.parse(fs.readFileSync(DB_PATH, 'utf8'));
@@ -24,7 +24,7 @@ export const getSession = (id: string) => {
 
 export const createSession = (mail: string, hash: string) => {
     if (!mail) {
-        throw new HttpException(422, { errors: { mail: ["can't be blank"] } });
+        throw new HttpException(422, { mail: "can't be blank" });
     }
 
     const DB = JSON.parse(fs.readFileSync(DB_PATH, 'utf8'));
@@ -83,11 +83,11 @@ export const createSession = (mail: string, hash: string) => {
 
 export const deleteSession = (id: number, session: string) => {
     if (isNaN(id)) {
-        throw new HttpException(422, { errors: { id: ["can't be blank"] } });
+        throw new HttpException(422, { id: ["can't be blank"] });
     }
 
     if (!session) {
-        throw new HttpException(422, { errors: { session: ["can't be blank"] } });
+        throw new HttpException(422, { session: ["can't be blank"] });
     }
 
     // session must match the id in DB.sessions

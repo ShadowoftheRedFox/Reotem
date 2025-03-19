@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import * as bcrypt from "bcryptjs";
 import { baseUrl, Login, LoginChallenge, User, UserSexe, UserRole, NewUser } from '../models/api.model';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { lastValueFrom } from 'rxjs';
+import { lastValueFrom, throwError } from 'rxjs';
 import { AuthentificationService } from './authentification.service';
 import { CommunicationService } from './communication.service';
 
@@ -26,7 +26,12 @@ export class APIService {
             //the user call the api to get a challenge
 
             // let { challenge, salt, id } =;
-            const res = await lastValueFrom(this.sendApiRequest<LoginChallenge>("POST", "signin", { mail: mail }, "Challenge auth"));
+            let res: LoginChallenge;
+            try {
+                res = await lastValueFrom(this.sendApiRequest<LoginChallenge>("POST", "signin", { mail: mail }, "Challenge auth"));
+            } catch (e) {
+                return throwError(() => e);
+            }
             const challenge: string = res.challenge;
             const salt: string = res.salt;
 
@@ -68,9 +73,8 @@ export class APIService {
     }
 
     user = {
-        get: (id: number, session: string | "") => {
-            // TODO with the api, if session not valid or empty, send only public data
-            return this.sendApiRequest<User>("GET", "users/" + id, { session: session }, `Getting user ${id}`);
+        get: (id: number, session?: string) => {
+            return this.sendApiRequest<User>("POST", "users/" + id, { session: session }, `Getting user ${id}`);
         }
     }
 

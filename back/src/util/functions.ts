@@ -1,6 +1,5 @@
 import models from "../models/export_models";
-import { UserSchema } from "~/models/user"; 
-import mongoose from "mongoose";
+import { UserSchema } from "~/models/user";
 
 const Reotem = {
   addUser: async (user: object) => {
@@ -21,7 +20,7 @@ const Reotem = {
     return;
   },
   updateUser: async (query: number, updated: UserSchema) => {
-    let data = await Reotem.getUser(query);
+    const data = await Reotem.getUser(query);
     if (typeof data !== "object") return;
     return data.updateOne(updated);
   }

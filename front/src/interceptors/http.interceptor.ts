@@ -9,32 +9,37 @@ export const httpInterceptor: HttpInterceptorFn = (req, next) => {
     const auth = inject(AuthentificationService);
 
     return next(req).pipe(
-        // si il n'y a pas d'erreur, vas dans tap
+        // if no error, go in tap
         tap(() => {
             /* if (event.type === HttpEventType.Response) {
                 console.log(req.url, 'returned a response with status', event.status);
             } */
 
             if (!navigator.onLine && auth.isOnline) {
-                popup.openSnackBar({ message: "Connection réseau perdue", action: "" });
+                popup.openSnackBar({ message: "Connexion réseau perdue", action: "" });
                 auth.isOnline = false;
             } else if (navigator.onLine && !auth.isOnline) {
-                popup.openSnackBar({ message: "Connection réseau restaurée", action: "" });
+                popup.openSnackBar({ message: "Connexion réseau restaurée", action: "" });
                 auth.isOnline = true;
             }
         }),
-        // sinon vas ici
+        // else go here
         catchError((error: HttpErrorResponse) => {
-            // on ne popup pas les bad request (400)
-            if (error.status != 400 && error.status != 404) {
+            // don't popup error except server
+            if (error.status >= 500) {
                 if (isDevMode()) {
                     popup.openSnackBar({ message: "Erreur lors de la requête: " + error.message + " " + error.statusText, action: "Fermer", duration: 10000 });
                 } else {
                     popup.openSnackBar({ message: "Erreur lors de la requête", action: "Fermer", });
                 }
             }
-            // console.error('Erreur de la requête:', error);
-            return throwError(() => new Error(error.message));
+            if (error.error.message) {
+                error.error.message = JSON.parse(error.error.message);
+            }
+            if (isDevMode()) {
+                console.error('Erreur de la requête:', error);
+            }
+            return throwError(() => error);
         })
     );
 };

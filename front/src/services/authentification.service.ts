@@ -41,6 +41,8 @@ export class AuthentificationService {
             this.clientToken = res;
             this.setCookie("session", res, CookieTime.Year, "/");
         });
+
+        com.AuthTokenUpdate.next(this.getCookie("session"));
     }
 
     public getCookie(name: string) {

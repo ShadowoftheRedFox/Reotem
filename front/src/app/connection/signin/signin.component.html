@@ -2,7 +2,7 @@
     <h1>Connexion</h1>
     <form [formGroup]="signin" class="flex flex-col items-stretch justify-center flex-nowrap">
         <mat-form-field>
-            <mat-label>adresse email</mat-label>
+            <mat-label>Adresse email</mat-label>
             <input matInput placeholder="pat@example.com" formControlName="email" required type="email"
                 autocomplete="email" />
             <mat-icon matSuffix>alternate_email</mat-icon>
@@ -29,5 +29,4 @@
     </form>
     <button mat-raised-button (click)="changeConnection.emit()">Inscription</button>
     <button mat-button (click)="forgotCredentials()">Email ou mot de passe oublié</button>
-    <!-- TODO submit si on appuie sur entré dans un des input? si on appuie sur entré dans mail alors mettre dans mot de passe -->
 </div>

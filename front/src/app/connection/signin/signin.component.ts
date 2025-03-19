@@ -8,6 +8,7 @@ import { APIService } from '../../../services/api.service';
 import { Router } from '@angular/router';
 import { AuthentificationService } from '../../../services/authentification.service';
 import { CommunicationService } from '../../../services/communication.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
     selector: 'app-signin',
@@ -73,19 +74,17 @@ export class SigninComponent {
 
         if (this.signin.controls.email.value && this.signin.controls.password.value) {
             this.api.auth.login(this.signin.controls.email.value, this.signin.controls.password.value).then(ob => ob.subscribe({
-                next: res => {
+                next: (res) => {
                     const session = res.sessionid;
                     this.com.AuthTokenUpdate.next(session);
                     this.api.auth.get(session).subscribe(res => {
                         this.com.AuthAccountUpdate.next(res);
                         this.router.navigate(["/"]);
                     });
-                }, error: err => {
-                    console.log(err)
-                    if ((err.error.message as string).includes("credentials")) {
+                }, error: (err: HttpErrorResponse) => {
+                    if (err.error.message.error == "invalid credentials" || err.error.message == "") {
                         this.signin.setErrors({ invalid: true });
                     }
-                    // TODO don't show errors when no user found (error 400)
                 }
             }));
         }
@@ -98,6 +97,6 @@ export class SigninComponent {
     }
 
     forgotCredentials() {
-        // TODO
+        this.router.navigate(["connection", "lost"]);
     }
 }
