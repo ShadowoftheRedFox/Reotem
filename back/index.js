@@ -3,6 +3,7 @@ const path = require("path");
 const bodyParser = require("body-parser");
 const multer = require("multer");
 const mongoose = require("./util/mongoose");
+const defaultPFPfile = "./assets/Default.png";
 const Reotem = {};
 require("./util/functions")(Reotem);
 require("dotenv").config();
@@ -28,6 +29,7 @@ app.get("/", (req, res) => {
 });
 
 app.get("/test/", (req, res) => {
+  console.log(req.query);
   const options = {
     root: path.join(__dirname),
   };
@@ -41,13 +43,26 @@ app.get("/test/", (req, res) => {
   });
 });
 
-app.post("/test/", upload.single("photo"), (req, res) => {
+app.post("/test/", upload.single("photo"), async (req, res) => {
   let user = req.body;
-  let photoBuffer = Buffer.from(req.file.path);
+  let photoBuffer =
+    req.file !== undefined
+      ? Buffer.from(req.file.path)
+      : Buffer.from(defaultPFPfile);
   user.photo = photoBuffer;
-  res.send("Bravo vous êtes inscrit " + user.first_name + " " + user.last_name);
-  console.log(user);
-  Reotem.addUser(user);
+  let results = await Reotem.addUser(user);
+  if (results.error === undefined)
+    return res.send(
+      "Bravo vous êtes inscrit " + user.first_name + " " + user.last_name
+    );
+  let errors = Object.values(Object.values(results.error)[0]);
+  res.statusMessage = "ERRORS: ";
+  errors.forEach(
+    (error) =>
+      (res.statusMessage = res.statusMessage + `${error.properties.message},`)
+  );
+  req.session.formData = req.body;
+  res.redirect("/test");
 });
 
 app.listen(port, () => {

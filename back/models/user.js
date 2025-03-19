@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const defaultIMG = Buffer.from("../assets/Default.png");
 
 const userSchema = mongoose.Schema({
   mongo_id: mongoose.Schema.Types.ObjectId,
@@ -10,7 +11,7 @@ const userSchema = mongoose.Schema({
   last_name: { type: String, required: true },
   genre: {
     type: String,
-    enum: ["Male", "Female", "MD Helicopter MD-900 Explorer", "Other"],
+    enum: ["Male", "Female", "Other"],
     required: true,
   },
   age: {
@@ -30,6 +31,6 @@ const userSchema = mongoose.Schema({
     ],
     required: true,
   },
-  photo: Buffer,
+  photo: {type: Buffer, default: defaultIMG},
 });
 module.exports = mongoose.model("User", userSchema);
