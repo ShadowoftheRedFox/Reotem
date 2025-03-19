@@ -2,7 +2,6 @@ import { APIService } from '../../../services/api.service';
 import { AuthentificationService } from '../../../services/authentification.service';
 import { CommunicationService } from '../../../services/communication.service';
 import { Component, EventEmitter, Output, signal } from '@angular/core';
-// import { delay } from 'rxjs';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -55,12 +54,32 @@ export class SignupComponent {
         private route: Router,
         private com: CommunicationService,
     ) {
+        // TODO do all check on the backend too
         // take until destro to prevent multiple listener when component is hidden
         // no need to check if username and/or mail is unique, api do that when creating the account
         // they would only know though when hitting create
-        // this.signup.controls.firstname.valueChanges.pipe(delay(300), takeUntilDestroyed()).subscribe(res => { });
-        // this.signup.controls.lastname.valueChanges.pipe(delay(300), takeUntilDestroyed()).subscribe(res => { });
-        // this.signup.controls.email.valueChanges.pipe(delay(300), takeUntilDestroyed()).subscribe(res => { });
+        this.signup.controls.firstname.valueChanges.pipe(takeUntilDestroyed()).subscribe((res) => {
+            if (res == null) return;
+            // valid char
+            if (!res.match(/^[a-zA-Z\-éêèñïîûùàã ]+$/gis)) return this.signup.controls.firstname.setErrors({ invalid: true });
+            // should not have multiple space or dash or start/end by either
+            if (res.match(/^[ \-\s]+|(?: {2,}|--|- | -)|[ \-\s]{1}$/)) return this.signup.controls.firstname.setErrors({ invalid: true });
+
+        });
+        this.signup.controls.lastname.valueChanges.pipe(takeUntilDestroyed()).subscribe(res => {
+            if (res == null) return;
+            // valid char
+            if (!res.match(/^[a-zA-Z\-éêèñïîûùàã ]+$/gis)) return this.signup.controls.lastname.setErrors({ invalid: true });
+            // should not have multiple space or dash or start/end by either
+            if (res.match(/^[ \-\s]+|(?: {2,}|--|- | -)|[ \-\s]{1}$/)) return this.signup.controls.lastname.setErrors({ invalid: true });
+
+        });
+
+        this.signup.controls.email.valueChanges.pipe(takeUntilDestroyed()).subscribe(res => {
+            if (res == null) return;
+            // don't allow "+" in mails
+            if (res.includes("+")) return this.signup.controls.email.setErrors({ email: true });
+        });
 
         // this.signup.controls.password.valueChanges.pipe(delay(300), takeUntilDestroyed()).subscribe(res => {
         //     // check password strength
@@ -68,6 +87,7 @@ export class SignupComponent {
 
         //     }
         // });
+
         this.signup.controls.passwordConfirm.valueChanges.pipe(takeUntilDestroyed()).subscribe(res => {
             // check password equals
             if (res != this.signup.controls.password.value && res != null && res.length > 0) {
@@ -76,7 +96,7 @@ export class SignupComponent {
         });
     }
 
-    mailErrorMessage() {
+    emailErrorMessage() {
         if (this.signup.controls.email.hasError('required')) {
             return 'Adresse email requise';
         } else if (this.signup.controls.email.hasError('email')) {
@@ -92,7 +112,9 @@ export class SignupComponent {
         if (this.signup.controls.firstname.hasError('required')) {
             return 'Prénom requis';
         } else if (this.signup.controls.firstname.hasError('taken')) {
-            return 'Prénom/Nom déjà utilisés'
+            return 'Prénom/Nom déjà utilisés';
+        } else if (this.signup.controls.firstname.hasError('invalid')) {
+            return 'Prénom invalide';
         } else {
             return '';
         }
@@ -102,7 +124,9 @@ export class SignupComponent {
         if (this.signup.controls.lastname.hasError('required')) {
             return 'Nom requis';
         } else if (this.signup.controls.lastname.hasError('taken')) {
-            return 'Prénom/Nom déjà utilisés'
+            return 'Prénom/Nom déjà utilisés';
+        } else if (this.signup.controls.lastname.hasError('invalid')) {
+            return 'Nom invalide';
         } else {
             return '';
         }

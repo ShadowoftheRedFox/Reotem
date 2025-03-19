@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 import { AuthentificationService } from '../../../services/authentification.service';
 import { CommunicationService } from '../../../services/communication.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
     selector: 'app-signin',
@@ -38,9 +39,15 @@ export class SigninComponent {
         private router: Router,
         private auth: AuthentificationService,
         private com: CommunicationService,
-    ) { }
+    ) {
+        this.signin.controls.email.valueChanges.pipe(takeUntilDestroyed()).subscribe(res => {
+            if (res == null) return;
+            // don't allow "+" in mails
+            if (res.includes("+")) return this.signin.controls.email.setErrors({ email: true });
+        });
+    }
 
-    mailErrorMessage() {
+    emailErrorMessage() {
         if (this.signin.controls.email.hasError('required')) {
             return 'Adresse email requise';
         } else if (this.signin.controls.email.hasError('email')) {

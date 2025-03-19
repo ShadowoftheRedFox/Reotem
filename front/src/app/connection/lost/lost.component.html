@@ -1,1 +1,77 @@
-<p>lost works!</p>
+<div class="flex justify-center flex-col items-center flex-nowrap h-full">
+    @if (lostType) {
+    @if (lostSent) {
+    <p>Un mail vous a été envoyé sur <span class="font-bold">{{lostPassword.value.email}}.</span></p>
+    <button mat-flat-button mat>Retour au menu principal</button>
+    }@else{
+    <form [formGroup]="lostPassword" (ngSubmit)="sendLostPassword()"
+        class="flex justify-center flex-col items-stretch flex-nowrap">
+        <p>Renseignez votre adresse email, et nous allons vous envoyer un lien pour changer votre mot de passe.</p>
+        <mat-form-field>
+            <mat-label>Adresse email</mat-label>
+            <input matInput placeholder="pat@example.com" formControlName="email" required type="email"
+                autocomplete="email" />
+            <mat-icon matSuffix>alternate_email</mat-icon>
+            @if (lostPassword.controls.email.invalid) {
+            <mat-error>{{emailErrorMessage()}}</mat-error>
+            }
+        </mat-form-field>
+        <button mat-flat-button type="submit" [disabled]="!lostPassword.valid">Valider</button>
+    </form>
+    <button mat-button (click)="lostType=!lostType">Oublié votre adresse mail?</button>
+    }} @else {
+    @if (lostSent) {
+    <p>Entrez une nouvelle adresse email.</p>
+    <p class="font-medium">Vous devrez valider l'email dans les 10 minutes suivant l'envoie.</p>
+    <form [formGroup]="changingEmail" (ngSubmit)="confirmEmailChange()"
+        class="flex justify-center flex-col items-stretch flex-nowrap">
+        <mat-form-field>
+            <mat-label>Adresse email</mat-label>
+            <input matInput placeholder="pat@example.com" formControlName="newEmail" required type="email"
+                autocomplete="email" />
+            <mat-icon matSuffix>alternate_email</mat-icon>
+            @if (changingEmail.controls.newEmail.invalid) {
+            <mat-error>{{newEmailErrorMessage()}}</mat-error>
+            }
+        </mat-form-field>
+        <button mat-flat-button type="submit" [disabled]="!changingEmail.valid">Valider</button>
+    </form>
+    } @else {
+    <form [formGroup]="lostMail" (ngSubmit)="sendLostEmail()"
+        class="flex justify-center flex-col items-stretch flex-nowrap">
+        <p>Renseignez votrte adresse prénom, nom et votre mot de passe. Nous vous redigerons pour changer d'email.</p>
+        <p class="font-medium">Vous devrez revalider l'email dans les 10 minutes suivant l'envoie.</p>
+        <mat-form-field>
+            <mat-label>Prénom</mat-label>
+            <input matInput placeholder="Jean" formControlName="firstname" required type="text"
+                autocomplete="family-name" />
+            @if (lostMail.controls.firstname.invalid) {
+            <mat-error>{{firstnameErrorMessage()}}</mat-error>
+            }
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>Nom</mat-label>
+            <input matInput placeholder="Dupond" formControlName="lastname" required type="text"
+                autocomplete="family-name" />
+            @if (lostMail.controls.lastname.invalid) {
+            <mat-error>{{lastnameErrorMessage()}}</mat-error>
+            }
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>Mot de passe</mat-label>
+            <input matInput placeholder="password" formControlName="password"
+                [type]="passwordHidden() ? 'password' : 'text'" autocomplete="password" />
+            <button mat-icon-button matSuffix (click)="hidePassword($event)"
+                [attr.aria-label]="'Cacher le mot de passe'" [attr.aria-pressed]="passwordHidden()">
+                <mat-icon>{{passwordHidden() ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+            @if (lostMail.controls.password.invalid) {
+            <mat-error>{{passwordErrorMessage()}}</mat-error>
+            }
+        </mat-form-field>
+        <button mat-flat-button type="submit" [disabled]="!lostMail.valid">Valider</button>
+    </form>
+    <button mat-button (click)="lostType=!lostType">Oublié votre mot de passe?</button>
+    }
+    }
+</div>

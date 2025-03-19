@@ -8,6 +8,8 @@ import { ValidatingComponent } from './connection/validating/validating.componen
 import { validatingGuard } from '../guards/validating.guard';
 import { UserComponent } from './user/user.component';
 import { NotificationComponent } from './notification/notification.component';
+import { AdminComponent } from './admin/admin.component';
+import { adminGuard } from '../guards/admin.guard';
 
 const TITLE_POSTFIX = " - " + environment.title;
 
@@ -42,6 +44,12 @@ export const routes: Routes = [
         path: "notification",
         title: "Notification" + TITLE_POSTFIX,
         component: NotificationComponent
+    },
+    {
+        path: "administration",
+        title: "Administration" + TITLE_POSTFIX,
+        component: AdminComponent,
+        canActivate: [adminGuard]
     },
     {
         path: "**",

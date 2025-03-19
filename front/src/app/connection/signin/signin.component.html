@@ -7,7 +7,7 @@
                 autocomplete="email" />
             <mat-icon matSuffix>alternate_email</mat-icon>
             @if (signin.controls.email.invalid) {
-            <mat-error>{{mailErrorMessage()}}</mat-error>
+            <mat-error>{{emailErrorMessage()}}</mat-error>
             }
         </mat-form-field>
         <mat-form-field>

@@ -108,9 +108,9 @@ export class SidebarComponent implements OnDestroy {
                         paramObj.link = ["/user", user.id + "", "settings"];
                         paramObj.hidden = !user;
                     }
-                    // if (adminObj) {
-                    //     adminObj.hidden = !this.auth.hasMorePermissions(ComptePermissions.ADMIN);
-                    // }
+                    if (adminObj) {
+                        adminObj.hidden = user.role === "Administrator";
+                    }
                 } else {
                     compteObj.title = "Compte";
                     compteObj.link = "/connection";

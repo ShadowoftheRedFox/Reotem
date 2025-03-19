@@ -8,10 +8,10 @@ export interface User {
     lastname: string;
     email: string;
     age: number;
-    role: number;
-    sexe: number;
+    role: UserRole;
+    sexe: UserSexe;
     validated?: false;
-    //TODO missing the user image
+    photo: string | null;
 }
 
 export interface NewUser {
@@ -36,7 +36,13 @@ export const UserRole = [
     "Tester",
     "Intern",
 ];
-export type UserRole = "Employé";
+export type UserRole = "Administrator" |
+    "CEO" |
+    "CO-CEO" |
+    "Project Manager" |
+    "Developper" |
+    "Tester" |
+    "Intern";
 
 export interface LoginChallenge {
     challenge: string;

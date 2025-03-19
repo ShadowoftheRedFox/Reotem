@@ -13,7 +13,7 @@ Installation d'angular CLI et des modules:
 ```sh
 cd ./front
 npm install -g @angular/cli
-npm install
+npm ci
 ```
 
 Vous pouvez modifier les variables d'environnements du frontend avec:  
@@ -25,7 +25,7 @@ Vous pouvez modifier les variables d'environnements du frontend avec:
 Installation des modules:
 ```sh
 cd ./back
-npm install
+npm ci
 ```
 
 Vous devez créer une copie du fichier [.env.example](back/.env.example), et le renommer en **.env**, afin de remplir le nécéssaire. Un compte [MailJet](https://www.mailjet.com) est nécéssaire pour l'envoie de mail.  
@@ -41,8 +41,10 @@ ng serve
 Lancer le back:
 ```sh
 cd ./back
+npm run build
 npm run start
-# npm run dev # redémarre automatiquement lors de changement de fichier
+# redémarre automatiquement lors de changement de fichiers:
+# npm run dev
 ```
 
 # Todo list

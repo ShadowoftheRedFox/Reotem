@@ -83,7 +83,7 @@ export const createUser = async (input: { [key: string]: never }) => {
         age: age,
         role: role,
         sexe: sexe,
-        validated: generateToken(64),
+        validated: generateToken(10),
         photo: typeof photo != "string" ? null : photo
     };
 

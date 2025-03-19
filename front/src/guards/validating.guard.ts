@@ -6,7 +6,7 @@ export const validatingGuard: CanActivateFn = async (route) => {
     const api = inject(APIService);
     const token = route.params['token'];
 
-    if (!token || token.length < 64) {
+    if (!token || token.length < 10) {
         return false;
     }
 
