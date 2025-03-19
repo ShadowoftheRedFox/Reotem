@@ -2,7 +2,7 @@ import { APIService } from '../../../services/api.service';
 import { AuthentificationService } from '../../../services/authentification.service';
 import { CommunicationService } from '../../../services/communication.service';
 import { Component, EventEmitter, Output, signal } from '@angular/core';
-import { delay } from 'rxjs';
+// import { delay } from 'rxjs';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -30,10 +30,10 @@ import { UserMaxAge, UserMinAge, UserRole, UserSexe } from '../../../models/api.
 export class SignupComponent {
     @Output() changeConnection = new EventEmitter<void>();
 
-    userRole = UserRole;
-    userSexe = UserSexe;
-    userMinAge = UserMinAge;
-    userMaxAge = UserMaxAge;
+    readonly userRole = UserRole;
+    readonly userSexe = UserSexe;
+    readonly userMinAge = UserMinAge;
+    readonly userMaxAge = UserMaxAge;
 
     signup = new FormGroup({
         firstname: new FormControl("", [Validators.required]),
@@ -58,16 +58,16 @@ export class SignupComponent {
         // take until destro to prevent multiple listener when component is hidden
         // no need to check if username and/or mail is unique, api do that when creating the account
         // they would only know though when hitting create
-        this.signup.controls.firstname.valueChanges.pipe(delay(300), takeUntilDestroyed()).subscribe(res => { });
-        this.signup.controls.lastname.valueChanges.pipe(delay(300), takeUntilDestroyed()).subscribe(res => { });
-        this.signup.controls.email.valueChanges.pipe(delay(300), takeUntilDestroyed()).subscribe(res => { });
+        // this.signup.controls.firstname.valueChanges.pipe(delay(300), takeUntilDestroyed()).subscribe(res => { });
+        // this.signup.controls.lastname.valueChanges.pipe(delay(300), takeUntilDestroyed()).subscribe(res => { });
+        // this.signup.controls.email.valueChanges.pipe(delay(300), takeUntilDestroyed()).subscribe(res => { });
 
-        this.signup.controls.password.valueChanges.pipe(delay(300), takeUntilDestroyed()).subscribe(res => {
-            // check password strength
-            if (res) {
+        // this.signup.controls.password.valueChanges.pipe(delay(300), takeUntilDestroyed()).subscribe(res => {
+        //     // check password strength
+        //     if (res) {
 
-            }
-        });
+        //     }
+        // });
         this.signup.controls.passwordConfirm.valueChanges.pipe(takeUntilDestroyed()).subscribe(res => {
             // check password equals
             if (res != this.signup.controls.password.value && res != null && res.length > 0) {
@@ -151,8 +151,7 @@ export class SignupComponent {
         ).subscribe({
             next: res => {
                 this.com.AuthTokenUpdate.next(res.session);
-                this.auth.client = res.user;
-                this.com.AuthAccountUpdate.next(true);
+                this.com.AuthAccountUpdate.next(res.user);
                 this.route.navigate(["user", res.user._id]);
             },
             error: err => {

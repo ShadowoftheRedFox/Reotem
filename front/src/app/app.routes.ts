@@ -6,6 +6,8 @@ import { ConnectionComponent } from './connection/connection.component';
 import { LostComponent } from './connection/lost/lost.component';
 import { ValidatingComponent } from './connection/validating/validating.component';
 import { validatingGuard } from '../guards/validating.guard';
+import { UserComponent } from './user/user.component';
+import { NotificationComponent } from './notification/notification.component';
 
 const TITLE_POSTFIX = " - " + environment.title;
 
@@ -30,6 +32,16 @@ export const routes: Routes = [
         path: "connection",
         title: "Connection" + TITLE_POSTFIX,
         component: ConnectionComponent,
+    },
+    {
+        path: "user/:id",
+        title: "Profil utilisateur" + TITLE_POSTFIX,
+        component: UserComponent
+    },
+    {
+        path: "notification",
+        title: "Notification" + TITLE_POSTFIX,
+        component: NotificationComponent
     },
     {
         path: "**",

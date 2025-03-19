@@ -5,6 +5,7 @@
         "gruntfuggly.todo-tree",
         "wayou.vscode-todo-highlight",
         "usernamehw.errorlens",
-        "editorconfig.editorconfig"
+        "editorconfig.editorconfig",
+        "dbaeumer.vscode-eslint"
     ]
 }

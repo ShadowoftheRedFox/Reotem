@@ -1,14 +1,13 @@
-const bcrypt = require("bcryptjs");
-const crypto = require("crypto");
-const HttpException = require("../../models/HttpException");
-const fs = require("fs");
-const path = require("path");
-const { generateToken } = require("../../util/crypt");
-const { parseUser } = require("../../util/parser");
+import crypto from "crypto";
+import HttpException from "../../models/HttpException";
+import fs from "fs";
+import path from "path";
+import { generateToken } from "../../util/crypt";
+import { parseUser } from "../../util/parser";
 
-const DB_PATH = path.join(__dirname, "..", "..", "db.json");
+const DB_PATH = path.join(__dirname, "..", "..", "..", "db.json");
 
-const getSession = (id) => {
+export const getSession = (id: string) => {
     if (!id) {
         throw new HttpException(422, { errors: { id: ["can't be blank"] } });
     }
@@ -23,21 +22,20 @@ const getSession = (id) => {
     return { ...user };
 };
 
-const createSession = (mail, hash) => {
+export const createSession = (mail: string, hash: string) => {
     if (!mail) {
         throw new HttpException(422, { errors: { mail: ["can't be blank"] } });
     }
 
     const DB = JSON.parse(fs.readFileSync(DB_PATH, 'utf8'));
 
-    let id = -1
+    let id = -1;
     // find id with mail
-    for (u in Object.values(DB.users)) {
-        if (DB.users[u].login == mail) {
-            id = DB.users[u]._id;
-            break;
+    Object.values(DB.users as { [key: string]: string | number | unknown }[]).forEach((u) => {
+        if ((u.email as string).toLowerCase() == mail.toLowerCase()) {
+            id = u._id as number;
         }
-    }
+    });
 
     if (id == -1) {
         throw new HttpException(400);
@@ -63,6 +61,13 @@ const createSession = (mail, hash) => {
         if (hash == hash_server) {
             const session_id = generateToken(24);
 
+            // deleting old session
+            Object.keys(DB.sessions).forEach(s => {
+                if (DB.sessions[s] == user._id) {
+                    delete DB.sessions[s];
+                }
+            });
+
             DB.sessions[session_id] = id;
 
             delete user.challenge;
@@ -76,8 +81,8 @@ const createSession = (mail, hash) => {
     throw new HttpException(401, { error: "invalid credentials" });
 };
 
-const deleteSession = (id, session) => {
-    if (!id) {
+export const deleteSession = (id: number, session: string) => {
+    if (isNaN(id)) {
         throw new HttpException(422, { errors: { id: ["can't be blank"] } });
     }
 
@@ -86,7 +91,6 @@ const deleteSession = (id, session) => {
     }
 
     // session must match the id in DB.sessions
-
     const DB = JSON.parse(fs.readFileSync(DB_PATH, 'utf8'));
     if (DB.sessions[session] != id) return false;
 
@@ -94,5 +98,3 @@ const deleteSession = (id, session) => {
     fs.writeFileSync(DB_PATH, JSON.stringify(DB));
     return true;
 };
-
-module.exports = { createSession, getSession, deleteSession };

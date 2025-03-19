@@ -3,7 +3,7 @@
     <form [formGroup]="signin" class="flex flex-col items-stretch justify-center flex-nowrap">
         <mat-form-field>
             <mat-label>adresse email</mat-label>
-            <input matInput placeholder="pat@example.com" formControlName="email" required type="email" autofocus
+            <input matInput placeholder="pat@example.com" formControlName="email" required type="email"
                 autocomplete="email" />
             <mat-icon matSuffix>alternate_email</mat-icon>
             @if (signin.controls.email.invalid) {

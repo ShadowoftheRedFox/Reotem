@@ -2,7 +2,7 @@ import { inject } from '@angular/core';
 import { CanActivateFn } from '@angular/router';
 import { APIService } from '../services/api.service';
 
-export const validatingGuard: CanActivateFn = async (route, state) => {
+export const validatingGuard: CanActivateFn = async (route) => {
     const api = inject(APIService);
     const token = route.params['token'];
 

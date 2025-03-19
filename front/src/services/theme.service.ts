@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-export type ThemePalette = {
+export interface ThemePalette {
     name: string;
     icon: string;
     trigger: () => void;
@@ -10,8 +10,6 @@ export type ThemePalette = {
     providedIn: 'root'
 })
 export class ThemeService {
-    // TODO ici se trouvera le script qui changera les themes
-
     public themeChoosen = 0;
 
     public themeList: ThemePalette[] = [

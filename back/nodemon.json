@@ -1,6 +1,0 @@
-{
-    "ignore": [
-        "*.test.js",
-        "db.json"
-    ]
-}

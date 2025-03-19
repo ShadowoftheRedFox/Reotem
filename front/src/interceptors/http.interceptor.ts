@@ -10,7 +10,7 @@ export const httpInterceptor: HttpInterceptorFn = (req, next) => {
 
     return next(req).pipe(
         // si il n'y a pas d'erreur, vas dans tap
-        tap(event => {
+        tap(() => {
             /* if (event.type === HttpEventType.Response) {
                 console.log(req.url, 'returned a response with status', event.status);
             } */
@@ -26,14 +26,14 @@ export const httpInterceptor: HttpInterceptorFn = (req, next) => {
         // sinon vas ici
         catchError((error: HttpErrorResponse) => {
             // on ne popup pas les bad request (400)
-            if (error.status != 400) {
+            if (error.status != 400 && error.status != 404) {
                 if (isDevMode()) {
                     popup.openSnackBar({ message: "Erreur lors de la requête: " + error.message + " " + error.statusText, action: "Fermer", duration: 10000 });
                 } else {
                     popup.openSnackBar({ message: "Erreur lors de la requête", action: "Fermer", });
                 }
             }
-            console.error('Erreur de la requête:', error);
+            // console.error('Erreur de la requête:', error);
             return throwError(() => new Error(error.message));
         })
     );

@@ -1,7 +1,10 @@
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 require('dotenv').config();
 
-const template = {
-    validate: (username, token) => {
+import { Client } from "node-mailjet"
+
+export const template = {
+    validate: (username: string, token: string) => {
         return `<h3>${username} ,vérifiez votre adresse mail.</h3>
 <p>Cliquez sur le lien suivant pour valider votre adresse email.</p>
 <a href="${process.env.FRONT_URL}connection/validating/${token}" target="_blank">Vérifiez</a>
@@ -9,13 +12,13 @@ const template = {
 <p>Ne donnez jamais vos informations personnelles. Nous ne vous demanderons jamais vos données personnelles, tel que vos numéros de carte bancaire, mot de passes, lieu de résidance, RIB...</p>
 `;
     }
-}
+};
 
-const sendMail = (target, title, description, html, username = "You") => {
-    const mailjet = require('node-mailjet').Client.apiConnect(
-        process.env.MJ_APIKEY_PUBLIC,
-        process.env.MJ_APIKEY_PRIVATE
-    )
+export const sendMail = (target: string, title: string, description: string, html: string, username = "You") => {
+    const mailjet = Client.apiConnect(
+        process.env.MJ_APIKEY_PUBLIC!,
+        process.env.MJ_APIKEY_PRIVATE!
+    );
     const request = mailjet.post('send', { version: 'v3.1' }).request({
         Messages: [
             {
@@ -34,16 +37,14 @@ const sendMail = (target, title, description, html, username = "You") => {
                 HTMLPart: html
             },
         ],
-    })
+    });
     request
-        .then(result => {
+        .then(() => {
             console.log(`Sent mail to ${target} about ${title}`);
             // console.log(result.body);
         })
-        .catch(err => {
+        .catch((err: Error) => {
             console.log("error");
             console.log(err);
-        })
-}
-
-module.exports = { sendMail, template };
+        });
+};

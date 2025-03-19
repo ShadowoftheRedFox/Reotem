@@ -2,7 +2,7 @@ import { environment } from "../environments/environment";
 
 export const baseUrl = environment.api_url;
 
-export type User = {
+export interface User {
     _id: number;
     firstname: string;
     lastname: string;
@@ -14,7 +14,7 @@ export type User = {
     //TODO missing the user image
 }
 
-export type NewUser = {
+export interface NewUser {
     user: User;
     session: string;
 }
@@ -32,11 +32,11 @@ export const UserRole = [
 ];
 export type UserRole = "Employé";
 
-export type LoginChallenge = {
+export interface LoginChallenge {
     challenge: string;
     salt: string;
 }
 
-export type Login = {
+export interface Login {
     session_id: string;
 }

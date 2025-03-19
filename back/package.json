@@ -3,8 +3,10 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "dev": "nodemon index.js --config nodemon.json"
+    "lint": "npx eslint .",
+    "dev": "nodemon --watch src -e js,ts --exec \"ts-node src/index.ts\"",
+    "build": "tsup src/index.ts --format cjs --clean",
+    "start": "node dist/index.js"
   },
   "author": "",
   "license": "ISC",
@@ -17,9 +19,25 @@
     "mongoose": "^8.11.0",
     "node-mailjet": "^6.0.8"
   },
-  "type": "commonjs",
   "devDependencies": {
+<<<<<<< HEAD
     "nodemon": "^3.1.9",
     "multer": "^1.4.5-lts.1"
   }
 }
+=======
+    "@eslint/js": "^9.22.0",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.13.10",
+    "eslint": "^9.22.0",
+    "nodemon": "^3.1.9",
+    "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
+    "tsup": "^8.4.0",
+    "typescript": "^5.8.2",
+    "typescript-eslint": "^8.26.1"
+  },
+  "type": "commonjs"
+}
+>>>>>>> main

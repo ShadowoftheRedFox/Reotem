@@ -1,7 +1,10 @@
-class HttpException extends Error {
+export default class HttpException extends Error {
+    errorCode = 200;
+    internalLog = false;
+
     constructor(
-        errorCode,
-        message,
+        errorCode: number,
+        message?: object | string,
         internalLog = false
     ) {
         super(JSON.stringify(message));
@@ -9,5 +12,3 @@ class HttpException extends Error {
         this.internalLog = internalLog;
     }
 }
-
-module.exports = HttpException;

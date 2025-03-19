@@ -11,7 +11,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MediaMatcher } from '@angular/cdk/layout';
-import { NgClass, NgStyle } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { ThemeService } from '../../services/theme.service';
 import { environment } from '../../environments/environment';
@@ -21,7 +21,7 @@ import { CommunicationService } from '../../services/communication.service';
 
 const SiteName = environment.title;
 
-type SideNavItem = {
+interface SideNavItem {
     title: string;
     link: string | string[] | null;
     icon?: string;
@@ -78,8 +78,7 @@ export class SidebarComponent implements OnDestroy {
     getItem(id: string): SideNavItem | null {
         const total = [...this.SideNavItemsBottom, ...this.SideNavItemsTop];
 
-        for (let i = 0; i < total.length; i++) {
-            const item = total[i];
+        for (const item of total) {
             if (item.id == id) return item;
         }
 
@@ -94,20 +93,20 @@ export class SidebarComponent implements OnDestroy {
         const paramObj = this.getItem("ParamètresObj");
         const adminObj = this.getItem("AdminObj")
         // update at each connection/disconnection
-        this.com.AuthAccountUpdate.subscribe((isConnected) => {
+        this.com.AuthAccountUpdate.subscribe((user) => {
             if (decoObj) {
-                decoObj.hidden = !isConnected;
+                decoObj.hidden = user == null;
             }
             if (compteObj) {
-                if (isConnected && this.auth.client) {
-                    compteObj.title = this.auth.client.firstname;
+                if (user != null) {
+                    compteObj.title = user.firstname;
                     compteObj.image = "Icone";
                     compteObj.tooltip = "Accéder à votre profil";
                     compteObj.aria = "Lien vers votre page de profil";
-                    compteObj.link = ["/user", this.auth.client._id + ''];
+                    compteObj.link = ["/user", user._id + ''];
                     if (paramObj) {
-                        paramObj.link = ["/user", this.auth.client._id + "", "settings"];
-                        paramObj.hidden = !isConnected;
+                        paramObj.link = ["/user", user._id + "", "settings"];
+                        paramObj.hidden = !user;
                     }
                     // if (adminObj) {
                     //     adminObj.hidden = !this.auth.hasMorePermissions(ComptePermissions.ADMIN);
@@ -119,7 +118,7 @@ export class SidebarComponent implements OnDestroy {
                     compteObj.aria = "Lien pour retourner se connecter";
                     compteObj.tooltip = "Se connecter";
                     if (paramObj) {
-                        paramObj.hidden = !isConnected;
+                        paramObj.hidden = !user;
                     }
                     if (adminObj) {
                         adminObj.hidden = true;
