@@ -10,8 +10,8 @@ const Reotem = {
       .save()
       .then((u) => console.log(`Nouvel utilisateur -> ${u.email}`));
   },
-  getUser: async (query: string) => {
-    const data = await models.findOne({ id: query });
+  getUser: async (id: number) => {
+    const data = await models.findOne({ id: id });
     if (data) return data;
     return;
   },
@@ -20,7 +20,7 @@ const Reotem = {
     if (data) return data;
     return;
   },
-  updateUser: async (query: string, updated: UserSchema) => {
+  updateUser: async (query: number, updated: UserSchema) => {
     let data = await Reotem.getUser(query);
     if (typeof data !== "object") return;
     return data.updateOne(updated);

@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { InferRawDocType } from "mongoose";
 const { Schema } = mongoose;
 
 export const UserMaxAge = 120;
@@ -18,7 +18,7 @@ export const UserRole = [
     "Intern",
 ];
 
-export const userSchema = new Schema({
+const userSchemaDefinition = {
     id: { type: Number, required: true },
     firstname: { type: String, required: true },
     lastname: { type: String, required: true },
@@ -35,8 +35,10 @@ export const userSchema = new Schema({
     photo: { type: Buffer, default: null},
     challenge: String, // can be undefined when is not challenged
     validated: String, // is a secret token, is defined when user has not validated his email yet
-});
+}
 
-export type UserSchema = typeof userSchema;
+export const userSchema = new Schema(userSchemaDefinition);
+
+export type UserSchema = InferRawDocType<typeof userSchemaDefinition>;
 
 export const UserModel = mongoose.model("User", userSchema);
