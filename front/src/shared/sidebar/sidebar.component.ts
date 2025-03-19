@@ -103,9 +103,9 @@ export class SidebarComponent implements OnDestroy {
                     compteObj.image = "Icone";
                     compteObj.tooltip = "Accéder à votre profil";
                     compteObj.aria = "Lien vers votre page de profil";
-                    compteObj.link = ["/user", user._id + ''];
+                    compteObj.link = ["/user", user.id + ''];
                     if (paramObj) {
-                        paramObj.link = ["/user", user._id + "", "settings"];
+                        paramObj.link = ["/user", user.id + "", "settings"];
                         paramObj.hidden = !user;
                     }
                     // if (adminObj) {

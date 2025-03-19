@@ -9,11 +9,17 @@ export const UserSexe = [
 ];
 
 export const UserRole = [
-    "Employé"
+    "Administrator",
+    "CEO",
+    "CO-CEO",
+    "Project Manager",
+    "Developper",
+    "Tester",
+    "Intern",
 ];
 
 export const userSchema = new Schema({
-    _id: { type: mongoose.Types.ObjectId, required: true },
+    id: { type: Number, required: true },
     firstname: { type: String, required: true },
     lastname: { type: String, required: true },
     email: { type: String, required: true },
@@ -26,8 +32,11 @@ export const userSchema = new Schema({
     },
     role: { type: String, required: true },
     sexe: { type: String, required: true },
+    photo: { type: Buffer, default: null},
     challenge: String, // can be undefined when is not challenged
     validated: String, // is a secret token, is defined when user has not validated his email yet
 });
+
+export type UserSchema = typeof userSchema;
 
 export const UserModel = mongoose.model("User", userSchema);

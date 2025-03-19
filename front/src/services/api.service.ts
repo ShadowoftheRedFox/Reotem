@@ -40,13 +40,13 @@ export class APIService {
         create: (firstname: string, lastname: string, email: string, age: number, role: UserRole, sexe: UserSexe, password: string) => {
             return this.sendApiRequest<NewUser>("POST", "signup/", { firstname: firstname, lastname: lastname, email: email, age: age, role: role, sexe: sexe, password: password }, "Creating account");
         },
-        get: (session_id: string) => {
-            return this.sendApiRequest<User>("GET", "signin/" + session_id, undefined, "Getting account");
+        get: (sessionid: string) => {
+            return this.sendApiRequest<User>("GET", "signin/" + sessionid, undefined, "Getting account");
         },
         disconnect: () => {
             if (!this.authis.client) return;
             const session = this.authis.clientToken;
-            const id = this.authis.client._id;
+            const id = this.authis.client.id;
             this.sendApiRequest("DELETE", "disconnect/" + id, { session: session }, "Disconnecting").subscribe({
                 next: () => {
                     this.authis.deleteCookie("session");

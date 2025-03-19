@@ -74,7 +74,7 @@ export class SigninComponent {
         if (this.signin.controls.email.value && this.signin.controls.password.value) {
             this.api.auth.login(this.signin.controls.email.value, this.signin.controls.password.value).then(ob => ob.subscribe({
                 next: res => {
-                    const session = res.session_id;
+                    const session = res.sessionid;
                     this.com.AuthTokenUpdate.next(session);
                     this.api.auth.get(session).subscribe(res => {
                         this.com.AuthAccountUpdate.next(res);

@@ -6,6 +6,7 @@ import { UserMaxAge, UserMinAge, UserRole, UserSexe } from "../../models/user";
 import { generateToken } from "../../util/crypt";
 import { parseUser } from "../../util/parser";
 import { sendMail, template } from "../../util/mailer";
+import Reotem from "../../util/functions";
 
 const DB_PATH = path.join(__dirname, "..", "..", "..", "db.json");
 
@@ -81,7 +82,7 @@ export const createUser = async (input: { [key: string]: never }) => {
 
     const DB = JSON.parse(fs.readFileSync(DB_PATH, 'utf8'));
     let user = {
-        _id: Object.keys(DB.users).length,
+        id: Object.keys(DB.users).length,
         firstname: firstname,
         lastname: lastname,
         email: email,
@@ -92,12 +93,16 @@ export const createUser = async (input: { [key: string]: never }) => {
         validated: generateToken(64)
     };
 
-    const session_id = generateToken(24);
+    const sessionid = generateToken(24);
 
-    DB.sessions[session_id] = user._id;
-    DB.users[user._id] = user;
-    DB.validating[user.validated] = user._id;
+
+
+    DB.sessions[sessionid] = user.id;
+    DB.users[user.id] = user;
+    DB.validating[user.validated] = user.id;
     fs.writeFileSync(DB_PATH, JSON.stringify(DB));
+
+    await Reotem.addUser(user);
 
     user = parseUser(user as never) as never;
 
@@ -107,7 +112,7 @@ export const createUser = async (input: { [key: string]: never }) => {
     // TEST if it works
     sendMail(user.email, "Vérification de votre adresse mail", `À l'attention de ${username}`, template.validate(username, user.validated), username);
 
-    return { user: user, session: session_id };
+    return { user: user, session: sessionid };
 };
 
 export const getCurrentUser = async (id: number) => {
@@ -120,7 +125,7 @@ export const getCurrentUser = async (id: number) => {
 
     return {
         ...user,
-        token: generateToken(user._id),
+        token: generateToken(user.id),
     };
 };
 
@@ -141,7 +146,7 @@ export const validateUser = async (token: string, session: string) => {
     delete user.validated;
     delete DB.validating[token];
 
-    DB.users[user._id] = user;
+    DB.users[user.id] = user;
     fs.writeFileSync(DB_PATH, JSON.stringify(DB));
 
     return true;

@@ -33,7 +33,7 @@ export const createSession = (mail: string, hash: string) => {
     // find id with mail
     Object.values(DB.users as { [key: string]: string | number | unknown }[]).forEach((u) => {
         if ((u.email as string).toLowerCase() == mail.toLowerCase()) {
-            id = u._id as number;
+            id = u.id as number;
         }
     });
 
@@ -49,7 +49,7 @@ export const createSession = (mail: string, hash: string) => {
         const salt = '$' + password[1] + '$' + password[2] + '$' + password[3].slice(0, 22);
         user.challenge = challenge;
 
-        DB.users[user._id] = user;
+        DB.users[user.id] = user;
         fs.writeFileSync(DB_PATH, JSON.stringify(DB));
 
         return { challenge: challenge, salt: salt };
@@ -59,22 +59,22 @@ export const createSession = (mail: string, hash: string) => {
         const hash_server = crypto.createHash("sha256").update(user.challenge + user.password).digest("hex");
 
         if (hash == hash_server) {
-            const session_id = generateToken(24);
+            const sessionid = generateToken(24);
 
             // deleting old session
             Object.keys(DB.sessions).forEach(s => {
-                if (DB.sessions[s] == user._id) {
+                if (DB.sessions[s] == user.id) {
                     delete DB.sessions[s];
                 }
             });
 
-            DB.sessions[session_id] = id;
+            DB.sessions[sessionid] = id;
 
             delete user.challenge;
             DB.users[id] = user;
             fs.writeFileSync(DB_PATH, JSON.stringify(DB));
 
-            return { session_id: session_id };
+            return { sessionid: sessionid };
         }
     }
 

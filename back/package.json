@@ -20,12 +20,7 @@
     "node-mailjet": "^6.0.8"
   },
   "devDependencies": {
-<<<<<<< HEAD
-    "nodemon": "^3.1.9",
-    "multer": "^1.4.5-lts.1"
-  }
-}
-=======
+    "multer": "^1.4.5-lts.1",
     "@eslint/js": "^9.22.0",
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
@@ -40,4 +35,3 @@
   },
   "type": "commonjs"
 }
->>>>>>> main

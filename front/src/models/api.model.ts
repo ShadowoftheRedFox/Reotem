@@ -3,7 +3,7 @@ import { environment } from "../environments/environment";
 export const baseUrl = environment.api_url;
 
 export interface User {
-    _id: number;
+    id: number;
     firstname: string;
     lastname: string;
     email: string;
@@ -28,7 +28,13 @@ export const UserSexe = [
 export type UserSexe = "Homme" | "Femme" | "Autre";
 
 export const UserRole = [
-    "Employé"
+    "Administrator",
+    "CEO",
+    "CO-CEO",
+    "Project Manager",
+    "Developper",
+    "Tester",
+    "Intern",
 ];
 export type UserRole = "Employé";
 
@@ -38,5 +44,5 @@ export interface LoginChallenge {
 }
 
 export interface Login {
-    session_id: string;
+    sessionid: string;
 }

@@ -30,7 +30,7 @@ export class UserComponent {
         // get the id params
         route.params.subscribe(res => {
             this.requestedUser = Number(res["id"]);
-            this.privateMode = auth.client?._id === this.requestedUser;
+            this.privateMode = auth.client?.id === this.requestedUser;
 
             api.user.get(this.requestedUser, this.auth.clientToken).subscribe({
                 next: (res) => {
@@ -45,7 +45,7 @@ export class UserComponent {
         com.AuthAccountUpdate.subscribe(user => {
             if (user == null) {
                 this.privateMode = false;
-            } else if (user._id == this.requestedUser) {
+            } else if (user.id == this.requestedUser) {
                 this.privateMode = true;
             }
         });
