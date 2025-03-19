@@ -82,7 +82,7 @@ export const createSession = (mail: string, hash: string) => {
 };
 
 export const deleteSession = (id: number, session: string) => {
-    if (!id) {
+    if (isNaN(id)) {
         throw new HttpException(422, { errors: { id: ["can't be blank"] } });
     }
 
@@ -91,7 +91,6 @@ export const deleteSession = (id: number, session: string) => {
     }
 
     // session must match the id in DB.sessions
-
     const DB = JSON.parse(fs.readFileSync(DB_PATH, 'utf8'));
     if (DB.sessions[session] != id) return false;
 

@@ -67,6 +67,13 @@ export class APIService {
         }
     }
 
+    user = {
+        get: (id: number, session: string | "") => {
+            // TODO with the api, if session not valid or empty, send only public data
+            return this.sendApiRequest<User>("GET", "users/" + id, { session: session }, `Getting user ${id}`);
+        }
+    }
+
     private sendApiRequest<T>(method: "GET" | "POST" | "PUT" | "DELETE" | "PATCH", endpoint: string, parameters: object = {}, message: string | undefined = undefined) {
         const urlParameters = (parameters != undefined && Object.keys(parameters).length > 0) ? "?data=" + JSON.stringify(parameters) : "";
         const headers = new HttpHeaders({ "Content-Type": "application/x-www-form-urlencoded" });
@@ -90,6 +97,7 @@ export class APIService {
 
 
     }
+
     //a function to hash a string with sha256 and return the hash in hex
     private async hash(string: string) {
         const sourceBytes = new TextEncoder().encode(string);

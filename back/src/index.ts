@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { ErrorRequestHandler } from 'express';
 import { init } from './util/mongoose';
 import cors from 'cors'; // corss origin request
 import routes from './routes/routes';
@@ -31,7 +31,7 @@ app.use(routes);
 
 init();
 
-const errorHandler = (err: Error | HttpException, req: express.Request, res: express.Response, /* next: express.NextFunction */) => {
+const errorHandler: ErrorRequestHandler = function (err, req, res, next) {
     if (err && err.name === 'UnauthorizedError') {
         return res.status(401).json({
             status: 'error',
@@ -39,12 +39,13 @@ const errorHandler = (err: Error | HttpException, req: express.Request, res: exp
         });
     } else if (err instanceof HttpException) {
         if (err.internalLog === true) { console.error(err); } else { console.log("Error for user generated."); }
-        res.status(err.errorCode).json({ message: err.message });
-    } else if (err) {
+        return res.status(err.errorCode).json({ message: err.message });
+    } else if (err instanceof Error) {
         console.log(err);
-        res.status(500).json({ message: err.message });
+        return res.status(500).json({ message: err.message });
     }
-}
+    next(err);
+} as ErrorRequestHandler;
 
 app.use(errorHandler as never);
 

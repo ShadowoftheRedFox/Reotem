@@ -30,10 +30,10 @@ import { UserMaxAge, UserMinAge, UserRole, UserSexe } from '../../../models/api.
 export class SignupComponent {
     @Output() changeConnection = new EventEmitter<void>();
 
-    userRole = UserRole;
-    userSexe = UserSexe;
-    userMinAge = UserMinAge;
-    userMaxAge = UserMaxAge;
+    readonly userRole = UserRole;
+    readonly userSexe = UserSexe;
+    readonly userMinAge = UserMinAge;
+    readonly userMaxAge = UserMaxAge;
 
     signup = new FormGroup({
         firstname: new FormControl("", [Validators.required]),

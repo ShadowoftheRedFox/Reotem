@@ -85,6 +85,7 @@ export class SigninComponent {
                     if ((err.error.message as string).includes("credentials")) {
                         this.signin.setErrors({ invalid: true });
                     }
+                    // TODO don't show errors when no user found (error 400)
                 }
             }));
         }

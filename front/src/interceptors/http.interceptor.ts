@@ -33,7 +33,7 @@ export const httpInterceptor: HttpInterceptorFn = (req, next) => {
                     popup.openSnackBar({ message: "Erreur lors de la requête", action: "Fermer", });
                 }
             }
-            console.error('Erreur de la requête:', error);
+            // console.error('Erreur de la requête:', error);
             return throwError(() => new Error(error.message));
         })
     );
