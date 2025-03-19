@@ -51,7 +51,7 @@ export class APIService {
                 next: () => {
                     this.authis.deleteCookie("session");
                     this.authis.deleteCookie("UID");
-                    this.com.AuthAccountUpdate.next(false);
+                    this.com.AuthAccountUpdate.next(null);
                     this.com.AuthTokenUpdate.next("");
                 },
                 error: err => {
@@ -105,8 +105,7 @@ export class APIService {
         this.auth.get(session).subscribe({
             next: res => {
                 this.com.AuthTokenUpdate.next(session);
-                this.authis.client = res;
-                this.com.AuthAccountUpdate.next(true);
+                this.com.AuthAccountUpdate.next(res);
             },
             error: () => {
                 console.warn("Unknown token, removing");

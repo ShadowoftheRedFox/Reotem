@@ -76,9 +76,8 @@ export class SigninComponent {
                 next: res => {
                     const session = res.session_id;
                     this.com.AuthTokenUpdate.next(session);
-                    this.com.AuthAccountUpdate.next(true);
                     this.api.auth.get(session).subscribe(res => {
-                        this.auth.client = res;
+                        this.com.AuthAccountUpdate.next(res);
                         this.router.navigate(["/"]);
                     });
                 }, error: err => {

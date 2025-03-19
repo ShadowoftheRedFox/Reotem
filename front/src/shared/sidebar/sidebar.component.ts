@@ -93,20 +93,20 @@ export class SidebarComponent implements OnDestroy {
         const paramObj = this.getItem("ParamètresObj");
         const adminObj = this.getItem("AdminObj")
         // update at each connection/disconnection
-        this.com.AuthAccountUpdate.subscribe((isConnected) => {
+        this.com.AuthAccountUpdate.subscribe((user) => {
             if (decoObj) {
-                decoObj.hidden = !isConnected;
+                decoObj.hidden = user == null;
             }
             if (compteObj) {
-                if (isConnected && this.auth.client) {
-                    compteObj.title = this.auth.client.firstname;
+                if (user != null) {
+                    compteObj.title = user.firstname;
                     compteObj.image = "Icone";
                     compteObj.tooltip = "Accéder à votre profil";
                     compteObj.aria = "Lien vers votre page de profil";
-                    compteObj.link = ["/user", this.auth.client._id + ''];
+                    compteObj.link = ["/user", user._id + ''];
                     if (paramObj) {
-                        paramObj.link = ["/user", this.auth.client._id + "", "settings"];
-                        paramObj.hidden = !isConnected;
+                        paramObj.link = ["/user", user._id + "", "settings"];
+                        paramObj.hidden = !user;
                     }
                     // if (adminObj) {
                     //     adminObj.hidden = !this.auth.hasMorePermissions(ComptePermissions.ADMIN);
@@ -118,7 +118,7 @@ export class SidebarComponent implements OnDestroy {
                     compteObj.aria = "Lien pour retourner se connecter";
                     compteObj.tooltip = "Se connecter";
                     if (paramObj) {
-                        paramObj.hidden = !isConnected;
+                        paramObj.hidden = !user;
                     }
                     if (adminObj) {
                         adminObj.hidden = true;

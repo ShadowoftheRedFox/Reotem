@@ -151,8 +151,7 @@ export class SignupComponent {
         ).subscribe({
             next: res => {
                 this.com.AuthTokenUpdate.next(res.session);
-                this.auth.client = res.user;
-                this.com.AuthAccountUpdate.next(true);
+                this.com.AuthAccountUpdate.next(res.user);
                 this.route.navigate(["user", res.user._id]);
             },
             error: err => {

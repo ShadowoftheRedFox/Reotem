@@ -7,7 +7,7 @@ import { generateToken } from "../../util/crypt";
 import { parseUser } from "../../util/parser";
 import { sendMail, template } from "../../util/mailer";
 
-const DB_PATH = path.join(__dirname, "..", "..", "db.json");
+const DB_PATH = path.join(__dirname, "..", "..", "..", "db.json");
 
 const checkUserUniqueness = async (email: string, firstname: string, lastname: string) => {
     const DB = JSON.parse(fs.readFileSync(DB_PATH, 'utf8'));

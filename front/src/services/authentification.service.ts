@@ -26,12 +26,13 @@ export class AuthentificationService {
     ) {
         // écoute les événements
         com.AuthAccountUpdate.subscribe(res => {
-            this.connected = res;
-            if (!this.connected) {
+            this.connected = res != null;
+            if (res == null) {
                 this.client = null;
                 this.deleteCookie("session");
                 this.deleteCookie("UID");
-            } else if (this.client) {
+            } else {
+                this.client = res;
                 this.setCookie("UID", this.client._id + "", CookieTime.Day, "/");
             }
         });

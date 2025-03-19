@@ -5,7 +5,7 @@ import path from "path";
 import { generateToken } from "../../util/crypt";
 import { parseUser } from "../../util/parser";
 
-const DB_PATH = path.join(__dirname, "..", "..", "db.json");
+const DB_PATH = path.join(__dirname, "..", "..", "..", "db.json");
 
 export const getSession = (id: string) => {
     if (!id) {

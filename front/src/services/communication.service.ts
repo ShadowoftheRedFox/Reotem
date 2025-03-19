@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
+import { User } from '../models/api.model';
 
 /**
  *
@@ -17,7 +18,7 @@ export class CommunicationService {
     NotifUpdate = new Subject<number>();
 
     // event launcher to tell if we connect or disconnect
-    AuthAccountUpdate = new Subject<boolean>();
+    AuthAccountUpdate = new Subject<User | null>();
     // event launcher on session token received
     AuthTokenUpdate = new Subject<string>();
 }
