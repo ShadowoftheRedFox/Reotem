@@ -1,4 +1,4 @@
 export const environment = {
     title: "CYTech Project",
-    api_url: "https://localhost:5000/"
+    api_url: "http://localhost:5000/"
 };

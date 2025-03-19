@@ -1,26 +1,14 @@
 const mongoose = require("mongoose");
 const defaultIMG = Buffer.from("../assets/Default.png");
 
-const userSchema = mongoose.Schema({
-  mongo_id: mongoose.Schema.Types.ObjectId,
-  userID: Number,
-  login: { type: String, required: true, unique: true },
-  mail: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
-  first_name: { type: String, required: true },
-  last_name: { type: String, required: true },
-  genre: {
-    type: String,
-    enum: ["Male", "Female", "Other"],
-    required: true,
-  },
-  age: {
-    type: Date,
-    required: true
-  },
-  type: {
-    type: String,
-    enum: [
+const UserMaxAge = 120;
+const UserMinAge = 18;
+
+const UserSexe = [
+    "Homme", "Femme", "Autre"
+];
+
+const UserRole = [
       "Administrator",
       "CEO",
       "CO-CEO",
@@ -28,9 +16,32 @@ const userSchema = mongoose.Schema({
       "Developper",
       "Tester",
       "Intern",
-    ],
-    required: true,
-  },
-  photo: {type: Buffer, default: defaultIMG},
+    ];
+
+const userSchema = mongoose.Schema({
+    _id: mongoose.Schema.Types.ObjectId,
+    firstname: String,
+    lastname: String,
+    email: String,
+    password: String,
+    age: {
+        type: Number,
+        minimum: UserMinAge,
+        maximum: UserMaxAge
+    },
+    role: String,
+    sexe: String,
+    photo: {type: Buffer, default: defaultIMG}
+    challenge: {
+        type: String,
+        nullable: true // can be undefined when is not challenged
+    },
+    validated: {
+        type: String, // is a secret token
+        nullable: true // is defined when user has not validated his email yet
+    },
 });
-module.exports = mongoose.model("User", userSchema);
+
+const UserModel = mongoose.model("User", userSchema);
+
+module.exports = { UserModel, UserRole, UserSexe, UserMinAge, UserMaxAge };

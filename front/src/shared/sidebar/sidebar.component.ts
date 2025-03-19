@@ -1,0 +1,256 @@
+import { APIService } from '../../services/api.service';
+import { ChangeDetectorRef, Component, isDevMode, OnDestroy, QueryList, ViewChildren } from '@angular/core';
+import { MatBadgeModule } from '@angular/material/badge';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialog } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
+import { MatListModule } from '@angular/material/list';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatSidenav } from '@angular/material/sidenav';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MediaMatcher } from '@angular/cdk/layout';
+import { NgClass, NgStyle } from '@angular/common';
+import { Router, RouterLink } from '@angular/router';
+import { ThemeService } from '../../services/theme.service';
+import { environment } from '../../environments/environment';
+import { DialogComponent, DialogDataType } from '../dialog/dialog.component';
+import { AuthentificationService } from '../../services/authentification.service';
+import { CommunicationService } from '../../services/communication.service';
+
+const SiteName = environment.title;
+
+type SideNavItem = {
+    title: string;
+    link: string | string[] | null;
+    icon?: string;
+    aria: string;
+    tooltip: string;
+    image?: string;
+    hidden?: boolean;
+    id: string;
+    notifications?: string;
+    hover?: boolean;
+    hoverClass?: string;
+    callback?: () => void;
+}
+
+@Component({
+    selector: 'app-sidebar',
+    standalone: true,
+    imports: [
+        MatBadgeModule,
+        MatButtonModule,
+        MatIconModule,
+        MatListModule,
+        MatMenuModule,
+        MatSidenavModule,
+        MatToolbarModule,
+        MatTooltipModule,
+        RouterLink,
+        NgClass,
+    ],
+    templateUrl: './sidebar.component.html',
+    styleUrl: './sidebar.component.scss'
+})
+export class SidebarComponent implements OnDestroy {
+    constructor(
+        private readonly dialog: MatDialog,
+        private api: APIService,
+        private auth: AuthentificationService,
+        private com: CommunicationService,
+        public theme: ThemeService,
+        private router: Router,
+        changeDetectorRef: ChangeDetectorRef,
+        media: MediaMatcher,
+    ) {
+        this.mobileQuery = media.matchMedia('(max-width: 600px)');
+        this._mobileQueryListener = () => changeDetectorRef.detectChanges();
+        this.mobileQuery.addEventListener("change", this._mobileQueryListener)
+
+        this.initUpdate();
+    }
+
+    isAdmin = false;
+    readonly SiteName = SiteName;
+
+    getItem(id: string): SideNavItem | null {
+        const total = [...this.SideNavItemsBottom, ...this.SideNavItemsTop];
+
+        for (let i = 0; i < total.length; i++) {
+            const item = total[i];
+            if (item.id == id) return item;
+        }
+
+        return null;
+    }
+
+    // listen to every event needed
+    initUpdate() {
+        const decoObj = this.getItem("DéconnexionObj");
+        const compteObj = this.getItem("CompteObj");
+        const notifObj = this.getItem("NotificationsObj");
+        const paramObj = this.getItem("ParamètresObj");
+        const adminObj = this.getItem("AdminObj")
+        // update at each connection/disconnection
+        this.com.AuthAccountUpdate.subscribe((isConnected) => {
+            if (decoObj) {
+                decoObj.hidden = !isConnected;
+            }
+            if (compteObj) {
+                if (isConnected && this.auth.client) {
+                    compteObj.title = this.auth.client.firstname;
+                    compteObj.image = "Icone";
+                    compteObj.tooltip = "Accéder à votre profil";
+                    compteObj.aria = "Lien vers votre page de profil";
+                    compteObj.link = ["/user", this.auth.client._id + ''];
+                    if (paramObj) {
+                        paramObj.link = ["/user", this.auth.client._id + "", "settings"];
+                        paramObj.hidden = !isConnected;
+                    }
+                    // if (adminObj) {
+                    //     adminObj.hidden = !this.auth.hasMorePermissions(ComptePermissions.ADMIN);
+                    // }
+                } else {
+                    compteObj.title = "Compte";
+                    compteObj.link = "/connection";
+                    compteObj.icon = "account_circle";
+                    compteObj.aria = "Lien pour retourner se connecter";
+                    compteObj.tooltip = "Se connecter";
+                    if (paramObj) {
+                        paramObj.hidden = !isConnected;
+                    }
+                    if (adminObj) {
+                        adminObj.hidden = true;
+                    }
+                }
+            }
+        });
+
+        this.com.NotifUpdate.subscribe((res) => {
+            if (notifObj) {
+                const num = res > 99 ? "99+" : "" + res;
+                notifObj.notifications = !res ? undefined : num;
+                notifObj.tooltip = res > 0 ? res + ` notification${res > 1 ? "s" : ""} non lue${res > 1 ? "s" : ""}` : "Notifications reçues";
+            }
+        });
+    }
+
+    // get the animation function
+    @ViewChildren(MatSidenav) snav!: QueryList<MatSidenav>
+
+    SideNavItemsTop: SideNavItem[] = [
+        {
+            title: "Accueil",
+            link: "/",
+            icon: "home",
+            aria: "Lien pour aller à a page principale",
+            tooltip: "Menu principal",
+            id: "AccueilObj",
+        },
+        {
+            title: "Notifications",
+            link: "/notification",
+            icon: "notifications",
+            aria: "Lien pour voir vos notifications",
+            tooltip: "Notifications reçues",
+            id: "NotificationsObj",
+            hoverClass: "nav-bell-hover",
+        }
+    ];
+
+    SideNavItemsBottom: SideNavItem[] = [
+        {
+            // only when user has admin permissions
+            title: "Administration",
+            link: "/administration",
+            icon: "security",
+            aria: "Lien vers la page d'administration",
+            tooltip: "Page administrateur",
+            id: "AdminObj",
+            hoverClass: "nav-blue-hover",
+            hidden: true,
+        },
+        {
+            // only when developping the app
+            title: "Test",
+            link: "/test",
+            icon: "bug_report",
+            aria: "Lien vers la page de test",
+            tooltip: "Page de test",
+            id: "TestObj",
+            hoverClass: "nav-bug-hover",
+            hidden: !isDevMode()
+        },
+        {
+            title: "Support",
+            link: "/support",
+            icon: "help",
+            aria: "Lien pour aller sur la page d'aide",
+            tooltip: "Aide, support et Q&A",
+            id: "SupportObj",
+            hoverClass: "nav-blue-hover",
+        },
+        {
+            title: "Déconnexion",
+            link: null,
+            icon: "logout",
+            aria: "Se déconnecter de son compte",
+            tooltip: "Se déconnecter",
+            id: "DéconnexionObj",
+            hoverClass: "nav-red-hover",
+            hidden: true,
+            callback: () => {
+                this.disconnect();
+                this.router.navigate(["/"], {
+                    preserveFragment: true,
+                });
+            },
+        },
+        {
+            title: "Compte",
+            link: "/connection",
+            icon: "account_circle",
+            aria: "Lien pour retourner se connecter",
+            tooltip: "Se connecter",
+            id: "CompteObj",
+        },
+    ];
+
+    // manage mobile screen sizes
+    private _mobileQueryListener: () => void;
+    mobileQuery: MediaQueryList;
+
+    ngOnDestroy(): void {
+        this.mobileQuery.removeEventListener("change", this._mobileQueryListener);
+    }
+
+    // buttons animations
+    toggled = false;
+    toggleSideNav() {
+        this.snav.first.toggle();
+        this.toggled = this.snav.first.opened;
+    }
+
+    disconnect() {
+        const dialogRef = this.dialog.open<DialogComponent, DialogDataType, number>(DialogComponent, {
+            maxHeight: "90dvh",
+            maxWidth: "90dvw",
+            data: {
+                title: "Déconnexion",
+                text: "Voulez vous vraiment vous déconnecter?",
+                btnNotOk: "Annuler",
+                btnOk: "Me déconnecter",
+                warn: true,
+            }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            // 0 == yes, -1 == no, undefined == cancel (escaped or clicked OOB)
+            if (result !== undefined && result >= 0) {
+                this.api.auth.disconnect();
+            }
+        });
+    }
+}

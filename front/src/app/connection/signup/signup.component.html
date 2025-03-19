@@ -1,0 +1,84 @@
+<div class="flex justify-center flex-col items-center flex-nowrap">
+    <h1>Inscription</h1>
+    <form [formGroup]="signup" (ngSubmit)="testSignup()" class="flex justify-center flex-col items-stretchlex-nowrap">
+        <mat-form-field>
+            <mat-label>Prénom</mat-label>
+            <input matInput placeholder="Jean" formControlName="firstname" required type="text"
+                autocomplete="family-name" />
+            @if (signup.controls.firstname.invalid) {
+            <mat-error>{{firstnameErrorMessage()}}</mat-error>
+            }
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>Nom</mat-label>
+            <input matInput placeholder="Dupond" formControlName="lastname" required type="text"
+                autocomplete="family-name" />
+            @if (signup.controls.lastname.invalid) {
+            <mat-error>{{lastnameErrorMessage()}}</mat-error>
+            }
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>adresse email</mat-label>
+            <input matInput placeholder="pat@example.com" formControlName="email" required type="email"
+                autocomplete="email" />
+            <mat-icon matSuffix>alternate_email</mat-icon>
+            @if (signup.controls.email.invalid) {
+            <mat-error>{{mailErrorMessage()}}</mat-error>
+            }
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>Âge</mat-label>
+            <input matInput placeholder="18" formControlName="age" [min]="userMinAge" [max]="userMaxAge" required
+                type="number">
+            @if (signup.controls.age.invalid) {
+            <mat-error>{{ageErrorMessage()}}</mat-error>
+            }
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>Genre</mat-label>
+            <mat-select formControlName="sexe">
+                @for (item of userSexe; track item) {
+                <mat-option [value]="item">{{item}}</mat-option>
+                }
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>Rôle</mat-label>
+            <mat-select formControlName="role">
+                @for (item of userRole; track item) {
+                <mat-option [value]="item">{{item}}</mat-option>
+                }
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>Mot de passe</mat-label>
+            <input matInput placeholder="password" formControlName="password"
+                [type]="passwordHidden() ? 'password' : 'text'" autocomplete="new-password" />
+            <button mat-icon-button matSuffix (click)="hidePassword($event)"
+                [attr.aria-label]="'Cacher le mot de passe'" [attr.aria-pressed]="passwordHidden()">
+                <mat-icon>{{passwordHidden() ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+            @if (signup.controls.password.invalid) {
+            <mat-error>{{passwordErrorMessage()}}</mat-error>
+            }
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>Confirmez le mot de passe</mat-label>
+            <input matInput placeholder="password" formControlName="passwordConfirm"
+                [type]="passwordConfirmHidden() ? 'password' : 'text'" autocomplete="new-password" />
+            <button mat-icon-button matSuffix (click)="hideConfirmPassword($event)"
+                [attr.aria-label]="'Cacher mot de passe'" [attr.aria-pressed]="passwordConfirmHidden()">
+                <mat-icon>{{passwordConfirmHidden() ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+            @if (signup.controls.passwordConfirm.invalid) {
+            <mat-error>{{passwordConfirmErrorMessage()}}</mat-error>
+            }
+        </mat-form-field>
+
+        <button mat-flat-button type="submit" [disabled]="!signup.valid">S'inscrire</button>
+    </form>
+    <button mat-button (click)="changeConnection.emit()">Connexion</button>
+</div>

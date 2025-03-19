@@ -1,54 +1,42 @@
 import { environment } from "../environments/environment";
 
-const baseUrl = environment.api_url;
+export const baseUrl = environment.api_url;
 
 export type User = {
-    _id: Number;
-    first_name: String;
-    last_name: String;
-    login: String;
-    password: String;
-    age: Number;
+    _id: number;
+    firstname: string;
+    lastname: string;
+    email: string;
+    age: number;
+    role: number;
+    sexe: number;
+    validated?: false;
+    //TODO missing the user image
 }
 
-export const API = {
-
+export type NewUser = {
+    user: User;
+    session: string;
 }
 
-export default API;
+export const UserMaxAge = 120;
+export const UserMinAge = 18;
 
-function sendApiRequest(method: "GET" | "POST" | "PUT", endpoint: String, parameters: Object = {}, message: String | undefined = undefined) {
-    return new Promise(function (resolve, reject) {
-        if (message !== undefined) {
-            console.info("[API] " + message);
-        }
-        const urlParameters = JSON.stringify(parameters);
+export const UserSexe = [
+    "Homme", "Femme", "Autre"
+];
+export type UserSexe = "Homme" | "Femme" | "Autre";
 
-        var options: any = { method };
-        if (method == "GET") {
-            endpoint += "?data=" + urlParameters;
-        } else {
-            options.body = urlParameters; // TODO test if it works
-            options.headers = { "Content-Type": "application/x-www-form-urlencoded" };
-        }
-        fetch(origin + baseUrl + "/api/" + endpoint, options)
-            .then(res => {
-                if (res.headers.get("Content-Type") === "application/json")
-                    return res.json();
-                else
-                    throw new Error(res.statusText);
-            })
-            .then(function (response) {
-                if (!response.success) {
-                    console.error("[API] " + response.error);
-                    reject(response.error);
-                } else {
-                    let data = response.data;
-                    if (response.count !== undefined)
-                        data.count = response.count;
-                    resolve(data);
-                }
-            })
-            .catch(reject);
-    });
+export const UserRole = [
+    "Employé"
+];
+export type UserRole = "Employé";
+
+export type LoginChallenge = {
+    challenge: string;
+    salt: string;
+}
+
+export type Login = {
+    session_id: string;
 }
