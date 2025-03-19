@@ -54,8 +54,44 @@ app.use(
 // 404: Not found
 app.use(function (req, res, next) {
     res.status(404).json({ ERROR: 'Page not found.' });
+=======
+const path = require("path");
+const multer = require("multer");
+const Reotem = require("./util/functions");
+  
+const storage = multer.diskStorage({
+  destination: "./uploads/",
+  filename: function (req, file, cb) {
+    cb(
+      null,
+      `${req.body.login}_${req.body.last_name}_${req.body.first_name}-profile_picture.jpg`
+    );
+  },
+});
+const upload = multer({ storage: storage });
+
+app.post("/test/", upload.single("photo"), async (req, res) => {
+  let user = req.body;
+  let photoBuffer =
+    req.file !== undefined
+      ? Buffer.from(req.file.path)
+      : Buffer.from(defaultPFPfile);
+  user.photo = photoBuffer;
+  let results = await Reotem.addUser(user);
+  if (results.error === undefined)
+    return res.send(
+      "Bravo vous êtes inscrit " + user.first_name + " " + user.last_name
+    );
+  let errors = Object.values(Object.values(results.error)[0]);
+  res.statusMessage = "ERRORS: ";
+  errors.forEach(
+    (error) =>
+      (res.statusMessage = res.statusMessage + `${error.properties.message},`)
+  );
+  req.session.formData = req.body;
+  res.redirect("/test");
 });
 
 app.listen(port, () => {
-    console.log(`Server running on http://localhost:${port}/`);
+  console.log(`Server running on http://localhost:${port}/`);
 });

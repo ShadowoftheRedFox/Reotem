@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const defaultIMG = Buffer.from("../assets/Default.png");
 
 const UserMaxAge = 120;
 const UserMinAge = 18;
@@ -8,8 +9,14 @@ const UserSexe = [
 ];
 
 const UserRole = [
-    "Employé"
-];
+      "Administrator",
+      "CEO",
+      "CO-CEO",
+      "Project Manager",
+      "Developper",
+      "Tester",
+      "Intern",
+    ];
 
 const userSchema = mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
@@ -24,6 +31,7 @@ const userSchema = mongoose.Schema({
     },
     role: String,
     sexe: String,
+    photo: {type: Buffer, default: defaultIMG}
     challenge: {
         type: String,
         nullable: true // can be undefined when is not challenged
@@ -31,7 +39,7 @@ const userSchema = mongoose.Schema({
     validated: {
         type: String, // is a secret token
         nullable: true // is defined when user has not validated his email yet
-    }
+    },
 });
 
 const UserModel = mongoose.model("User", userSchema);

@@ -19,6 +19,7 @@
   },
   "type": "commonjs",
   "devDependencies": {
-    "nodemon": "^3.1.9"
+    "nodemon": "^3.1.9",
+    "multer": "^1.4.5-lts.1"
   }
 }

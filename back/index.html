@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+    <head><title>Coucou c'est le caca</title></head>
+    <body>
+        <form action="/test" method="post" enctype="multipart/form-data">
+            <label for="login">Pseudo<br></label>
+            <input name="login" placeholder="Entrez votre pseudo"><br>
+            <label for="password">Mot de passe<br></label>
+            <input name="password" type="password" placeholder="Entrez votre mot de passe"><br>
+            <label for="first_name">Prénom<br></label>
+            <input name="first_name" placeholder="Entrez votre prénom"><br>
+            <label for="last_name">Nom<br></label>
+            <input name="last_name" placeholder="Entrez votre nom"><br>
+            <label for="age">Age<br></label>
+            <input name ="age" type="date"><br>
+            <label for="genre">Genre<br></label>
+            <select name="genre">
+                <option value="Male">Homme</option>
+                <option value="Female">Femme</option>
+                <option value="MD Helicopter MD-900 Explorer">MD Helicopter MD-900 Explorer</option>
+                <option value="Other">Autre</option>
+            </select><br>
+            <label for="type">Type de membre<br></label>
+            <select name="type">
+                <option value="Administrator">Administrateur</option>
+                <option value="CEO">Président Directeur/Présidente Directrice</option>
+                <option value="CO-CEO">Vice-Président Directeur/Vice-Présidente Directrice</option>
+                <option value="Project Manager">Chef de Projet</option>
+                <option value="Developper">Développeur</option>
+                <option value="Tester">Testeur</option>
+                <option value="Intern">Stagiaire</option>
+            </select><br>
+            <label for="photo">Photo<br></label>
+            <input name="photo" type="file"><br>
+            <button type="submit">Inscription</button>
+        </form>
+    </body>
+</html>
