@@ -1,9 +1,10 @@
 import { Router } from "express";
 import { getNotificationAmount, getNotificationQuery } from "./user.service";
 
-export const router = Router();
+export const UserRouter = Router();
+export default UserRouter;
 
-router.post('/user/notification/:id', async (req, res, next) => {
+UserRouter.post('/user/notification/:id', async (req, res, next) => {
     try {
         console.log(`Getting user ${req.params.id} amount of notifications...`);
         const amount = await getNotificationAmount(Number(req.params.id), req.body.session);
@@ -13,7 +14,7 @@ router.post('/user/notification/:id', async (req, res, next) => {
     }
 });
 
-router.post('/user/notifications/:id', async (req, res, next) => {
+UserRouter.post('/user/notifications/:id', async (req, res, next) => {
     try {
         console.log(`Getting user ${req.params.id} notifications...`);
         const notifs = await getNotificationQuery(Number(req.params.id), req.body.session, req.body.query);

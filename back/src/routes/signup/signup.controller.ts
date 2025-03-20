@@ -1,9 +1,10 @@
 import { Router } from "express";
 import { createUser, checkTokenExists, validateUser } from "./signup.service";
 
-export const router = Router();
+const SignupRouter = Router();
+export default SignupRouter;
 
-router.post('/signup', async (req, res, next) => {
+SignupRouter.post('/signup', async (req, res, next) => {
     try {
         console.log("creating user...");
         const user = await createUser({ ...req.body });
@@ -13,7 +14,7 @@ router.post('/signup', async (req, res, next) => {
     }
 });
 
-router.post("/signup/token", async (req, res, next) => {
+SignupRouter.post("/signup/token", async (req, res, next) => {
     try {
         console.log("Checking token exists");
         const exists = await checkTokenExists(req.body.token);
@@ -23,7 +24,7 @@ router.post("/signup/token", async (req, res, next) => {
     }
 });
 
-router.post("/signup/validating", async (req, res, next) => {
+SignupRouter.post("/signup/validating", async (req, res, next) => {
     try {
         console.log("Validating token");
         const exists = await validateUser(req.body.token, req.body.session);

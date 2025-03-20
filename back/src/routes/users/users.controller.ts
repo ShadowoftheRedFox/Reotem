@@ -1,9 +1,10 @@
 import { Router } from "express";
 import { getUser } from "./users.service";
 
-export const router = Router();
+const UserRouter = Router();
+export default UserRouter;
 
-router.post('/users/:id', async (req, res, next) => {
+UserRouter.post('/users/:id', async (req, res, next) => {
     try {
         console.log(`Getting user ${req.params.id}...`);
         const user = await getUser(Number(req.params.id), req.body.session);

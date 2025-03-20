@@ -1,14 +1,14 @@
 import { Router } from "express";
-import * as signup from "./signup/signup.controller";
-import * as signin from "./session/session.controller";
-import * as users from "./users/users.controller";
-import * as user from "./user/user.controller";
+import SignupRouter from "./signup/signup.controller";
+import SessionRouter from "./session/session.controller";
+import UserRouter from "./users/users.controller";
+import UsersRouter from "./user/user.controller";
 
 const api = Router()
-    .use(signup.router)
-    .use(signin.router)
-    .use(user.router)
-    .use(users.router);
+    .use(SignupRouter)
+    .use(SessionRouter)
+    .use(UserRouter)
+    .use(UsersRouter);
 
 const routes = Router().use('/', api);
 export default routes;

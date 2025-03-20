@@ -1,9 +1,10 @@
 import { Router } from "express";
 import { deleteSession, getSession, createSession } from "./session.service";
 
-export const router = Router();
+const SessionRouter = Router();
+export default SessionRouter;
 
-router.get('/signin/:id', async (req, res, next) => {
+SessionRouter.get('/signin/:id', async (req, res, next) => {
     try {
         console.log(`getting sessions ${req.params.id}`);
         const session = getSession(req.params.id);
@@ -18,7 +19,7 @@ router.get('/signin/:id', async (req, res, next) => {
     }
 });
 
-router.post('/signin', async (req, res, next) => {
+SessionRouter.post('/signin', async (req, res, next) => {
     try {
         console.log(`creating sessions ${JSON.stringify(req.body)}`); // expect id and an optional hash
         const session = createSession(req.body.mail, req.body.hash);
@@ -28,7 +29,7 @@ router.post('/signin', async (req, res, next) => {
     }
 });
 
-router.delete('/disconnect/:id', async (req, res, next) => {
+SessionRouter.delete('/disconnect/:id', async (req, res, next) => {
     try {
         console.log(`deleting session ${req.params.id}`);
         if (deleteSession(Number(req.params.id), req.body.session)) {
