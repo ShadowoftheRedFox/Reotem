@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import * as bcrypt from "bcryptjs";
-import { baseUrl, Login, LoginChallenge, User, UserSexe, UserRole, NewUser } from '../models/api.model';
+import { baseUrl, Login, LoginChallenge, User, UserSexe, UserRole, NewUser, NotificationAmount, APIQuery, NotificationQuery } from '../models/api.model';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { lastValueFrom, throwError } from 'rxjs';
 import { AuthentificationService } from './authentification.service';
@@ -20,7 +20,7 @@ export class APIService {
     }
 
 
-    auth = {
+    readonly auth = {
         login: async (mail: string, password: string) => {
             //authentificate the user and return a session id if success
             //the user call the api to get a challenge
@@ -72,9 +72,18 @@ export class APIService {
         }
     }
 
-    user = {
+    readonly user = {
         get: (id: number, session?: string) => {
             return this.sendApiRequest<User>("POST", "users/" + id, { session: session }, `Getting user ${id}`);
+        }
+    }
+
+    readonly notifications = {
+        getNum: (id: number, session: string) => {
+            return this.sendApiRequest<NotificationAmount>("POST", "user/notification/" + id, { session: session }, "Getting notifications amount");
+        },
+        getAll: (id: number, session: string, query: APIQuery<NotificationQuery>) => {
+            return this.sendApiRequest<Notification[]>("POST", "user/notifications/" + id, { session: session, query: query }, "Getting notifications");
         }
     }
 

@@ -10,6 +10,7 @@ import { UserComponent } from './user/user.component';
 import { NotificationComponent } from './notification/notification.component';
 import { AdminComponent } from './admin/admin.component';
 import { adminGuard } from '../guards/admin.guard';
+import { FaqComponent } from './faq/faq.component';
 
 const TITLE_POSTFIX = " - " + environment.title;
 
@@ -50,6 +51,11 @@ export const routes: Routes = [
         title: "Administration" + TITLE_POSTFIX,
         component: AdminComponent,
         canActivate: [adminGuard]
+    },
+    {
+        path: "faq",
+        title: "FAQ" + TITLE_POSTFIX,
+        component: FaqComponent
     },
     {
         path: "**",

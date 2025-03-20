@@ -52,3 +52,24 @@ export interface LoginChallenge {
 export interface Login {
     sessionid: string;
 }
+
+export interface NotificationAmount {
+    amount: number;
+}
+
+export interface Notification {
+    read: boolean;
+    message: string;
+}
+
+export interface APIQuery<T = undefined> {
+    limit?: number;
+    start?: number;
+    step?: number;
+    specific?: T
+}
+
+export interface NotificationQuery {
+    read?: boolean,
+    id?: number
+}

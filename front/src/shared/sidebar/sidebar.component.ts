@@ -18,6 +18,7 @@ import { environment } from '../../environments/environment';
 import { DialogComponent, DialogDataType } from '../dialog/dialog.component';
 import { AuthentificationService } from '../../services/authentification.service';
 import { CommunicationService } from '../../services/communication.service';
+import { NotificationService } from '../../services/notification.service';
 
 const SiteName = environment.title;
 
@@ -62,6 +63,7 @@ export class SidebarComponent implements OnDestroy {
         private com: CommunicationService,
         public theme: ThemeService,
         private router: Router,
+        private notif: NotificationService,
         changeDetectorRef: ChangeDetectorRef,
         media: MediaMatcher,
     ) {
@@ -111,6 +113,9 @@ export class SidebarComponent implements OnDestroy {
                     if (adminObj) {
                         adminObj.hidden = user.role === "Administrator";
                     }
+                    if (notifObj) {
+                        notifObj.hidden = false;
+                    }
                 } else {
                     compteObj.title = "Compte";
                     compteObj.link = "/connection";
@@ -122,6 +127,9 @@ export class SidebarComponent implements OnDestroy {
                     }
                     if (adminObj) {
                         adminObj.hidden = true;
+                    }
+                    if (notifObj) {
+                        notifObj.hidden = true;
                     }
                 }
             }
@@ -156,6 +164,7 @@ export class SidebarComponent implements OnDestroy {
             tooltip: "Notifications reçues",
             id: "NotificationsObj",
             hoverClass: "nav-bell-hover",
+            hidden: true
         }
     ];
 
@@ -183,12 +192,12 @@ export class SidebarComponent implements OnDestroy {
             hidden: !isDevMode()
         },
         {
-            title: "Support",
-            link: "/support",
+            title: "FAQ",
+            link: "/faq",
             icon: "help",
             aria: "Lien pour aller sur la page d'aide",
             tooltip: "Aide, support et Q&A",
-            id: "SupportObj",
+            id: "FaqObj",
             hoverClass: "nav-blue-hover",
         },
         {
