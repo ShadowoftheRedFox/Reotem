@@ -2,7 +2,7 @@ import { readFileSync } from "fs";
 import path from "path";
 import HttpException from "~/models/HttpException";
 import Reotem from "~/util/functions";
-import { APIQuery, Notification, NotificationQuery } from "../../../../front/src/models/api.model"
+import { APIQuery, Notification, NotificationQuery, UserRole } from "../../../../front/src/models/api.model"
 
 const DB_PATH = path.join(__dirname, "..", "..", "..", "db.json");
 
@@ -18,7 +18,7 @@ export const getNotificationAmount = async (id: number, session: string) => {
         throw new HttpException(404);
     }
 
-    // TODO Reotem.getSession(session:string) -> user.id
+    // TODO Reotem.getSession(session:string) -> user.id | undefined
     const DB = JSON.parse(readFileSync(DB_PATH, 'utf8'));
     if (DB.sessions[session] != id) {
         throw new HttpException(401);
@@ -40,7 +40,7 @@ export const getNotificationQuery = async (id: number, session: string, query?: 
         throw new HttpException(400);
     }
 
-    // TODO Reotem.getSession(session:string) -> user.id
+    // TODO Reotem.getSession(session:string) -> user.id | undefined
     const DB = JSON.parse(readFileSync(DB_PATH, 'utf8'));
     if (DB.sessions[session] != id) {
         throw new HttpException(401);
@@ -52,4 +52,22 @@ export const getNotificationQuery = async (id: number, session: string, query?: 
 
     // TODO follow query
     return DB.notifications[id];
+}
+
+export const checkUserRole = async (role: UserRole, session: string) => {
+    if (!role || !session) {
+        throw new HttpException(404);
+    }
+
+    if (!UserRole.includes(role)) {
+        throw new HttpException(400, { role: "unknown" });
+    }
+
+    // TODO Reotem.getSession(session:string) -> user.id | undefined
+    const DB = JSON.parse(readFileSync(DB_PATH, 'utf8'));
+    if (DB.sessions[session] == undefined) {
+        throw new HttpException(401);
+    }
+
+    return DB.users[DB.sessions[session]].role == role;
 }

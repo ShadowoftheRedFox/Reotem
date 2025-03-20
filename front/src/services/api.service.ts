@@ -69,6 +69,9 @@ export class APIService {
         },
         tokenExists: async (token: string) => {
             return lastValueFrom(this.sendApiRequest<boolean>("POST", "signup/token", { token: token }));
+        },
+        verifyRole: (role: UserRole, session: string) => {
+            return this.sendApiRequest<boolean>("POST", "user/verify", { role: role, session: session }, "Verifying role");
         }
     }
 
