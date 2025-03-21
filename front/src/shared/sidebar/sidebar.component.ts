@@ -163,7 +163,7 @@ export class SidebarComponent implements OnDestroy {
             aria: "Lien pour voir vos notifications",
             tooltip: "Notifications reçues",
             id: "NotificationsObj",
-            hoverClass: "nav-bell-hover",
+            hoverClass: "nav-bell-hover nav-yellow-hover",
             hidden: true
         }
     ];

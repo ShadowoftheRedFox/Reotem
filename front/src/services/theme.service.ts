@@ -1,4 +1,8 @@
 import { Injectable } from '@angular/core';
+import { AuthentificationService } from './authentification.service';
+import { CookieTime } from '../models/cookie.models';
+
+const ThemeCookie = "theme";
 
 export interface ThemePalette {
     name: string;
@@ -10,6 +14,14 @@ export interface ThemePalette {
     providedIn: 'root'
 })
 export class ThemeService {
+    constructor(private auth: AuthentificationService) {
+        const CookieContent = auth.getCookie(ThemeCookie);
+        if (CookieContent.length > 0) {
+            this.themeChoosen = Number(CookieContent);
+            this.changeTheme();
+        }
+    }
+
     public themeChoosen = 0;
 
     public themeList: ThemePalette[] = [
@@ -56,6 +68,7 @@ export class ThemeService {
     ];
 
     private changeTheme() {
+        this.auth.setCookie(ThemeCookie, this.themeChoosen.toString(), CookieTime.Year, "/");
         // c'est dans cet élement qu'on stock no variable
         const root = document.querySelector(':root');
         if (!root) {
