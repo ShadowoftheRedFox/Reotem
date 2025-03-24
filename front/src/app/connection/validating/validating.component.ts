@@ -23,7 +23,7 @@ export class ValidatingComponent implements OnInit {
         private com: CommunicationService,
         private router: Router,
     ) {
-        if (auth.clientToken.length > 0) {
+        if (auth.clientToken.length == 0) {
             router.navigateByUrl("/");
         }
     }

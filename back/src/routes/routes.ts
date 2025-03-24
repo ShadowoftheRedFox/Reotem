@@ -1,14 +1,16 @@
 import { Router } from "express";
 import SignupRouter from "./signup/signup.controller";
 import SessionRouter from "./session/session.controller";
-import UserRouter from "./users/users.controller";
-import UsersRouter from "./user/user.controller";
+import UsersRouter from "./users/users.controller";
+import UserRouter from "./user/user.controller";
+import ObjectsRouter from "./objects/objects.controller";
 
 const api = Router()
-    .use(SignupRouter)
+    .use("/signup/", SignupRouter)
     .use(SessionRouter)
-    .use(UserRouter)
-    .use(UsersRouter);
+    .use("/user/", UserRouter)
+    .use("/users/", UsersRouter)
+    .use("/objects/", ObjectsRouter);
 
 const routes = Router().use('/', api);
 export default routes;

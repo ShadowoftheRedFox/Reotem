@@ -1,4 +1,5 @@
 import { environment } from "../environments/environment";
+import { ObjectClass } from "./domo.model";
 
 export const baseUrl = environment.api_url;
 
@@ -44,6 +45,9 @@ export type UserRole = "Administrator" |
     "Tester" |
     "Intern";
 
+export const UserLevel = ["Débutant", "Avancé", "Expert"];
+export type UserLevel = "Débutant" | "Avancé" | "Expert";
+
 export interface LoginChallenge {
     challenge: string;
     salt: string;
@@ -62,14 +66,19 @@ export interface Notification {
     message: string;
 }
 
-export interface APIQuery<T = undefined> {
+export interface APIQuery {
     limit?: number;
-    start?: number;
     step?: number;
-    specific?: T
 }
 
-export interface NotificationQuery {
-    read?: boolean,
-    id?: number
+export interface NotificationQuery extends APIQuery {
+    read?: boolean;
+    id?: number;
+}
+
+export interface ObjectQuery extends APIQuery {
+    id?: number;
+    sort?: "asc" | "desc";
+    type?: ObjectClass;
+    // TODO find a way to remember recently used object by user, maybe via localStorage,
 }

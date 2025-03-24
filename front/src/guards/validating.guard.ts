@@ -11,7 +11,6 @@ export const validatingGuard: CanActivateFn = async (route) => {
     }
 
     // check if api has this token, otherwise redirect to 404
-    // await api.auth.tokenExists(token);
     const res = await api.auth.tokenExists(token);
     return res;
 };

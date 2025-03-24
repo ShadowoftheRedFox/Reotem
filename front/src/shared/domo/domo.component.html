@@ -1,0 +1,62 @@
+@if (obj.id!==-1) {
+<div [ngTemplateOutlet]="objectClassToTemplate(light, thermostat, speaker, videoprojector, computer, windowstore, door, wifi, error)"
+    class="mobile-width">
+</div>
+} @else {
+<!-- TODO loading component animation -->
+<p>Chargement...</p>
+}
+
+<ng-template #light>
+    <mat-card appearance="outlined">
+        <mat-card-header>
+            <div mat-card-avatar class="light-header-image"></div>
+            <mat-card-title>Lumière: {{obj.name}}</mat-card-title>
+            <mat-card-subtitle>{{(obj.building ? "Bâtiment: " + obj.building + " " : "") + "Salle: " +
+                obj.room}}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+            <p>Statut: {{obj.state}}</p>
+            <p>Type de connexion: {{obj.connection}}</p>
+            <p>Dernière interaction: {{format()}}</p>
+        </mat-card-content>
+        <mat-card-actions>
+            <button mat-raised-button>
+                <mat-icon>settings</mat-icon>
+                Paramétrer
+            </button>
+        </mat-card-actions>
+    </mat-card>
+</ng-template>
+
+<ng-template #thermostat>
+    <p>Object thermostat!</p>
+</ng-template>
+
+<ng-template #speaker>
+    <p>Object speaker!</p>
+</ng-template>
+
+<ng-template #videoprojector>
+    <p>Object videoprojector!</p>
+</ng-template>
+
+<ng-template #computer>
+    <p>Object computer!</p>
+</ng-template>
+
+<ng-template #windowstore>
+    <p>Object windowstore!</p>
+</ng-template>
+
+<ng-template #door>
+    <p>Object door!</p>
+</ng-template>
+
+<ng-template #wifi>
+    <p>Object wifi!</p>
+</ng-template>
+
+<ng-template #error>
+    <p>Object error!</p>
+</ng-template>

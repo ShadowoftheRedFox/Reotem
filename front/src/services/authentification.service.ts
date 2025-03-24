@@ -1,6 +1,6 @@
 import { User } from '../models/api.model';
 import { CommunicationService } from './communication.service';
-import { CookieConsentName, CookieTime } from '../models/cookie.models';
+import { CookieConsentName, CookieTime } from '../models/cookie.model';
 import { DOCUMENT } from '@angular/common';
 import { Inject, Injectable } from '@angular/core';
 

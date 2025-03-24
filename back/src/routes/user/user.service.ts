@@ -2,7 +2,7 @@ import { readFileSync } from "fs";
 import path from "path";
 import HttpException from "~/models/HttpException";
 import Reotem from "~/util/functions";
-import { APIQuery, Notification, NotificationQuery, UserRole } from "../../../../front/src/models/api.model"
+import { Notification, NotificationQuery, UserRole } from "../../../../front/src/models/api.model"
 
 const DB_PATH = path.join(__dirname, "..", "..", "..", "db.json");
 
@@ -35,7 +35,7 @@ export const getNotificationAmount = async (id: number, session: string) => {
     return { amount: amount };
 };
 
-export const getNotificationQuery = async (id: number, session: string, query?: APIQuery<NotificationQuery>): Promise<Notification[]> => {
+export const getNotificationQuery = async (id: number, session: string, query?: NotificationQuery): Promise<Notification[]> => {
     if (id < 0 || !session) {
         throw new HttpException(400);
     }

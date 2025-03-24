@@ -11,6 +11,8 @@ import { NotificationComponent } from './notification/notification.component';
 import { AdminComponent } from './admin/admin.component';
 import { adminGuard } from '../guards/admin.guard';
 import { FaqComponent } from './faq/faq.component';
+import { TestComponent } from './test/test.component';
+import { testGuard } from '../guards/test.guard';
 
 const TITLE_POSTFIX = " - " + environment.title;
 
@@ -56,6 +58,12 @@ export const routes: Routes = [
         path: "faq",
         title: "FAQ" + TITLE_POSTFIX,
         component: FaqComponent
+    },
+    {
+        path: "test",
+        title: "Page de test" + TITLE_POSTFIX,
+        component: TestComponent,
+        canActivate: [testGuard]
     },
     {
         path: "**",

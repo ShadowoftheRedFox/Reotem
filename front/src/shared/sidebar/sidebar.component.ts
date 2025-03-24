@@ -34,6 +34,7 @@ interface SideNavItem {
     notifications?: string;
     hover?: boolean;
     hoverClass?: string;
+    class?: string;
     callback?: () => void;
 }
 
@@ -89,7 +90,7 @@ export class SidebarComponent implements OnDestroy {
 
     // listen to every event needed
     initUpdate() {
-        const decoObj = this.getItem("DéconnexionObj");
+        const decoObj = this.getItem("DeconnectionObj");
         const compteObj = this.getItem("CompteObj");
         const notifObj = this.getItem("NotificationsObj");
         const paramObj = this.getItem("ParamètresObj");
@@ -111,7 +112,7 @@ export class SidebarComponent implements OnDestroy {
                         paramObj.hidden = !user;
                     }
                     if (adminObj) {
-                        adminObj.hidden = user.role === "Administrator";
+                        adminObj.hidden = user.role != "Administrator";
                     }
                     if (notifObj) {
                         notifObj.hidden = false;
@@ -192,29 +193,14 @@ export class SidebarComponent implements OnDestroy {
             hidden: !isDevMode()
         },
         {
-            title: "FAQ",
+            title: "Forum",
             link: "/faq",
-            icon: "help",
+            // icon: "auto_stories",
+            icon: "category",
             aria: "Lien pour aller sur la page d'aide",
             tooltip: "Aide, support et Q&A",
             id: "FaqObj",
             hoverClass: "nav-blue-hover",
-        },
-        {
-            title: "Déconnexion",
-            link: null,
-            icon: "logout",
-            aria: "Se déconnecter de son compte",
-            tooltip: "Se déconnecter",
-            id: "DéconnexionObj",
-            hoverClass: "nav-red-hover",
-            hidden: true,
-            callback: () => {
-                this.disconnect();
-                this.router.navigate(["/"], {
-                    preserveFragment: true,
-                });
-            },
         },
         {
             title: "Compte",
@@ -223,6 +209,23 @@ export class SidebarComponent implements OnDestroy {
             aria: "Lien pour retourner se connecter",
             tooltip: "Se connecter",
             id: "CompteObj",
+        },
+        {
+            title: "Déconnexion",
+            link: null,
+            icon: "logout",
+            aria: "Se déconnecter de son compte",
+            tooltip: "Se déconnecter",
+            id: "DeconnectionObj",
+            class: "nav-red",
+            hoverClass: "nav-red-hover",
+            hidden: true,
+            callback: () => {
+                this.disconnect();
+                this.router.navigate(["/"], {
+                    preserveFragment: true,
+                });
+            },
         },
     ];
 

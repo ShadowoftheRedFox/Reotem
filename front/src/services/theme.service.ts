@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AuthentificationService } from './authentification.service';
-import { CookieTime } from '../models/cookie.models';
+import { CookieTime } from '../models/cookie.model';
 
 const ThemeCookie = "theme";
 
@@ -49,22 +49,22 @@ export class ThemeService {
                 this.changeTheme();
             }
         },
-        {
+        /* {
             name: "Couché de soleil",
             icon: "light_mode",
             trigger: () => {
                 this.themeChoosen = 3;
                 this.changeTheme();
             }
-        },
-        {
+        }, */
+        /* {
             name: "Noir et blanc",
             icon: "dark_mode",
             trigger: () => {
                 this.themeChoosen = 4;
                 this.changeTheme();
             }
-        },
+        }, */
     ];
 
     private changeTheme() {

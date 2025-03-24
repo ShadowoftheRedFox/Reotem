@@ -24,7 +24,7 @@ export class NotificationComponent {
             return;
         }
 
-        api.notifications.getAll(auth.client.id, auth.clientToken, { limit: 10, start: 0 }).subscribe({
+        api.notifications.getAll(auth.client.id, auth.clientToken, { limit: 10 }).subscribe({
             next: (res) => {
                 this.notifications = res;
             },

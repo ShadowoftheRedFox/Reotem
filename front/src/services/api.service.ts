@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import * as bcrypt from "bcryptjs";
-import { baseUrl, Login, LoginChallenge, User, UserSexe, UserRole, NewUser, NotificationAmount, APIQuery, NotificationQuery } from '../models/api.model';
+import { baseUrl, Login, LoginChallenge, User, UserSexe, UserRole, NewUser, NotificationAmount, NotificationQuery, ObjectQuery } from '../models/api.model';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { lastValueFrom, throwError } from 'rxjs';
 import { AuthentificationService } from './authentification.service';
 import { CommunicationService } from './communication.service';
+import { AnyObject } from '../models/domo.model';
 
 @Injectable({
     providedIn: 'root'
@@ -85,8 +86,14 @@ export class APIService {
         getNum: (id: number, session: string) => {
             return this.sendApiRequest<NotificationAmount>("POST", "user/notification/" + id, { session: session }, "Getting notifications amount");
         },
-        getAll: (id: number, session: string, query: APIQuery<NotificationQuery>) => {
+        getAll: (id: number, session: string, query: NotificationQuery) => {
             return this.sendApiRequest<Notification[]>("POST", "user/notifications/" + id, { session: session, query: query }, "Getting notifications");
+        }
+    }
+
+    readonly objects = {
+        all: (query: ObjectQuery) => {
+            return this.sendApiRequest<{ objects: AnyObject[], total: number }>("GET", "objects/", query, "Getting all objects");
         }
     }
 

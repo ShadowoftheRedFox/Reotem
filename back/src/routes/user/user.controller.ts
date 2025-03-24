@@ -4,7 +4,7 @@ import { getNotificationAmount, getNotificationQuery, checkUserRole } from "./us
 export const UserRouter = Router();
 export default UserRouter;
 
-UserRouter.post('/user/notification/:id', async (req, res, next) => {
+UserRouter.post('/notification/:id', async (req, res, next) => {
     try {
         console.log(`Getting user ${req.params.id} amount of notifications...`);
         const amount = await getNotificationAmount(Number(req.params.id), req.body.session);
@@ -14,7 +14,7 @@ UserRouter.post('/user/notification/:id', async (req, res, next) => {
     }
 });
 
-UserRouter.post('/user/notifications/:id', async (req, res, next) => {
+UserRouter.post('/notifications/:id', async (req, res, next) => {
     try {
         console.log(`Getting user ${req.params.id} notifications...`);
         const notifs = await getNotificationQuery(Number(req.params.id), req.body.session, req.body.query);
@@ -24,7 +24,7 @@ UserRouter.post('/user/notifications/:id', async (req, res, next) => {
     }
 });
 
-UserRouter.post("user/verify", async (req, res, next) => {
+UserRouter.post("/verify", async (req, res, next) => {
     try {
         console.log(`Verifying user ${req.body.session} has role...`);
         const hasRole = await checkUserRole(req.body.role, req.body.session);
