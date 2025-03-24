@@ -3,15 +3,21 @@ import { CommunicationService } from '../../services/communication.service';
 import { APIService } from '../../services/api.service';
 import { AuthentificationService } from '../../services/authentification.service';
 import { Router } from '@angular/router';
+import { MatTableModule } from '@angular/material/table';
+import { MatSortModule } from '@angular/material/sort';
 
 @Component({
     selector: 'app-notification',
-    imports: [],
+    imports: [
+        MatTableModule,
+        MatSortModule
+    ],
     templateUrl: './notification.component.html',
     styleUrl: './notification.component.scss'
 })
 export class NotificationComponent {
     notifications: Notification[] = [];
+    displayedColumns: string[] = ['selection', 'title', 'message', 'menu'];
 
     constructor(
         private com: CommunicationService,

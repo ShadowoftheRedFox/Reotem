@@ -1,4 +1,4 @@
-@if (obj.id!==-1) {
+@if (obj().id!==-1) {
 <div [ngTemplateOutlet]="objectClassToTemplate(light, thermostat, speaker, videoprojector, computer, windowstore, door, wifi, error)"
     class="mobile-width">
 </div>
@@ -11,13 +11,13 @@
     <mat-card appearance="outlined">
         <mat-card-header>
             <div mat-card-avatar class="light-header-image"></div>
-            <mat-card-title>Lumière: {{obj.name}}</mat-card-title>
-            <mat-card-subtitle>{{(obj.building ? "Bâtiment: " + obj.building + " " : "") + "Salle: " +
-                obj.room}}</mat-card-subtitle>
+            <mat-card-title>Lumière: {{obj().name}}</mat-card-title>
+            <mat-card-subtitle>{{(obj().building ? "Bâtiment: " + obj().building + " " : "") + "Salle: " +
+                obj().room}}</mat-card-subtitle>
         </mat-card-header>
         <mat-card-content>
-            <p>Statut: {{obj.state}}</p>
-            <p>Type de connexion: {{obj.connection}}</p>
+            <p>Statut: {{lightObj.state}}</p>
+            <p>Type de connexion: {{lightObj.connection}}</p>
             <p>Dernière interaction: {{format()}}</p>
         </mat-card-content>
         <mat-card-actions>
@@ -30,33 +30,180 @@
 </ng-template>
 
 <ng-template #thermostat>
-    <p>Object thermostat!</p>
+    <mat-card appearance="outlined">
+        <mat-card-header>
+            <div mat-card-avatar class="thermostat-header-image"></div>
+            <mat-card-title>Thermostat: {{obj().name}}</mat-card-title>
+            <mat-card-subtitle>{{(obj().building ? "Bâtiment: " + obj().building + " " : "") + "Salle: " +
+                obj().room}}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+            <p>Statut: {{thermostatObj.state}}</p>
+            <p>Type de connexion: {{thermostatObj.connection}}</p>
+            <p>Dernière interaction: {{format()}}</p>
+        </mat-card-content>
+        <mat-card-actions>
+            <button mat-raised-button>
+                <mat-icon>settings</mat-icon>
+                Paramétrer
+            </button>
+        </mat-card-actions>
+    </mat-card>
 </ng-template>
 
 <ng-template #speaker>
-    <p>Object speaker!</p>
+    <mat-card appearance="outlined">
+        <mat-card-header>
+            <div mat-card-avatar class="speaker-header-image"></div>
+            <mat-card-title>Enceinte: {{obj().name}}</mat-card-title>
+            <mat-card-subtitle>{{(obj().building ? "Bâtiment: " + obj().building + " " : "") + "Salle: " +
+                obj().room}}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+            <p>Statut: {{speakerObj.state}}</p>
+            <p>Type de connexion: {{speakerObj.connection}}</p>
+            <p>Allumé: {{speakerObj.turnedOn?"allumé":"éteint"}}</p>
+            @if (speakerObj.battery !== undefined) {
+            <p>Batterie: {{speakerObj.battery}}%</p>
+            }
+            <p>Dernière interaction: {{format()}}</p>
+        </mat-card-content>
+        <mat-card-actions>
+            <button mat-raised-button>
+                <mat-icon>settings</mat-icon>
+                Paramétrer
+            </button>
+        </mat-card-actions>
+    </mat-card>
 </ng-template>
 
 <ng-template #videoprojector>
-    <p>Object videoprojector!</p>
+    <mat-card appearance="outlined">
+        <mat-card-header>
+            <div mat-card-avatar class="videoprojector-header-image"></div>
+            <mat-card-title>Vidéo projecteur: {{obj().name}}</mat-card-title>
+            <mat-card-subtitle>{{(obj().building ? "Bâtiment: " + obj().building + " " : "") + "Salle: " +
+                obj().room}}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+            <p>Statut: {{videoprojectorObj.state}}</p>
+            <p>Type de connexion: {{videoprojectorObj.connection}}</p>
+            <p>Dernière interaction: {{format()}}</p>
+        </mat-card-content>
+        <mat-card-actions>
+            <button mat-raised-button>
+                <mat-icon>settings</mat-icon>
+                Paramétrer
+            </button>
+        </mat-card-actions>
+    </mat-card>
 </ng-template>
 
 <ng-template #computer>
-    <p>Object computer!</p>
+    <mat-card appearance="outlined">
+        <mat-card-header>
+            <div mat-card-avatar class="computer-header-image"></div>
+            <mat-card-title>Ordinateur: {{obj().name}}</mat-card-title>
+            <mat-card-subtitle>{{(obj().building ? "Bâtiment: " + obj().building + " " : "") + "Salle: " +
+                obj().room}}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+            <p>Statut: {{computerObj.state}}</p>
+            <p>Type de connexion: {{computerObj.connection}}</p>
+            <p>Dernière interaction: {{format()}}</p>
+        </mat-card-content>
+        <mat-card-actions>
+            <button mat-raised-button>
+                <mat-icon>settings</mat-icon>
+                Paramétrer
+            </button>
+        </mat-card-actions>
+    </mat-card>
 </ng-template>
 
 <ng-template #windowstore>
-    <p>Object windowstore!</p>
+    <mat-card appearance="outlined">
+        <mat-card-header>
+            <div mat-card-avatar class="windowstore-header-image"></div>
+            <mat-card-title>Store: {{obj().name}}</mat-card-title>
+            <mat-card-subtitle>{{(obj().building ? "Bâtiment: " + obj().building + " " : "") + "Salle: " +
+                obj().room}}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+            <p>Statut: {{windowstoreObj.state}}</p>
+            <p>Type de connexion: {{windowstoreObj.connection}}</p>
+            <p>Dernière interaction: {{format()}}</p>
+        </mat-card-content>
+        <mat-card-actions>
+            <button mat-raised-button>
+                <mat-icon>settings</mat-icon>
+                Paramétrer
+            </button>
+        </mat-card-actions>
+    </mat-card>
 </ng-template>
 
 <ng-template #door>
-    <p>Object door!</p>
+    <mat-card appearance="outlined">
+        <mat-card-header>
+            <div mat-card-avatar class="door-header-image"></div>
+            <mat-card-title>Porte: {{obj().name}}</mat-card-title>
+            <mat-card-subtitle>{{(obj().building ? "Bâtiment: " + obj().building + " " : "") + "Salle: " +
+                obj().room}}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+            <p>Statut: {{doorObj.state}}</p>
+            <p>Type de connexiondoorObj {{speakerObj.connection}}</p>
+            <p>Dernière interaction: {{format()}}</p>
+        </mat-card-content>
+        <mat-card-actions>
+            <button mat-raised-button>
+                <mat-icon>settings</mat-icon>
+                Paramétrer
+            </button>
+        </mat-card-actions>
+    </mat-card>
 </ng-template>
 
 <ng-template #wifi>
-    <p>Object wifi!</p>
+    <mat-card appearance="outlined">
+        <mat-card-header>
+            <div mat-card-avatar class="wifi-header-image"></div>
+            <mat-card-title>WiFi: {{obj().name}}</mat-card-title>
+            <mat-card-subtitle>{{(obj().building ? "Bâtiment: " + obj().building + " " : "") + "Salle: " +
+                obj().room}}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+            <p>Statut: {{wifiObj.state}}</p>
+            <p>Type de connexionwifiObj {{speakerObj.connection}}</p>
+            <p>Dernière interaction: {{format()}}</p>
+        </mat-card-content>
+        <mat-card-actions>
+            <button mat-raised-button>
+                <mat-icon>settings</mat-icon>
+                Paramétrer
+            </button>
+        </mat-card-actions>
+    </mat-card>
 </ng-template>
 
 <ng-template #error>
-    <p>Object error!</p>
+    <mat-card appearance="outlined">
+        <mat-card-header>
+            <div mat-card-avatar class="error-header-image"></div>
+            <mat-card-title>Erreur: {{obj().name}}</mat-card-title>
+            <mat-card-subtitle>{{(obj().building ? "Bâtiment: " + obj().building + " " : "") + "Salle: " +
+                obj().room}}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+            <p>Statut: {{obj().state}}</p>
+            <p>Dernière interaction: {{format()}}</p>
+        </mat-card-content>
+        <mat-card-actions>
+            <button mat-raised-button>
+                <mat-icon>settings</mat-icon>
+                Paramétrer
+            </button>
+        </mat-card-actions>
+    </mat-card>
 </ng-template>

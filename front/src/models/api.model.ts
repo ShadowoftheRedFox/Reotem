@@ -64,6 +64,7 @@ export interface NotificationAmount {
 export interface Notification {
     read: boolean;
     message: string;
+    title: string;
 }
 
 export interface APIQuery {

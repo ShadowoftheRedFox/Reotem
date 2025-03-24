@@ -2,11 +2,55 @@
     width: calc(100dvw - 2rem);
 }
 
+.mat-card-title {
+    min-width: max-content;
+}
+
 .mat-mdc-card-actions {
     flex-direction: row-reverse;
 }
 
 .light-header-image {
     background-image: url('/assets/img/objects/light.png');
+    background-size: cover;
+}
+
+.thermostat-header-image {
+    background-image: url('/assets/img/objects/thermostat.png');
+    background-size: cover;
+}
+
+.speaker-header-image {
+    background-image: url('/assets/img/objects/speaker.png');
+    background-size: cover;
+}
+
+.videoprojector-header-image {
+    background-image: url('/assets/img/objects/videoprojector.png');
+    background-size: cover;
+}
+
+.computer-header-image {
+    background-image: url('/assets/img/objects/computer.png');
+    background-size: cover;
+}
+
+.windowstore-header-image {
+    background-image: url('/assets/img/objects/windowstore.png');
+    background-size: cover;
+}
+
+.door-header-image {
+    background-image: url('/assets/img/objects/door.png');
+    background-size: cover;
+}
+
+.wifi-header-image {
+    background-image: url('/assets/img/objects/wifi.png');
+    background-size: cover;
+}
+
+.error-header-image {
+    background-image: url('/assets/img/objects/error.png');
     background-size: cover;
 }

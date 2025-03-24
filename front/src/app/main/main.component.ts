@@ -19,7 +19,7 @@ export class MainComponent {
         private api: APIService
     ) {
         api.objects.all({ limit: 20 }).subscribe(res => {
-            this.objectList = [res.objects[0], res.objects[0], res.objects[0], res.objects[0], res.objects[0], res.objects[0], res.objects[0], res.objects[0], res.objects[0]];
+            this.objectList = res.objects;
 
             console.log(res.objects[0]);
         });
