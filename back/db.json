@@ -37,7 +37,7 @@
     },
     "sessions": {
         "y761K2cCKsHAHf1wzPdqOaJI": 1,
-        "gxaaMLP54i6yKz1aZlz2By93": 0
+        "PMXrJ2U3S2m7JGZ0xYkvRFqF": 0
     },
     "validating": {
         "VWR1lSjd4boAXcFzSqdV01Mfz3rBFVk091EY084RpgsxC36xSYgMfKEfhKQCYqkb": 1
@@ -45,9 +45,16 @@
     "notifications": {
         "0": [
             {
+                "id": 0,
                 "read": false,
                 "title": "Titre",
                 "message": "Test"
+            },
+            {
+                "id": 1,
+                "read": true,
+                "title": "Titre de message lu",
+                "message": "Testouille"
             }
         ]
     },

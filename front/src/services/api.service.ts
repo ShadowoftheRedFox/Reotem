@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import * as bcrypt from "bcryptjs";
-import { baseUrl, Login, LoginChallenge, User, UserSexe, UserRole, NewUser, NotificationAmount, NotificationQuery, ObjectQuery } from '../models/api.model';
+import { baseUrl, Login, LoginChallenge, User, UserSexe, UserRole, NewUser, NotificationAmount, NotificationQuery, ObjectQuery, Notification } from '../models/api.model';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { lastValueFrom, throwError } from 'rxjs';
 import { AuthentificationService } from './authentification.service';

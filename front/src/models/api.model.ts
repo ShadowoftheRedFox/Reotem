@@ -62,6 +62,7 @@ export interface NotificationAmount {
 }
 
 export interface Notification {
+    id: number;
     read: boolean;
     message: string;
     title: string;

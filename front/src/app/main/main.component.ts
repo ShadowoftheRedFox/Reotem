@@ -21,7 +21,7 @@ export class MainComponent {
         api.objects.all({ limit: 20 }).subscribe(res => {
             this.objectList = res.objects;
 
-            console.log(res.objects[0]);
+            // console.log(res.objects[0]);
         });
     }
 }
