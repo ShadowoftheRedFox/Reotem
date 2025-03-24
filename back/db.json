@@ -37,8 +37,7 @@
     },
     "sessions": {
         "y761K2cCKsHAHf1wzPdqOaJI": 1,
-        "rXx8pmolQd4GzC982V9YjbmF": 2,
-        "wBQmqlefUsi8mDnOV1QJgfzL": 0
+        "gxaaMLP54i6yKz1aZlz2By93": 0
     },
     "validating": {
         "VWR1lSjd4boAXcFzSqdV01Mfz3rBFVk091EY084RpgsxC36xSYgMfKEfhKQCYqkb": 1
@@ -47,6 +46,7 @@
         "0": [
             {
                 "read": false,
+                "title": "Titre",
                 "message": "Test"
             }
         ]
