@@ -1,7 +1,7 @@
 @use 'sass:math';
 
 ::ng-deep.sidenav-container.sidenav-is-mobile .mobile-width {
-    width: calc(100dvw - 2rem);
+    width: calc(100dvw - 6rem);
 }
 
 .mat-card-title {
