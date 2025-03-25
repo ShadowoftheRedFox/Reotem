@@ -21,3 +21,12 @@ p {
     color: white !important;
     font-weight: bold !important;
 }
+
+:root {
+    --back-admin: var(--mat-sys-primary, inherit);
+    --on-back-admin: var(--mat-sys-on-primary, inherit);
+    --back-expert: var(--mat-sys-tertiary, inherit);
+    --on-back-expert: var(--mat-sys-on-tertiary, inherit);
+    --back-advanced: var(--mat-sys-secondary, inherit);
+    --on-back-advanced: var(--mat-sys-on-secondary, inherit);
+}
