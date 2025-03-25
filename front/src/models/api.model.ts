@@ -10,6 +10,7 @@ export interface User {
     email: string;
     age: number;
     role: UserRole;
+    level: UserLevel;
     sexe: UserSexe;
     validated?: false;
     photo: string | null;

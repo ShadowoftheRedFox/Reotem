@@ -5,6 +5,11 @@ import { MatCardModule } from "@angular/material/card"
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { toDateTime } from '../../models/date.model';
+import { MatMenuModule } from '@angular/material/menu';
+import { APIService } from '../../services/api.service';
+import { AuthentificationService } from '../../services/authentification.service';
+import { Router } from '@angular/router';
+import { PopupService } from '../../services/popup.service';
 
 @Component({
     selector: 'app-domo',
@@ -12,12 +17,20 @@ import { toDateTime } from '../../models/date.model';
         NgTemplateOutlet,
         MatCardModule,
         MatButtonModule,
-        MatIconModule
+        MatIconModule,
+        MatMenuModule
     ],
     templateUrl: './domo.component.html',
     styleUrl: './domo.component.scss'
 })
 export class DomoComponent {
+    constructor(
+        private api: APIService,
+        private auth: AuthentificationService,
+        private router: Router,
+        private popup: PopupService
+    ) { }
+
     obj = input<AnyObject>({
         id: -1,
         connection: "Déconnecté",
@@ -40,37 +53,82 @@ export class DomoComponent {
     wifiObj = this.obj() as WiFiObject;
 
     objectClassToTemplate(...templates: TemplateRef<unknown>[]) {
+        this.updateState();
         switch (this.obj().objectClass) {
             case "LightObject":
-                this.lightObj = this.obj() as LightObject;
                 return templates[0];
             case "ThermostatObject":
-                this.thermostatObj = this.obj() as ThermostatObject;
                 return templates[1];
             case "SpeakerObject":
-                this.speakerObj = this.obj() as SpeakerObject;
                 return templates[2];
             case "VideoProjectorObject":
-                this.videoprojectorObj = this.obj() as VideoProjectorObject;
                 return templates[3];
             case "ComputerObject":
-                this.computerObj = this.obj() as ComputerObject;
                 return templates[4];
             case "WindowStoreObject":
-                this.windowstoreObj = this.obj() as WindowStoreObject;
                 return templates[5];
             case "DoorObject":
-                this.doorObj = this.obj() as DoorObject;
                 return templates[6];
             case "WiFiObject":
-                this.wifiObj = this.obj() as WiFiObject;
                 return templates[7];
             default:
                 return templates[templates.length - 1];
         }
     }
 
+    updateState() {
+        this.lightObj = this.obj() as LightObject;
+        this.thermostatObj = this.obj() as ThermostatObject;
+        this.speakerObj = this.obj() as SpeakerObject;
+        this.videoprojectorObj = this.obj() as VideoProjectorObject;
+        this.computerObj = this.obj() as ComputerObject;
+        this.windowstoreObj = this.obj() as WindowStoreObject;
+        this.doorObj = this.obj() as DoorObject;
+        this.wifiObj = this.obj() as WiFiObject;
+    }
+
     format() {
         return toDateTime(this.obj().lastInteraction);
+    }
+
+    objDetail() {
+        this.router.navigate(["object", this.obj().id]);
+    }
+
+    objTurnOnOff() {
+        this.api.objects.update<SpeakerObject>(this.obj().id, this.auth.clientToken, { "turnedOn": !this.speakerObj.turnedOn }).subscribe({
+            next: () => {
+                (this.obj() as SpeakerObject).turnedOn = !this.speakerObj.turnedOn;
+                this.updateState();
+            }, error: () => {
+                this.popupError();
+            }
+        });
+    }
+
+    doorLock() {
+        this.api.objects.update<DoorObject>(this.obj().id, this.auth.clientToken, { "locked": !this.doorObj.locked }).subscribe({
+            next: () => {
+                (this.obj() as DoorObject).locked = !this.doorObj.locked;
+                this.updateState();
+            }, error: () => {
+                this.popupError()
+            }
+        });
+    }
+
+    popupError() {
+        this.popup.openSnackBar({ message: "Erreur, changement annulé", duration: 10, action: "Fermer" });
+    }
+
+    rngClass1 = this.rngClass();
+    rngClass2 = this.rngClass();
+    rngClass3 = this.rngClass();
+    rngClass4 = this.rngClass();
+    rngClass5 = this.rngClass();
+
+    rngClass() {
+        const v = ["rplaceholder1", "rplaceholder2", "rplaceholder3", "rplaceholder4", "rplaceholder5"];
+        return v[Math.floor(v.length * Math.random())];
     }
 }

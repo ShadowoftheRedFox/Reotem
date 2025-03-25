@@ -4,8 +4,11 @@
     <li>Filtre: batiment, type objet, état...</li>
     <li></li>
 </ul>
-<div class="w-full flex flex-row flex-nowrap overflow-y-auto gap-4 items-stretch px-4">
+<div class="w-full flex flex-row flex-nowrap justify-start overflow-y-auto gap-4 items-stretch px-4">
     @for (obj of objectList; track $index) {
     <app-domo [obj]="obj"></app-domo>
     }
+    <app-domo></app-domo>
+    <app-domo></app-domo>
+    <app-domo></app-domo>
 </div>

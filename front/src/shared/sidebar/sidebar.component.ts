@@ -95,6 +95,7 @@ export class SidebarComponent implements OnDestroy {
         const notifObj = this.getItem("NotificationsObj");
         const paramObj = this.getItem("ParamètresObj");
         const adminObj = this.getItem("AdminObj")
+        const objectManagerObj = this.getItem("ObjectManagerObj")
         // update at each connection/disconnection
         this.com.AuthAccountUpdate.subscribe((user) => {
             if (decoObj) {
@@ -116,6 +117,9 @@ export class SidebarComponent implements OnDestroy {
                     }
                     if (notifObj) {
                         notifObj.hidden = false;
+                    }
+                    if (objectManagerObj) {
+                        objectManagerObj.hidden = false;
                     }
                 } else {
                     compteObj.title = "Compte";
@@ -165,6 +169,16 @@ export class SidebarComponent implements OnDestroy {
             tooltip: "Notifications reçues",
             id: "NotificationsObj",
             hoverClass: "nav-bell-hover nav-yellow-hover",
+            hidden: true
+        },
+        {
+            title: "Gestionnaire",
+            link: "/object",
+            icon: "view_in_ar",
+            aria: "Lien pour voir aller au gestionnaire d'objets",
+            tooltip: "Gestionnaire d'objets",
+            id: "ObjectManagerObj",
+            hoverClass: "nav-obj-manager-hover",
             hidden: true
         }
     ];

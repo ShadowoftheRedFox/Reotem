@@ -35,6 +35,16 @@ mat-icon {
     }
 }
 
+.nav-obj-manager-hover {
+    &.mat-icon {
+        color: #4CAF50 !important;
+    }
+
+    & mat-icon {
+        color: #4CAF50 !important;
+    }
+}
+
 .nav-bug-hover {
     &.mat-icon {
         color: #4CAF50 !important;

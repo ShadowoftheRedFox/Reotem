@@ -13,6 +13,8 @@ import { adminGuard } from '../guards/admin.guard';
 import { FaqComponent } from './faq/faq.component';
 import { TestComponent } from './test/test.component';
 import { testGuard } from '../guards/test.guard';
+import { ObjectComponent } from './object-manager/object/object.component';
+import { ObjectManagerComponent } from './object-manager/object-manager.component';
 
 const TITLE_POSTFIX = " - " + environment.title;
 
@@ -42,6 +44,16 @@ export const routes: Routes = [
         path: "user/:id",
         title: "Profil utilisateur" + TITLE_POSTFIX,
         component: UserComponent
+    },
+    {
+        path: "object/:id",
+        title: "Objet" + TITLE_POSTFIX,
+        component: ObjectComponent
+    },
+    {
+        path: "object",
+        title: "Gestionnaire d'objet" + TITLE_POSTFIX,
+        component: ObjectManagerComponent
     },
     {
         path: "notification",

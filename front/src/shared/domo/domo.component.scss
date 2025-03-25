@@ -54,3 +54,74 @@
     background-image: url('/assets/img/objects/error.png');
     background-size: cover;
 }
+
+.icon-red {
+    &.mat-icon {
+        color: #ff5151 !important;
+    }
+
+    & mat-icon {
+        color: #ff5151 !important;
+    }
+}
+
+.icon-green {
+    &.mat-icon {
+        color: #4CAF50 !important;
+    }
+
+    & mat-icon {
+        color: #4CAF50 !important;
+    }
+}
+
+mat-card-title {
+    text-wrap-mode: nowrap;
+}
+
+@keyframes placeHolderShimmer {
+    0% {
+        background-position: 0px 0;
+    }
+
+    100% {
+        background-position: 100em 0;
+    }
+}
+
+.placeholder-p {
+    min-width: 60px;
+    color: rgba(#000000, 0);
+    text-wrap-mode: nowrap;
+    animation-fill-mode: forwards;
+    animation-iteration-count: infinite;
+    animation-name: placeHolderShimmer;
+    animation-timing-function: linear;
+    background: transparent;
+    background: linear-gradient(to right, #eeeeeea8 8%, #dddddda8 18%, #eeeeeea8 33%);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    border-radius: 16px;
+    margin-bottom: 0.5em;
+    animation-duration: 30s;
+}
+
+.rplaceholder1 {
+    width: min(300, max(150, random(300)))+px;
+}
+
+.rplaceholder2 {
+    width: min(300, max(150, random(300)))+px;
+}
+
+.rplaceholder3 {
+    width: min(300, max(150, random(300)))+px;
+}
+
+.rplaceholder4 {
+    width: min(300, max(150, random(300)))+px;
+}
+
+.rplaceholder5 {
+    width: min(300, max(150, random(300)))+px;
+}
