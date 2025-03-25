@@ -6,16 +6,25 @@
             </button>
             <h3>{{SiteName}}</h3>
         </div>
-        <div>
-            <button mat-mini-fab [matMenuTriggerFor]="themeMenu" matTooltip="Changer le thème du site">
-                <mat-icon>palette</mat-icon>
-            </button>
-            <mat-menu #themeMenu>
-                @for (item of theme.themeList; track $index) {
-                <button mat-menu-item [style.display]="item.value===theme.themeChoosen?'none':'block'"
-                    (click)="theme.setTheme(item.value)">{{item.label}}</button>
-                }
-            </mat-menu>
+        <div class="flex flex-row flex-nowrap justify-end gap-4">
+            @if (user) {
+            <div class="flex justify-end items-center"
+                [class]="mobileQuery.matches? 'flex-col gap-1' : 'flex-row gap-4'">
+                <p class="text-base">{{user.level||'err'}}</p>
+                <mat-progress-bar mode="determinate" [value]="user.xp||10"></mat-progress-bar>
+            </div>
+            }
+            <div>
+                <button mat-mini-fab [matMenuTriggerFor]="themeMenu" matTooltip="Changer le thème du site">
+                    <mat-icon>palette</mat-icon>
+                </button>
+                <mat-menu #themeMenu>
+                    @for (item of theme.themeList; track $index) {
+                    <button mat-menu-item [style.display]="item.value===theme.themeChoosen?'none':'block'"
+                        (click)="theme.setTheme(item.value)">{{item.label}}</button>
+                    }
+                </mat-menu>
+            </div>
         </div>
     </mat-toolbar>
 

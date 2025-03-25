@@ -1,3 +1,5 @@
+@use 'sass:math';
+
 ::ng-deep.sidenav-container.sidenav-is-mobile .mobile-width {
     width: calc(100dvw - 2rem);
 }
@@ -107,21 +109,21 @@ mat-card-title {
 }
 
 .rplaceholder1 {
-    width: min(300, max(150, random(300)))+px;
+    width: min(300, max(150, math.random(300)))+px;
 }
 
 .rplaceholder2 {
-    width: min(300, max(150, random(300)))+px;
+    width: min(300, max(150, math.random(300)))+px;
 }
 
 .rplaceholder3 {
-    width: min(300, max(150, random(300)))+px;
+    width: min(300, max(150, math.random(300)))+px;
 }
 
 .rplaceholder4 {
-    width: min(300, max(150, random(300)))+px;
+    width: min(300, max(150, math.random(300)))+px;
 }
 
 .rplaceholder5 {
-    width: min(300, max(150, random(300)))+px;
+    width: min(300, max(150, math.random(300)))+px;
 }

@@ -32,6 +32,7 @@ const userSchemaDefinition = {
     },
     role: { type: String, required: true },
     level: { type: String, required: true },
+    xp: { type: Number, required: true },
     sexe: { type: String, required: true },
     photo: { type: Buffer, default: null },
     challenge: String, // can be undefined when is not challenged

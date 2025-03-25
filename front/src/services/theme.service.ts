@@ -45,8 +45,8 @@ export class ThemeService {
             backgroundColor: "#fff",
             buttonColor: "#ffc107",
             headingColor: "#673ab7",
-            label: "Indigo & Rose",
-            value: "indigo-pink"
+            label: "Chartreuse & Vert",
+            value: "chartreuse-green"
         },
         {
             backgroundColor: "#fff",

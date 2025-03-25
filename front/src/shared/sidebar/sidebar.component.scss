@@ -1,8 +1,3 @@
-// TODO:
-/*
-Mettre le titre de la side bar au nom du site (et animé)
-*/
-
 p {
     margin: 0;
 }
@@ -299,4 +294,9 @@ h3 {
 
 ::ng-deep mat-sidenav>div {
     display: inherit !important;
+}
+
+mat-progress-bar {
+    width: 20dvw;
+    border-radius: 10px;
 }

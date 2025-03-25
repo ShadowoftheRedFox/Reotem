@@ -50,8 +50,8 @@
                             },
                             {
                                 "inject": false,
-                                "input": "src/assets/styles/indigo-pink.scss",
-                                "bundleName": "indigo-pink"
+                                "input": "src/assets/styles/chartreuse-green.scss",
+                                "bundleName": "chartreuse-green"
                             },
                             {
                                 "inject": false,
@@ -155,8 +155,8 @@
                             },
                             {
                                 "inject": false,
-                                "input": "src/assets/styles/indigo-pink.scss",
-                                "bundleName": "indigo-pink"
+                                "input": "src/assets/styles/chartreuse-green.scss",
+                                "bundleName": "chartreuse-green"
                             },
                             {
                                 "inject": false,

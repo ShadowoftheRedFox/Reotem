@@ -10,6 +10,7 @@ import { MatSidenav } from '@angular/material/sidenav';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { NgClass } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
@@ -19,6 +20,7 @@ import { DialogComponent, DialogDataType } from '../dialog/dialog.component';
 import { AuthentificationService } from '../../services/authentification.service';
 import { CommunicationService } from '../../services/communication.service';
 import { NotificationService } from '../../services/notification.service';
+import { User } from '../../models/api.model';
 
 const SiteName = environment.title;
 
@@ -52,6 +54,7 @@ interface SideNavItem {
         MatTooltipModule,
         RouterLink,
         NgClass,
+        MatProgressBarModule
     ],
     templateUrl: './sidebar.component.html',
     styleUrl: './sidebar.component.scss'
@@ -73,8 +76,15 @@ export class SidebarComponent implements OnDestroy {
         this.mobileQuery.addEventListener("change", this._mobileQueryListener)
 
         this.initUpdate();
+
+        com.AuthAccountUpdate.subscribe(u => {
+            if (u) {
+                this.user = u;
+            }
+        })
     }
 
+    user: User | null = null;
     isAdmin = false;
     readonly SiteName = SiteName;
 
