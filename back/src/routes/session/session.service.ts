@@ -4,25 +4,28 @@ import fs from "fs";
 import path from "path";
 import { generateToken } from "../../util/crypt";
 import { parseUser } from "../../util/parser";
+import Reotem from "~/util/functions";
 
 const DB_PATH = path.join(__dirname, "..", "..", "..", "db.json");
 
-export const getSession = (id: string) => {
-    if (!id) {
-        throw new HttpException(422, { id: "can't be blank" });
+export const getSession = async (token: string) => {
+    if (!token) {
+        throw new HttpException(422, { token: "can't be blank" });
     }
 
     const DB = JSON.parse(fs.readFileSync(DB_PATH, 'utf8'));
-
-    let user = DB.users[DB.sessions[id]];
+    let session = await Reotem.getSession(token);
+    let user = await Reotem.getUser(session?.id) || DB.users[DB.sessions[token]];
     if (user == undefined) throw new HttpException(404);
 
-    user = parseUser(user);
+    user = parseUser(user as never) as never;
+
+    console.log(user)
 
     return { ...user };
 };
 
-export const createSession = (mail: string, hash: string) => {
+export const createSession = async (mail: string, hash: string) => {
     if (!mail) {
         throw new HttpException(422, { mail: "can't be blank" });
     }
@@ -40,7 +43,7 @@ export const createSession = (mail: string, hash: string) => {
     if (id == -1) {
         throw new HttpException(400);
     }
-    const user = DB.users[id];
+    const user = await Reotem.getUserByMail(mail) || DB.users[id];
 
     if (!hash) {
         const challenge = generateToken(24);
@@ -65,10 +68,12 @@ export const createSession = (mail: string, hash: string) => {
             Object.keys(DB.sessions).forEach(s => {
                 if (DB.sessions[s] == user.id) {
                     delete DB.sessions[s];
+                    Reotem.deleteSession(user.id);
                 }
             });
 
             DB.sessions[sessionid] = id;
+            Reotem.addSession({ id: user.id, token: sessionid });
 
             delete user.challenge;
             DB.users[id] = user;
@@ -95,6 +100,7 @@ export const deleteSession = (id: number, session: string) => {
     if (DB.sessions[session] != id) return false;
 
     delete DB.sessions[session];
+    Reotem.deleteSession(id);
     fs.writeFileSync(DB_PATH, JSON.stringify(DB));
     return true;
 };

@@ -31,8 +31,10 @@ export class APIService {
             try {
                 res = await lastValueFrom(this.sendApiRequest<LoginChallenge>("POST", "signin", { mail: mail }, "Challenge auth"));
             } catch (e) {
+                console.error(e)
                 return throwError(() => e);
             }
+            console.log(res)
             const challenge: string = res.challenge;
             const salt: string = res.salt;
 

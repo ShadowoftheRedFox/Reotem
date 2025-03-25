@@ -95,6 +95,8 @@ export const createUser = async (input: { [key: string]: never }) => {
     fs.writeFileSync(DB_PATH, JSON.stringify(DB));
 
     await Reotem.addUser(user);
+    await Reotem.addSession({ id: user.id, token: sessionid });
+
 
     user = parseUser(user as never) as never;
 

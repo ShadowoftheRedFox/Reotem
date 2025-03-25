@@ -37,6 +37,7 @@ const userSchemaDefinition = {
     validated: String, // is a secret token, is defined when user has not validated his email yet
 }
 
+
 export const userSchema = new Schema(userSchemaDefinition);
 
 export type UserSchema = InferRawDocType<typeof userSchemaDefinition>;

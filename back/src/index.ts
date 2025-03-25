@@ -14,6 +14,8 @@ const corsOptions = {
     optionsSuccessStatus: 200 // Ensure compatibility by setting OPTIONS success status to 200 OK.
 };
 
+init();
+
 const app = express();
 
 // Apply JSON parsing and CORS with configured options as global middleware.
@@ -28,8 +30,6 @@ app.use(express.urlencoded({
 app.use(cors(corsOptions));
 
 app.use(routes);
-
-init();
 
 const errorHandler: ErrorRequestHandler = function (err, req, res, next) {
     if (err && err.name === 'UnauthorizedError') {

@@ -11,25 +11,28 @@ export const getNotificationAmount = async (id: number, session: string) => {
     if (id < 0 || !session) {
         throw new HttpException(400);
     }
-
-    const user = await Reotem.getUser(id);
-
-    if (user == undefined) {
-        throw new HttpException(404);
-    }
-
+    
+    const currentSession = await Reotem.getSession(session);
     // TODO Reotem.getSession(session:string) -> user.id | undefined
-    const DB = JSON.parse(readFileSync(DB_PATH, 'utf8'));
-    if (DB.sessions[session] != id) {
+    if (currentSession?.id != id) {
         throw new HttpException(401);
     }
 
+    
+
     // TODO Reotem.user.getNotifications(id:number) -> number
+    const userNotications = await Reotem.getNotifications(id);
     let amount = 0;
-    if (DB.notifications[id] != undefined) {
-        (DB.notifications[id] as { read: boolean, message: string }[]).forEach(notif => {
+    if (userNotications != undefined) {
+        userNotications.notifications.forEach(notif => {
             if (!notif.read) amount++;
         });
+    } else {
+        const notifications = {
+            id: id,
+            notifications: []
+        };
+        await Reotem.addNotifications(notifications)
     }
 
     return { amount: amount };
