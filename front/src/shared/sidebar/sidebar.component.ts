@@ -78,9 +78,7 @@ export class SidebarComponent implements OnDestroy {
         this.initUpdate();
 
         com.AuthAccountUpdate.subscribe(u => {
-            if (u) {
-                this.user = u;
-            }
+            this.user = u;
         })
     }
 
