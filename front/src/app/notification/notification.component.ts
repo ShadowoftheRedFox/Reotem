@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Injectable, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Injectable, signal, ViewChild } from '@angular/core';
 import { CommunicationService } from '../../services/communication.service';
 import { APIService } from '../../services/api.service';
 import { AuthentificationService } from '../../services/authentification.service';
@@ -12,6 +12,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { Notification } from '../../models/api.model';
 import { MatPaginator, MatPaginatorIntl, MatPaginatorModule } from '@angular/material/paginator';
 import { Subject } from 'rxjs';
+import { PopupService } from '../../services/popup.service';
 
 @Injectable()
 export class CustomPaginatorIntl implements MatPaginatorIntl {
@@ -39,6 +40,11 @@ export class CustomPaginatorIntl implements MatPaginatorIntl {
 
 type Columns = "selection" | "title" | "message" | "menu" | "id";
 
+export interface Task {
+    checked: boolean;
+    subtasks?: Task[];
+}
+
 @Component({
     selector: 'app-notification',
     imports: [
@@ -59,12 +65,15 @@ export class NotificationComponent implements AfterViewInit {
     sortedNotifications: Notification[] = [];
     displayedColumns: Columns[] = ['selection', 'id', 'title', 'message', 'menu'];
 
-    selectedItems: boolean[] = [];
-
     dataSource = new MatTableDataSource<Notification>(this.sortedNotifications);
 
     @ViewChild(MatPaginator) paginator!: MatPaginator;
     @ViewChild(MatSort) sort!: MatSort;
+
+    readonly task = signal<Task>({
+        checked: false,
+        subtasks: []
+    });
 
     ngAfterViewInit(): void {
         this.dataSource.paginator = this.paginator;
@@ -75,6 +84,7 @@ export class NotificationComponent implements AfterViewInit {
         private com: CommunicationService,
         private api: APIService,
         private auth: AuthentificationService,
+        private popup: PopupService,
         private router: Router,
     ) {
         if (auth.client == null) {
@@ -85,18 +95,28 @@ export class NotificationComponent implements AfterViewInit {
         api.notifications.getAll(auth.client.id, auth.clientToken, { limit: 10 }).subscribe({
             next: (res) => {
                 this.notifications = res;
-                this.sortedNotifications = this.notifications;
-
-                this.notifications.forEach(() => {
-                    this.selectedItems.push(false);
-                });
-
-                this.dataSource.data = this.notifications;
+                this.updateNotifsContent();
             },
             error: (err) => {
                 console.error(err);
             }
         });
+    }
+
+    updateNotifsContent() {
+        this.sortedNotifications = this.notifications;
+
+        const subtasks: Task[] = [];
+        this.notifications.forEach(() => {
+            subtasks.push({ checked: false });
+        });
+
+        this.task.set({
+            checked: false,
+            subtasks: subtasks
+        });
+
+        this.dataSource.data = this.notifications;
     }
 
     sortNotif(sort: Sort) {
@@ -128,5 +148,146 @@ export class NotificationComponent implements AfterViewInit {
         return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
     }
 
-    // TODO interactions
+    // interactions
+
+    notifIdToIndex(id: number) {
+        for (let i = 0; i < this.notifications.length; i++) {
+            if (this.notifications[i].id == id) return i;
+        }
+        return -1;
+    }
+
+    taskPartiallyComplete() {
+        const task = this.task();
+        if (!task.subtasks) {
+            return false;
+        }
+        return task.subtasks.some(t => t.checked) && !task.subtasks.every(t => t.checked);
+    };
+
+    update(checked: boolean, id?: number) {
+        const index = this.notifIdToIndex(id || -1);
+        if (index == -1 && id != undefined) return;
+
+        this.task.update(task => {
+            if (index === -1) {
+                task.checked = checked;
+                task.subtasks?.forEach(t => (t.checked = checked));
+            } else {
+                task.subtasks![index].checked = checked;
+                task.checked = task.subtasks?.every(t => t.checked) ?? true;
+            }
+            return { ...task };
+        });
+    }
+
+    delete(elementId?: number) {
+        const ids: number[] = [];
+        const aid: number[] = [];
+
+        this.task().subtasks?.forEach((t, i) => {
+            if (t.checked) {
+                aid.push(i);
+                ids.push(this.notifications[i].id);
+            }
+        });
+
+        this.api.notifications.delete(ids, this.auth.clientToken).subscribe({
+            next: () => {
+                if (elementId != undefined) {
+                    this.notifications.forEach((n, i) => {
+                        if (n.id == elementId) {
+                            this.notifications.splice(i, 1);
+                        }
+                    });
+                } else {
+                    aid.forEach((i) => {
+                        this.notifications.splice(i, 1);
+                    });
+                }
+                this.updateNotifsContent();
+            },
+            error: () => {
+                this.popupError();
+            },
+        })
+    }
+
+    read(elementId?: number) {
+        const ids: number[] = [];
+        const aid: number[] = [];
+
+        this.task().subtasks?.forEach((t, i) => {
+            if (t.checked) {
+                aid.push(i);
+                ids.push(this.notifications[i].id);
+            }
+        });
+
+        this.api.notifications.read(ids, this.auth.clientToken).subscribe({
+            next: () => {
+                if (elementId != undefined) {
+                    this.notifications.forEach((n, i) => {
+                        if (n.id == elementId) {
+                            this.notifications[i].read = true;
+                        }
+                    });
+                } else {
+                    aid.forEach((i) => {
+                        this.notifications[i].read = true;
+                    });
+                }
+                this.updateNotifsContent();
+                this.sendUnreadNotification();
+            },
+            error: () => {
+                this.popupError();
+            },
+        })
+    }
+
+    unread(elementId?: number) {
+        const ids: number[] = [];
+        const aid: number[] = [];
+
+        this.task().subtasks?.forEach((t, i) => {
+            if (t.checked) {
+                aid.push(i);
+                ids.push(this.notifications[i].id);
+            }
+        });
+
+        this.api.notifications.unread(ids, this.auth.clientToken).subscribe({
+            next: () => {
+                if (elementId != undefined) {
+                    this.notifications.forEach((n, i) => {
+                        if (n.id == elementId) {
+                            this.notifications[i].read = false;
+                        }
+                    });
+                } else {
+                    aid.forEach((i) => {
+                        this.notifications[i].read = false;
+                    });
+                }
+                this.updateNotifsContent();
+                this.sendUnreadNotification();
+            },
+            error: () => {
+                this.popupError();
+            },
+        })
+    }
+
+    sendUnreadNotification() {
+        let count = 0;
+        this.notifications.forEach(n => {
+            count += Number(!n.read);
+        });
+        this.com.NotifUpdate.next(count);
+    }
+
+    popupError() {
+        this.popup.openSnackBar({ message: "Échec de l'interaction", duration: 10000 });
+    }
 }
