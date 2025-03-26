@@ -2,7 +2,7 @@ import bcrypt from "bcryptjs";
 import HttpException from "../../models/HttpException";
 import fs from "fs";
 import path from "path";
-import { UserMaxAge, UserMinAge, UserRole, UserSexe } from "../../models/user";
+import { UserMaxAge, UserMinAge, UserRole, UserSchema, UserSexe } from "../../models/user";
 import { generateToken } from "../../util/crypt";
 import { parseUser } from "../../util/parser";
 import { sendMail, template } from "../../util/mailer";
@@ -27,7 +27,6 @@ export const createUser = async (input: { [key: string]: never }) => {
     const role = input.role as string;
     const sexe = input.sexe as string;
     const password = input.password as string;
-    const photo = input.photo as string | null;
 
     if (!email) {
         throw new HttpException(422, { email: "can't be blank" });
@@ -43,6 +42,10 @@ export const createUser = async (input: { [key: string]: never }) => {
 
     if (!password) {
         throw new HttpException(422, { password: "can't be blank" });
+    }
+
+    if (password.length < 8) {
+        throw new HttpException(422, { password: "must be longer than 8 characters" });
     }
 
     if (!age) {
@@ -81,9 +84,8 @@ export const createUser = async (input: { [key: string]: never }) => {
         role: role,
         sexe: sexe,
         validated: generateToken(10),
-        photo: typeof photo != "string" ? null : photo,
-        xp: 0,
-        level: "Débutant"
+        exp: 0,
+        lvl: "Débutant"
     };
 
     const sessionid = generateToken(24);
@@ -94,6 +96,8 @@ export const createUser = async (input: { [key: string]: never }) => {
     fs.writeFileSync(DB_PATH, JSON.stringify(DB));
 
     await Reotem.addUser(user);
+    await Reotem.addSession({ id: user.id, token: sessionid });
+
 
     user = parseUser(user as never) as never;
 
@@ -106,12 +110,11 @@ export const createUser = async (input: { [key: string]: never }) => {
 };
 
 export const getCurrentUser = async (id: number) => {
-    const DB = JSON.parse(fs.readFileSync(DB_PATH, 'utf8'));
-    let user = DB.users[id];
+    let user = await Reotem.getUser(id) as UserSchema | Partial<UserSchema>;
 
     if (!user) return {};
 
-    user = parseUser(user);
+    user = parseUser(user as UserSchema) as Partial<UserSchema>;
 
     return {
         ...user,

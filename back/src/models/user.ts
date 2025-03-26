@@ -31,13 +31,14 @@ const userSchemaDefinition = {
         required: true
     },
     role: { type: String, required: true },
-    level: { type: String, required: true },
-    xp: { type: Number, required: true },
     sexe: { type: String, required: true },
-    photo: { type: String, default: null },
+    exp: {type: Number, default: 0},
+    lvl:  {type: String, default: "Débutant"},
     challenge: String, // can be undefined when is not challenged
     validated: String, // is a secret token, is defined when user has not validated his email yet
+    adminValidated: {type: Boolean, default: false}
 }
+
 
 export const userSchema = new Schema(userSchemaDefinition);
 

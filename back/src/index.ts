@@ -14,6 +14,8 @@ const corsOptions = {
     optionsSuccessStatus: 200 // Ensure compatibility by setting OPTIONS success status to 200 OK.
 };
 
+init();
+
 const app = express();
 
 // Apply JSON parsing and CORS with configured options as global middleware.

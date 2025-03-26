@@ -14,24 +14,25 @@ export const getNotificationAmount = async (id: number, session: string) => {
         throw new HttpException(400);
     }
 
-    const user = await Reotem.getUser(id);
-
-    if (user == undefined) {
-        throw new HttpException(404);
-    }
-
+    const currentSession = await Reotem.getSession(session);
     // TODO Reotem.getSession(session:string) -> user.id | undefined
-    const DB = JSON.parse(readFileSync(DB_PATH, 'utf8'));
-    if (DB.sessions[session] != id) {
+    if (currentSession?.id != id) {
         throw new HttpException(401);
     }
 
     // TODO Reotem.user.getNotifications(id:number) -> number
+    const userNotications = await Reotem.getNotifications(id);
     let amount = 0;
-    if (DB.notifications[id] != undefined) {
-        (DB.notifications[id] as { read: boolean, message: string }[]).forEach(notif => {
+    if (userNotications != undefined) {
+        userNotications.notifications.forEach(notif => {
             if (!notif.read) amount++;
         });
+    } else {
+        const notifications = {
+            id: id,
+            notifications: []
+        };
+        await Reotem.addNotifications(notifications)
     }
 
     return { amount: amount };
@@ -42,18 +43,44 @@ export const getNotificationQuery = async (id: number, session: string, query?: 
         throw new HttpException(400);
     }
 
+    const currentSession = await Reotem.getSession(session);
     // TODO Reotem.getSession(session:string) -> user.id | undefined
-    const DB = JSON.parse(readFileSync(DB_PATH, 'utf8'));
-    if (DB.sessions[session] != id) {
+    if (currentSession?.id != id) {
         throw new HttpException(401);
     }
 
-    if (query == undefined) {
-        return DB.notifications[id];
+    const userNotif = await Reotem.getNotifications(id);
+    console.log(query)
+    if (query === undefined) {
+        return userNotif?.notifications as Notification[];
     }
 
+    let queryNotifs: Notification[] = [];
+    if (query.id) {
+        userNotif?.notifications.forEach(notif => {
+            if (notif.id === query.id) {
+                queryNotifs.push(notif as Notification);
+            }
+        });
+        return queryNotifs;
+    }
+
+    if (query.read) {
+        userNotif?.notifications.forEach(notif => {
+            if (notif.read === query.read) {
+                queryNotifs.push(notif as Notification);
+            }
+        });
+    }
+
+    if (query.limit) {
+        if (queryNotifs.length === 0) {
+            queryNotifs = userNotif?.notifications as Notification[];
+        }
+        queryNotifs = queryNotifs.splice((query.step || 0) * query.limit, query.limit);
+    }
     // TODO follow query
-    return DB.notifications[id];
+    return queryNotifs;
 }
 
 export const checkUserRole = async (role: UserRole, session: string) => {

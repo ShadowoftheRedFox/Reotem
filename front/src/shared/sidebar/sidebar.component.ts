@@ -81,15 +81,15 @@ export class SidebarComponent implements OnDestroy {
             this.user = u;
 
             if (this.user) {
-                switch (this.user.level) {
+                switch (this.user.lvl) {
                     case "Débutant":
-                        this.userLevelCompletion = Math.floor((this.user.xp / LevelBeginner) * 100);
+                        this.userLevelCompletion = Math.floor((this.user.exp / LevelBeginner) * 100);
                         break;
                     case "Avancé":
-                        this.userLevelCompletion = Math.floor((this.user.xp / LevelAdvanced) * 100);
+                        this.userLevelCompletion = Math.floor((this.user.exp / LevelAdvanced) * 100);
                         break;
                     case "Expert":
-                        this.userLevelCompletion = Math.floor((this.user.xp / LevelExpert) * 100);
+                        this.userLevelCompletion = Math.floor((this.user.exp / LevelExpert) * 100);
                         break;
                     default:
                         this.userLevelCompletion = Math.floor(((Math.random() * LevelExpert) / LevelExpert) * 100);
@@ -119,7 +119,6 @@ export class SidebarComponent implements OnDestroy {
         const decoObj = this.getItem("DeconnectionObj");
         const compteObj = this.getItem("CompteObj");
         const notifObj = this.getItem("NotificationsObj");
-        const paramObj = this.getItem("ParamètresObj");
         const adminObj = this.getItem("AdminObj")
         const objectManagerObj = this.getItem("ObjectManagerObj")
         // update at each connection/disconnection
@@ -134,10 +133,7 @@ export class SidebarComponent implements OnDestroy {
                     compteObj.tooltip = "Accéder à votre profil";
                     compteObj.aria = "Lien vers votre page de profil";
                     compteObj.link = ["/user", user.id + ''];
-                    if (paramObj) {
-                        paramObj.link = ["/user", user.id + "", "settings"];
-                        paramObj.hidden = !user;
-                    }
+
                     if (adminObj) {
                         adminObj.hidden = user.role != "Administrator";
                     }
@@ -153,9 +149,7 @@ export class SidebarComponent implements OnDestroy {
                     compteObj.icon = "account_circle";
                     compteObj.aria = "Lien pour retourner se connecter";
                     compteObj.tooltip = "Se connecter";
-                    if (paramObj) {
-                        paramObj.hidden = !user;
-                    }
+
                     if (adminObj) {
                         adminObj.hidden = true;
                     }

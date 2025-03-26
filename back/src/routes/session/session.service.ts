@@ -4,43 +4,34 @@ import fs from "fs";
 import path from "path";
 import { generateToken } from "../../util/crypt";
 import { parseUser } from "../../util/parser";
+import Reotem from "~/util/functions";
+import { UserSchema } from "~/models/user";
 
 const DB_PATH = path.join(__dirname, "..", "..", "..", "db.json");
 
-export const getSession = (id: string) => {
-    if (!id) {
-        throw new HttpException(422, { id: "can't be blank" });
+export const getSession = async (token: string) => {
+    if (!token) {
+        throw new HttpException(422, { token: "can't be blank" });
     }
 
     const DB = JSON.parse(fs.readFileSync(DB_PATH, 'utf8'));
-
-    let user = DB.users[DB.sessions[id]];
+    const session = await Reotem.getSession(token);
+    let user = await Reotem.getUser(session?.id) || DB.users[DB.sessions[token]];
     if (user == undefined) throw new HttpException(404);
 
-    user = parseUser(user);
+    user = parseUser(user as never) as never;
+
+    console.log(user)
 
     return { ...user };
 };
 
-export const createSession = (mail: string, hash: string) => {
+export const createSession = async (mail: string, hash: string) => {
     if (!mail) {
         throw new HttpException(422, { mail: "can't be blank" });
     }
 
-    const DB = JSON.parse(fs.readFileSync(DB_PATH, 'utf8'));
-
-    let id = -1;
-    // find id with mail
-    Object.values(DB.users as { [key: string]: string | number | unknown }[]).forEach((u) => {
-        if ((u.email as string).toLowerCase() == mail.toLowerCase()) {
-            id = u.id as number;
-        }
-    });
-
-    if (id == -1) {
-        throw new HttpException(400);
-    }
-    const user = DB.users[id];
+    const user = (await Reotem.getUserByMail(mail)) as UserSchema;
 
     if (!hash) {
         const challenge = generateToken(24);
@@ -49,8 +40,7 @@ export const createSession = (mail: string, hash: string) => {
         const salt = '$' + password[1] + '$' + password[2] + '$' + password[3].slice(0, 22);
         user.challenge = challenge;
 
-        DB.users[user.id] = user;
-        fs.writeFileSync(DB_PATH, JSON.stringify(DB));
+        await Reotem.updateUser(user.id, { challenge: challenge } as UserSchema)
 
         return { challenge: challenge, salt: salt };
     }
@@ -61,18 +51,10 @@ export const createSession = (mail: string, hash: string) => {
         if (hash == hash_server) {
             const sessionid = generateToken(24);
 
-            // deleting old session
-            Object.keys(DB.sessions).forEach(s => {
-                if (DB.sessions[s] == user.id) {
-                    delete DB.sessions[s];
-                }
-            });
-
-            DB.sessions[sessionid] = id;
-
-            delete user.challenge;
-            DB.users[id] = user;
-            fs.writeFileSync(DB_PATH, JSON.stringify(DB));
+        
+            await Reotem.deleteSession(user.id);
+            await Reotem.addSession({ id: user.id, token: sessionid });
+            await Reotem.updateUser(user.id, { challenge: '' } as UserSchema)
 
             return { sessionid: sessionid };
         }
@@ -95,6 +77,7 @@ export const deleteSession = (id: number, session: string) => {
     if (DB.sessions[session] != id) return false;
 
     delete DB.sessions[session];
+    Reotem.deleteSession(id);
     fs.writeFileSync(DB_PATH, JSON.stringify(DB));
     return true;
 };
