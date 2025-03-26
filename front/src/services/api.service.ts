@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import * as bcrypt from "bcryptjs";
-import { baseUrl, Login, LoginChallenge, User, UserSexe, UserRole, NewUser, NotificationAmount, NotificationQuery, ObjectQuery } from '../models/api.model';
+import { baseUrl, Login, LoginChallenge, User, UserSexe, UserRole, NewUser, NotificationAmount, NotificationQuery, ObjectQuery, Notification } from '../models/api.model';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { lastValueFrom, throwError } from 'rxjs';
 import { AuthentificationService } from './authentification.service';
@@ -90,12 +90,31 @@ export class APIService {
         },
         getAll: (id: number, session: string, query: NotificationQuery) => {
             return this.sendApiRequest<Notification[]>("POST", "user/notifications/" + id, { session: session, query: query }, "Getting notifications");
-        }
+        },
+        // TODO do the back
+        delete: (ids: number[], session: string) => {
+            return this.sendApiRequest("POST", "user/notification/delete", { ids: ids, session: session }, "Delete notification");
+        },
+        // TODO do the back
+        read: (ids: number[], session: string) => {
+            return this.sendApiRequest("POST", "user/notification/read", { ids: ids, session: session }, "Read notification");
+        },
+        // TODO do the back
+        unread: (ids: number[], session: string) => {
+            return this.sendApiRequest("POST", "user/notification/unread", { ids: ids, session: session }, "Unread notification");
+        },
     }
 
     readonly objects = {
         all: (query: ObjectQuery) => {
             return this.sendApiRequest<{ objects: AnyObject[], total: number }>("GET", "objects/", query, "Getting all objects");
+        },
+        get: (id: number) => {
+            return this.sendApiRequest<AnyObject>("GET", "objects/" + id, {}, "Getting object " + id);
+        },
+        // TODO do the back
+        update: <T = AnyObject>(id: number, session: string, changes: Partial<{ [key in keyof T]: T[key] }>) => {
+            return this.sendApiRequest("PUT", "objects/" + id, { params: changes, session: session }, "Updating object " + id);
         }
     }
 

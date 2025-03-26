@@ -1,1 +1,81 @@
-<p>notification works!</p>
+<div class="mat-elevation-z8 h-full flex flex-col justify-between">
+    <table mat-table class="w-full" [dataSource]="dataSource" matSort (matSortChange)="sortNotif($event)">
+        <ng-container matColumnDef="selection">
+            <th mat-header-cell *matHeaderCellDef>
+                <mat-checkbox [checked]="task().checked" [indeterminate]="taskPartiallyComplete()"
+                    (change)="update($event.checked)"></mat-checkbox>
+            </th>
+            <td mat-cell *matCellDef="let element">
+                <mat-checkbox [checked]="task().subtasks?.at(element.id)?.checked"
+                    (change)="update($event.checked, element.id)"></mat-checkbox>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="id">ID</th>
+            <td mat-cell *matCellDef="let element">{{element.id}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="title">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="title">Titre</th>
+            <td mat-cell *matCellDef="let element" [class]="element.read?'':'font-bold'">{{element.title}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="message">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="message">Message</th>
+            <td mat-cell *matCellDef="let element" [class]="element.read?'':'font-bold'">{{element.message}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="menu">
+            <th mat-header-cell *matHeaderCellDef>
+                <div class="flex items-center gap-4">
+                    Actions
+                    <button mat-icon-button [matMenuTriggerFor]="menuAll"
+                        aria-label="Menu d'actions sur toutes les notifications">
+                        <mat-icon>more_vert</mat-icon>
+                    </button>
+                    <mat-menu #menuAll="matMenu">
+                        <button mat-menu-item (click)="delete()" [disabled]="!task().checked">
+                            <mat-icon>delete</mat-icon>
+                            <span>Effacer</span>
+                        </button>
+                        <button mat-menu-item (click)="unread()" [disabled]="!task().checked">
+                            <mat-icon>mark_email_unread</mat-icon>
+                            <span>Marquer comme non lu</span>
+                        </button>
+                        <button mat-menu-item (click)="read()" [disabled]="!task().checked">
+                            <mat-icon>drafts</mat-icon>
+                            <span>Marquer comme lu</span>
+                        </button>
+                    </mat-menu>
+                </div>
+            </th>
+            <td mat-cell *matCellDef="let element">
+                <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Menu d'actions sur la notification">
+                    <mat-icon>more_vert</mat-icon>
+                </button>
+                <mat-menu #menu="matMenu">
+                    <button mat-menu-item (click)="delete(element.id)">
+                        <mat-icon>delete</mat-icon>
+                        <span>Effacer</span>
+                    </button>
+                    <button mat-menu-item [disabled]="!element.read" (click)="unread(element.id)">
+                        <mat-icon>mark_email_unread</mat-icon>
+                        <span>Marquer comme non lu</span>
+                    </button>
+                    <button mat-menu-item [disabled]="element.read" (click)="read(element.id)">
+                        <mat-icon>drafts</mat-icon>
+                        <span>Marquer comme lu</span>
+                    </button>
+                </mat-menu>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+
+    <mat-paginator [pageSizeOptions]="[10, 20, 50]" showFirstLastButtons
+        aria-label="Sélection d'une page de notification">
+    </mat-paginator>
+</div>

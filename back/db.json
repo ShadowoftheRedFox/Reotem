@@ -9,7 +9,8 @@
             "age": 18,
             "role": "Administrator",
             "sexe": "Homme",
-            "photo": null
+            "photo": null,
+            "level": "Expert"
         },
         "1": {
             "id": 1,
@@ -21,7 +22,8 @@
             "role": "CEO",
             "sexe": "Homme",
             "validated": "VWR1lSjd4boAXcFzSqdV01Mfz3rBFVk091EY084RpgsxC36xSYgMfKEfhKQCYqkb",
-            "photo": null
+            "photo": null,
+            "level": "Expert"
         },
         "2": {
             "id": 2,
@@ -32,13 +34,13 @@
             "age": 18,
             "role": "Administrator",
             "sexe": "Autre",
-            "photo": null
+            "photo": null,
+            "level": "Expert"
         }
     },
     "sessions": {
         "y761K2cCKsHAHf1wzPdqOaJI": 1,
-        "rXx8pmolQd4GzC982V9YjbmF": 2,
-        "wBQmqlefUsi8mDnOV1QJgfzL": 0
+        "PMXrJ2U3S2m7JGZ0xYkvRFqF": 0
     },
     "validating": {
         "VWR1lSjd4boAXcFzSqdV01Mfz3rBFVk091EY084RpgsxC36xSYgMfKEfhKQCYqkb": 1
@@ -46,8 +48,16 @@
     "notifications": {
         "0": [
             {
+                "id": 0,
                 "read": false,
+                "title": "Titre",
                 "message": "Test"
+            },
+            {
+                "id": 1,
+                "read": true,
+                "title": "Titre de message lu",
+                "message": "Testouille"
             }
         ]
     },

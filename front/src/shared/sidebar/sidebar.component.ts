@@ -10,6 +10,7 @@ import { MatSidenav } from '@angular/material/sidenav';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { NgClass } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
@@ -19,6 +20,7 @@ import { DialogComponent, DialogDataType } from '../dialog/dialog.component';
 import { AuthentificationService } from '../../services/authentification.service';
 import { CommunicationService } from '../../services/communication.service';
 import { NotificationService } from '../../services/notification.service';
+import { User } from '../../models/api.model';
 
 const SiteName = environment.title;
 
@@ -52,6 +54,7 @@ interface SideNavItem {
         MatTooltipModule,
         RouterLink,
         NgClass,
+        MatProgressBarModule
     ],
     templateUrl: './sidebar.component.html',
     styleUrl: './sidebar.component.scss'
@@ -73,8 +76,13 @@ export class SidebarComponent implements OnDestroy {
         this.mobileQuery.addEventListener("change", this._mobileQueryListener)
 
         this.initUpdate();
+
+        com.AuthAccountUpdate.subscribe(u => {
+            this.user = u;
+        })
     }
 
+    user: User | null = null;
     isAdmin = false;
     readonly SiteName = SiteName;
 
@@ -95,6 +103,7 @@ export class SidebarComponent implements OnDestroy {
         const notifObj = this.getItem("NotificationsObj");
         const paramObj = this.getItem("ParamètresObj");
         const adminObj = this.getItem("AdminObj")
+        const objectManagerObj = this.getItem("ObjectManagerObj")
         // update at each connection/disconnection
         this.com.AuthAccountUpdate.subscribe((user) => {
             if (decoObj) {
@@ -116,6 +125,9 @@ export class SidebarComponent implements OnDestroy {
                     }
                     if (notifObj) {
                         notifObj.hidden = false;
+                    }
+                    if (objectManagerObj) {
+                        objectManagerObj.hidden = false;
                     }
                 } else {
                     compteObj.title = "Compte";
@@ -165,6 +177,16 @@ export class SidebarComponent implements OnDestroy {
             tooltip: "Notifications reçues",
             id: "NotificationsObj",
             hoverClass: "nav-bell-hover nav-yellow-hover",
+            hidden: true
+        },
+        {
+            title: "Gestionnaire",
+            link: "/object",
+            icon: "view_in_ar",
+            aria: "Lien pour voir aller au gestionnaire d'objets",
+            tooltip: "Gestionnaire d'objets",
+            id: "ObjectManagerObj",
+            hoverClass: "nav-obj-manager-hover",
             hidden: true
         }
     ];

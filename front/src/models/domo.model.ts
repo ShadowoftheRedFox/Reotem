@@ -4,7 +4,7 @@ export type Mode = "Automatique" | "Manuel";
 
 export type Connection = "Wi-Fi" | "Cablé" | "Bluetooth" | "Déconnecté" | "Autre";
 
-export type ObjectState = "Normal" | "Erreur" | "Réparation";
+export type ObjectState = "Normal" | "Erreur" | "Maintenance";
 
 export type ObjectClass = "LightObject" |
     "ThermostatObject" |
@@ -24,7 +24,7 @@ export type AnyObject = LightObject |
     WindowStoreObject |
     DoorObject |
     WiFiObject |
-    BaseObject;
+    BaseObjectError;
 
 export interface BaseObject {
     id: number;
@@ -37,6 +37,10 @@ export interface BaseObject {
     connection: Connection;
     state: ObjectState;
     objectClass: ObjectClass;
+}
+
+interface BaseObjectError extends BaseObject {
+    objectClass: "Erreur"
 }
 
 export interface LightObject extends BaseObject {

@@ -10,9 +10,11 @@ export interface User {
     email: string;
     age: number;
     role: UserRole;
+    level: UserLevel;
+    xp: number;
     sexe: UserSexe;
     validated?: false;
-    photo: string | null;
+    photo: unknown | null;
 }
 
 export interface NewUser {
@@ -62,8 +64,10 @@ export interface NotificationAmount {
 }
 
 export interface Notification {
+    id: number;
     read: boolean;
     message: string;
+    title: string;
 }
 
 export interface APIQuery {

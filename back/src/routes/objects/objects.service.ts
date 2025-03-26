@@ -2,7 +2,7 @@
 import fs from "fs";
 import path from "path";
 import { ObjectQuery } from "../../../../front/src/models/api.model";
-import { AnyObject, LightObject } from "../../../../front/src/models/domo.model";
+import { AnyObject, SpeakerObject } from "../../../../front/src/models/domo.model";
 
 const DB_PATH = path.join(__dirname, "..", "..", "..", "db.json");
 
@@ -11,7 +11,8 @@ export const getAll = (query: ObjectQuery) => {
 
     const objects = Object.values(DB.objects as { [key: number]: AnyObject });
 
-    const testObject: LightObject = {
+    const testObject: SpeakerObject = {
+        objectClass: "SpeakerObject",
         name: "Ampoule1",
         room: "Test",
         lastInteraction: new Date().toISOString(),
@@ -19,11 +20,10 @@ export const getAll = (query: ObjectQuery) => {
         state: "Normal",
         id: 12,
         neededLevel: "Débutant",
-        objectClass: "LightObject",
         electricityUsage: 12,
-        consomationThreshold: 45,
-        turnedOn: false,
-        mode: "Manuel",
+        consomationThreshold: 12,
+        turnedOn: true,
+        battery: 90
     };
     objects.push(testObject);
 
