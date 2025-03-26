@@ -5,6 +5,7 @@ import path from "path";
 import { generateToken } from "../../util/crypt";
 import { parseUser } from "../../util/parser";
 import Reotem from "~/util/functions";
+import { UserSchema } from "~/models/user";
 
 const DB_PATH = path.join(__dirname, "..", "..", "..", "db.json");
 
@@ -32,18 +33,7 @@ export const createSession = async (mail: string, hash: string) => {
 
     const DB = JSON.parse(fs.readFileSync(DB_PATH, 'utf8'));
 
-    let id = -1;
-    // find id with mail
-    Object.values(DB.users as { [key: string]: string | number | unknown }[]).forEach((u) => {
-        if ((u.email as string).toLowerCase() == mail.toLowerCase()) {
-            id = u.id as number;
-        }
-    });
-
-    if (id == -1) {
-        throw new HttpException(400);
-    }
-    const user = await Reotem.getUserByMail(mail) || DB.users[id];
+    const user = (await Reotem.getUserByMail(mail)) as UserSchema;
 
     if (!hash) {
         const challenge = generateToken(24);
@@ -52,8 +42,7 @@ export const createSession = async (mail: string, hash: string) => {
         const salt = '$' + password[1] + '$' + password[2] + '$' + password[3].slice(0, 22);
         user.challenge = challenge;
 
-        DB.users[user.id] = user;
-        fs.writeFileSync(DB_PATH, JSON.stringify(DB));
+        await Reotem.updateUser(user.id, { challenge: challenge } as UserSchema)
 
         return { challenge: challenge, salt: salt };
     }
@@ -64,20 +53,10 @@ export const createSession = async (mail: string, hash: string) => {
         if (hash == hash_server) {
             const sessionid = generateToken(24);
 
-            // deleting old session
-            Object.keys(DB.sessions).forEach(s => {
-                if (DB.sessions[s] == user.id) {
-                    delete DB.sessions[s];
-                    Reotem.deleteSession(user.id);
-                }
-            });
-
-            DB.sessions[sessionid] = id;
-            Reotem.addSession({ id: user.id, token: sessionid });
-
-            delete user.challenge;
-            DB.users[id] = user;
-            fs.writeFileSync(DB_PATH, JSON.stringify(DB));
+        
+            await Reotem.deleteSession(user.id);
+            await Reotem.addSession({ id: user.id, token: sessionid });
+            await Reotem.updateUser(user.id, { challenge: '' } as UserSchema)
 
             return { sessionid: sessionid };
         }

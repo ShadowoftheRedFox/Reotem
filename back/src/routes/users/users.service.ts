@@ -1,5 +1,6 @@
 import { randomInt } from "crypto";
 import HttpException from "~/models/HttpException";
+import { NotificationSchema, NotifSchema } from "~/models/notification";
 import Reotem from "~/util/functions";
 import { parseUser } from "~/util/parser";
 
@@ -11,6 +12,7 @@ export const getUser = async (id: number, session?: string) => {
 
     const user = await Reotem.getUser(id);
     const userSession = await Reotem.getSession(session!);
+
     if (user !== undefined) {
         // TODO Reotem.getSession(session:string) -> user.id
         const sensible = session != undefined && userSession?.id == id;

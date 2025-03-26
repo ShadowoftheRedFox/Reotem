@@ -2,11 +2,12 @@ import bcrypt from "bcryptjs";
 import HttpException from "../../models/HttpException";
 import fs from "fs";
 import path from "path";
-import { UserMaxAge, UserMinAge, UserRole, UserSexe } from "../../models/user";
+import { UserMaxAge, UserMinAge, UserRole, UserSchema, UserSexe } from "../../models/user";
 import { generateToken } from "../../util/crypt";
 import { parseUser } from "../../util/parser";
 import { sendMail, template } from "../../util/mailer";
 import Reotem from "../../util/functions";
+import { User } from "../../../../front/src/models/api.model";
 
 const DB_PATH = path.join(__dirname, "..", "..", "..", "db.json");
 
@@ -46,6 +47,10 @@ export const createUser = async (input: { [key: string]: never }) => {
 
     if (!password) {
         throw new HttpException(422, { password: "can't be blank" });
+    }
+
+    if (password.length < 8) {
+        throw new HttpException(422, { password: "must be longer than 8 characters" });
     }
 
     if (!age) {
@@ -109,12 +114,11 @@ export const createUser = async (input: { [key: string]: never }) => {
 };
 
 export const getCurrentUser = async (id: number) => {
-    const DB = JSON.parse(fs.readFileSync(DB_PATH, 'utf8'));
-    let user = DB.users[id];
+    let user = await Reotem.getUser(id) as Partial<User>;
 
     if (!user) return {};
 
-    user = parseUser(user);
+    user = parseUser(user as UserSchema);
 
     return {
         ...user,

@@ -3,6 +3,7 @@ import { UserSchema } from "~/models/user";
 import mongoose from "mongoose";
 import { arrayBuffer } from "stream/consumers";
 import { NotifSchema, NotificationSchema } from "~/models/notification";
+import { NotificationQuery } from "../../../front/src/models/api.model";
 
 const excludes = ['collection', '_doc', 'db', '_id', '__v', 'schema'];
 
@@ -86,8 +87,8 @@ const Reotem = {
       .save()
       .then((u) => console.log(`Nouvel espace de notifications pour utilisateur ${u.id}`));
   },
-  getNotification: async (userId: number, notificationId: string) => {
-    const data = await models.Notification.findOne({ id: userId, notifications: { $elemMatch: { _id: notificationId } } });
+  getNotification: async (userId: number, query: NotificationQuery) => {
+    const data = await models.Notification.findOne({ id: userId, notifications: { $elemMatch: query }});
     if (data) return data;
     return;
   },
@@ -96,16 +97,14 @@ const Reotem = {
     if (data) return data;
     return;
   },
-  addNotification: async (userId: number, notif: NotifSchema) => {
-    const notifications = await Reotem.getNotifications(userId);
-    
+  addNotification: async (userId: number, notif: NotifSchema) => {    
     await models.Notification.updateOne(
       { id: userId },
       { $push: { notifications: notif } });
       console.log(`Nouvelle notification pour utilisateur ${userId} -> ${notif.message}`);
   },
   updateNotification: async (userId: number, updated: NotifSchema) => {
-    const data = await Reotem.getNotification(userId, updated._id);
+    const data = await Reotem.getNotification(userId, updated as NotificationQuery);
     if (typeof data !== "object") return;
     for (const key in (data as any)) {
       if (key.startsWith('$') || typeof (data as any)[key] === typeof Function || excludes.includes(key) || (updated as any)[key] === undefined) continue;
