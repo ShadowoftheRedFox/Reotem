@@ -17,6 +17,15 @@ p {
     text-align: justify;
 }
 
+a {
+    font-weight: bold;
+    color: var(--mat-sys-on-primary-container);
+
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
 .danger-button {
     background-color: red !important;
     color: white !important;

@@ -1,0 +1,21 @@
+.mat-expansion-panel-header-description {
+    justify-content: space-between;
+    align-items: center;
+}
+
+.mat-expansion-panel {
+
+    p {
+        margin-top: 4px;
+        margin-bottom: 4px;
+    }
+
+    ol {
+        margin-left: 40px;
+        list-style: auto;
+    }
+}
+
+::ng-deep .sidenav-is-mobile mat-panel-description mat-icon {
+    width: 28px;
+}
