@@ -25,6 +25,10 @@ export interface NewUser {
 export const UserMaxAge = 120;
 export const UserMinAge = 18;
 
+export const LevelBeginner = 100;
+export const LevelAdvanced = 300;
+export const LevelExpert = 600;
+
 export const UserSexe = [
     "Homme", "Femme", "Autre"
 ];

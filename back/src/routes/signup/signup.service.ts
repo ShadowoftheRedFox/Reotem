@@ -10,14 +10,11 @@ import Reotem from "../../util/functions";
 
 const DB_PATH = path.join(__dirname, "..", "..", "..", "db.json");
 
-const checkUserUniqueness = async (email: string, firstname: string, lastname: string) => {
+const checkUserUniqueness = async (email: string) => {
     const DB = JSON.parse(fs.readFileSync(DB_PATH, 'utf8'));
     Object.values(DB.users as { [key: string]: unknown }[]).forEach((user) => {
         if ((user.email as string).toLowerCase() == email.toLowerCase()) {
             throw new HttpException(422, { email: 'has already been taken', });
-        }
-        if ((user.firstname as string).toLowerCase() == firstname.toLowerCase() && (user.lastname as string).toLowerCase() == lastname.toLowerCase()) {
-            throw new HttpException(422, { name: 'has already been taken' });
         }
     });
 };
@@ -69,7 +66,7 @@ export const createUser = async (input: { [key: string]: never }) => {
         throw new HttpException(422, { sexe: "invalid" });
     }
 
-    await checkUserUniqueness(email, firstname, lastname);
+    await checkUserUniqueness(email);
 
     const hashedPassword = await bcrypt.hash(password, bcrypt.genSaltSync(10));
 
@@ -84,7 +81,9 @@ export const createUser = async (input: { [key: string]: never }) => {
         role: role,
         sexe: sexe,
         validated: generateToken(10),
-        photo: typeof photo != "string" ? null : photo
+        photo: typeof photo != "string" ? null : photo,
+        xp: 0,
+        level: "Débutant"
     };
 
     const sessionid = generateToken(24);

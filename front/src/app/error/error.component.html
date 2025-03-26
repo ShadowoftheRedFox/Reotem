@@ -1,1 +1,14 @@
-<p>La page "{{directory}}" n'existe pas.</p>
+<div class="h-full w-full flex flex-col items-center justify-center gap-8">
+    <div class="flex flex-col font-bold text-[100px] items-center" style="color: var(--back-admin);">
+        <p>Erreur</p>
+        <p>{{count}}</p>
+    </div>
+    <div class="flex flex-col items-center gap-4">
+        <p>La page "{{directory}}" n'existe pas.</p>
+        <a routerLink="/">
+            <button mat-raised-button>
+                Retourner en lieu sûr
+            </button>
+        </a>
+    </div>
+</div>

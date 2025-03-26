@@ -20,7 +20,7 @@ import { DialogComponent, DialogDataType } from '../dialog/dialog.component';
 import { AuthentificationService } from '../../services/authentification.service';
 import { CommunicationService } from '../../services/communication.service';
 import { NotificationService } from '../../services/notification.service';
-import { User } from '../../models/api.model';
+import { LevelAdvanced, LevelBeginner, LevelExpert, User } from '../../models/api.model';
 
 const SiteName = environment.title;
 
@@ -79,12 +79,30 @@ export class SidebarComponent implements OnDestroy {
 
         com.AuthAccountUpdate.subscribe(u => {
             this.user = u;
+
+            if (this.user) {
+                switch (this.user.level) {
+                    case "Débutant":
+                        this.userLevelCompletion = Math.floor((this.user.xp / LevelBeginner) * 100);
+                        break;
+                    case "Avancé":
+                        this.userLevelCompletion = Math.floor((this.user.xp / LevelAdvanced) * 100);
+                        break;
+                    case "Expert":
+                        this.userLevelCompletion = Math.floor((this.user.xp / LevelExpert) * 100);
+                        break;
+                    default:
+                        this.userLevelCompletion = Math.floor(((Math.random() * LevelExpert) / LevelExpert) * 100);
+                }
+            }
         })
     }
 
     user: User | null = null;
     isAdmin = false;
     readonly SiteName = SiteName;
+
+    userLevelCompletion = 0;
 
     getItem(id: string): SideNavItem | null {
         const total = [...this.SideNavItemsBottom, ...this.SideNavItemsTop];

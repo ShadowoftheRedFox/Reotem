@@ -10,8 +10,8 @@
             @if (user) {
             <div class="flex justify-end items-center"
                 [class]="mobileQuery.matches? 'flex-col gap-1' : 'flex-row gap-4'">
-                <p class="text-base">{{user.level||'err'}}</p>
-                <mat-progress-bar mode="determinate" [value]="user.xp||10"></mat-progress-bar>
+                <p class="text-base">{{user.level||'Inconnu'}}</p>
+                <mat-progress-bar mode="determinate" [value]="userLevelCompletion"></mat-progress-bar>
             </div>
             }
             <div>
