@@ -12,7 +12,7 @@ export const parseUser = (user: UserSchema, sensible = false): Partial<User> => 
         sexe: user.sexe as UserSexe,
         level: sensible ? user.level as UserLevel : undefined,
         xp: sensible ? user.xp : undefined,
-        photo: user.photo as unknown,
+        photo: user.photo,
         validated: sensible ? (user.validated ? false : undefined) : undefined,
     };
 };

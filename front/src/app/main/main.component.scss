@@ -11,12 +11,3 @@
         margin-bottom: 0.5em;
     }
 }
-
-a {
-    font-weight: bold;
-    color: var(--mat-sys-on-primary-container);
-
-    &:hover {
-        text-decoration: underline;
-    }
-}

@@ -1,5 +1,5 @@
 <div class="sidenav-container" [class.sidenav-is-mobile]="mobileQuery.matches">
-    <mat-toolbar class="flex flex-col justify-between">
+    <mat-toolbar class="flex flex-col justify-between !p-[16px]">
         <div class="sidenav-toolbar flex flex-row items-center">
             <button mat-icon-button (click)="toggleSideNav()">
                 <mat-icon aria-hidden="false" [style.font-weight]="toggled?'bold':'inherit'">menu</mat-icon>
@@ -10,8 +10,8 @@
             @if (user) {
             <div class="flex justify-end items-center"
                 [class]="mobileQuery.matches? 'flex-col gap-1' : 'flex-row gap-4'">
-                <p class="text-base">{{user.level||'err'}}</p>
-                <mat-progress-bar mode="determinate" [value]="user.xp||10"></mat-progress-bar>
+                <p class="text-base">{{user.level||'Inconnu'}}</p>
+                <mat-progress-bar mode="determinate" [value]="userLevelCompletion"></mat-progress-bar>
             </div>
             }
             <div>

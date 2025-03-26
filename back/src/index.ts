@@ -31,6 +31,13 @@ app.use(cors(corsOptions));
 
 app.use(routes);
 
+init();
+
+// to get images
+// https://stackoverflow.com/questions/68572063/return-url-of-locally-stored-image-node-js-api
+app.use(express.static('public'))
+
+
 const errorHandler: ErrorRequestHandler = function (err, req, res, next) {
     if (err && err.name === 'UnauthorizedError') {
         return res.status(401).json({

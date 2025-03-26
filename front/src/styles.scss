@@ -17,10 +17,29 @@ p {
     text-align: justify;
 }
 
+a {
+    font-weight: bold;
+    color: var(--mat-sys-on-primary-container);
+
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
 .danger-button {
     background-color: red !important;
     color: white !important;
     font-weight: bold !important;
+}
+
+// the other google icon font
+.symbols {
+    font-family: 'Material Symbols Outlined';
+    font-variation-settings:
+        'FILL' 0,
+        'wght' 400,
+        'GRAD' 0,
+        'opsz' 24
 }
 
 :root {
@@ -34,7 +53,8 @@ p {
 
 /* width */
 ::-webkit-scrollbar {
-    width: 20px;
+    width: 10px;
+    height: 10px;
 }
 
 /* Track */

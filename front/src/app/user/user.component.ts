@@ -5,6 +5,7 @@ import { APIService } from '../../services/api.service';
 import { CommunicationService } from '../../services/communication.service';
 import { User } from '../../models/api.model';
 import { ErrorComponent } from '../error/error.component';
+import { environment } from '../../environments/environment';
 
 @Component({
     selector: 'app-user',
@@ -15,6 +16,8 @@ import { ErrorComponent } from '../error/error.component';
     styleUrl: './user.component.scss'
 })
 export class UserComponent {
+    readonly BaseUrl = environment.api_url;
+
     requestedUser = -1;
     // if it's the own user looking at his profile
     privateMode = false;
