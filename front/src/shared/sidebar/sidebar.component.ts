@@ -162,6 +162,9 @@ export class SidebarComponent implements OnDestroy {
                     if (notifObj) {
                         notifObj.hidden = true;
                     }
+                    if (objectManagerObj) {
+                        objectManagerObj.hidden = true;
+                    }
                 }
             }
         });

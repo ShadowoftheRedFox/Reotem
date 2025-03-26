@@ -15,12 +15,14 @@ import { RouterLink } from '@angular/router';
 export class ErrorComponent implements AfterViewInit {
     directory = window.location.pathname.split("/").pop()?.trim();
     count = 0;
+    number = 0;
 
     ngAfterViewInit(): void {
         const inter = setInterval(() => {
             this.count += 1;
+            this.number = Math.floor(Math.random() * 999);
             if (this.count >= 404) {
-                this.count = 404;
+                this.number = 404;
                 clearInterval(inter);
             }
         }, 5)
