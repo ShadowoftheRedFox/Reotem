@@ -3,7 +3,7 @@
         <ng-container matColumnDef="selection">
             <th mat-header-cell *matHeaderCellDef>
                 <mat-checkbox [checked]="task().checked" [indeterminate]="taskPartiallyComplete()"
-                    (change)="update($event.checked)"></mat-checkbox>
+                    (change)="update($event.checked, undefined)"></mat-checkbox>
             </th>
             <td mat-cell *matCellDef="let element">
                 <mat-checkbox [checked]="task().subtasks?.at(element.id)?.checked"
@@ -35,15 +35,17 @@
                         <mat-icon>more_vert</mat-icon>
                     </button>
                     <mat-menu #menuAll="matMenu">
-                        <button mat-menu-item (click)="delete()" [disabled]="!task().checked">
+                        <button mat-menu-item (click)="delete()"
+                            [disabled]="!task().checked && !taskPartiallyComplete()">
                             <mat-icon>delete</mat-icon>
                             <span>Effacer</span>
                         </button>
-                        <button mat-menu-item (click)="unread()" [disabled]="!task().checked">
+                        <button mat-menu-item (click)="unread()"
+                            [disabled]="!task().checked && !taskPartiallyComplete()">
                             <mat-icon>mark_email_unread</mat-icon>
                             <span>Marquer comme non lu</span>
                         </button>
-                        <button mat-menu-item (click)="read()" [disabled]="!task().checked">
+                        <button mat-menu-item (click)="read()" [disabled]="!task().checked && !taskPartiallyComplete()">
                             <mat-icon>drafts</mat-icon>
                             <span>Marquer comme lu</span>
                         </button>

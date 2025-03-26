@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Injectable, signal, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, computed, Injectable, signal, ViewChild } from '@angular/core';
 import { CommunicationService } from '../../services/communication.service';
 import { APIService } from '../../services/api.service';
 import { AuthentificationService } from '../../services/authentification.service';
@@ -117,6 +117,14 @@ export class NotificationComponent implements AfterViewInit {
         });
 
         this.dataSource.data = this.notifications;
+
+        this.taskPartiallyComplete = computed(() => {
+            const task = this.task();
+            if (!task.subtasks) {
+                return false;
+            }
+            return task.subtasks.some(t => t.checked) && !task.subtasks.every(t => t.checked);
+        })
     }
 
     sortNotif(sort: Sort) {
@@ -157,24 +165,21 @@ export class NotificationComponent implements AfterViewInit {
         return -1;
     }
 
-    taskPartiallyComplete() {
+    taskPartiallyComplete = computed(() => {
         const task = this.task();
         if (!task.subtasks) {
             return false;
         }
         return task.subtasks.some(t => t.checked) && !task.subtasks.every(t => t.checked);
-    };
+    });
 
     update(checked: boolean, id?: number) {
-        const index = this.notifIdToIndex(id || -1);
-        if (index == -1 && id != undefined) return;
-
         this.task.update(task => {
-            if (index === -1) {
+            if (id === undefined) {
                 task.checked = checked;
                 task.subtasks?.forEach(t => (t.checked = checked));
             } else {
-                task.subtasks![index].checked = checked;
+                task.subtasks![id].checked = checked;
                 task.checked = task.subtasks?.every(t => t.checked) ?? true;
             }
             return { ...task };
