@@ -23,6 +23,16 @@ p {
     font-weight: bold !important;
 }
 
+// the other google icon font
+.symbols {
+    font-family: 'Material Symbols Outlined';
+    font-variation-settings:
+        'FILL' 0,
+        'wght' 400,
+        'GRAD' 0,
+        'opsz' 24
+}
+
 :root {
     --back-admin: var(--mat-sys-primary, inherit);
     --on-back-admin: var(--mat-sys-on-primary, inherit);

@@ -14,9 +14,11 @@ export type ObjectClass = "LightObject" |
     "WindowStoreObject" |
     "DoorObject" |
     "WiFiObject" |
+    "BaseObject" |
     "Erreur";
 
-export type AnyObject = LightObject |
+export type AnyObject = BaseObject |
+    LightObject |
     ThermostatObject |
     SpeakerObject |
     VideoProjectorObject |
@@ -41,6 +43,10 @@ export interface BaseObject {
 
 interface BaseObjectError extends BaseObject {
     objectClass: "Erreur"
+}
+
+export interface BaseObjectOnly extends BaseObject {
+    objectClass: "BaseObject"
 }
 
 export interface LightObject extends BaseObject {

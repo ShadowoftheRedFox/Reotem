@@ -1,5 +1,5 @@
 import { Component, input, TemplateRef } from '@angular/core';
-import { AnyObject, ComputerObject, DoorObject, LightObject, SpeakerObject, ThermostatObject, VideoProjectorObject, WiFiObject, WindowStoreObject } from '../../models/domo.model';
+import { AnyObject, BaseObject, ComputerObject, DoorObject, LightObject, SpeakerObject, ThermostatObject, VideoProjectorObject, WiFiObject, WindowStoreObject } from '../../models/domo.model';
 import { NgTemplateOutlet } from '@angular/common';
 import { MatCardModule } from "@angular/material/card"
 import { MatButtonModule } from '@angular/material/button';
@@ -51,6 +51,7 @@ export class DomoComponent {
     windowstoreObj = this.obj() as WindowStoreObject;
     doorObj = this.obj() as DoorObject;
     wifiObj = this.obj() as WiFiObject;
+    baseObj: BaseObject = this.obj();
 
     objectClassToTemplate(...templates: TemplateRef<unknown>[]) {
         this.updateState();
@@ -85,6 +86,7 @@ export class DomoComponent {
         this.windowstoreObj = this.obj() as WindowStoreObject;
         this.doorObj = this.obj() as DoorObject;
         this.wifiObj = this.obj() as WiFiObject;
+        this.baseObj = this.obj();
     }
 
     format() {
