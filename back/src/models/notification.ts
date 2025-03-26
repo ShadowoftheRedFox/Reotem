@@ -1,4 +1,4 @@
-import mongoose, { InferRawDocType, ObjectId } from "mongoose";
+import mongoose, { InferRawDocType } from "mongoose";
 const { Schema } = mongoose;
 
 const notifSchemaDefinition = {

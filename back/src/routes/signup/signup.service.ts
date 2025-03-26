@@ -7,7 +7,6 @@ import { generateToken } from "../../util/crypt";
 import { parseUser } from "../../util/parser";
 import { sendMail, template } from "../../util/mailer";
 import Reotem from "../../util/functions";
-import { User } from "../../../../front/src/models/api.model";
 
 const DB_PATH = path.join(__dirname, "..", "..", "..", "db.json");
 
@@ -28,7 +27,6 @@ export const createUser = async (input: { [key: string]: never }) => {
     const role = input.role as string;
     const sexe = input.sexe as string;
     const password = input.password as string;
-    const photo = input.photo as string | null;
 
     if (!email) {
         throw new HttpException(422, { email: "can't be blank" });
@@ -86,9 +84,8 @@ export const createUser = async (input: { [key: string]: never }) => {
         role: role,
         sexe: sexe,
         validated: generateToken(10),
-        photo: typeof photo != "string" ? null : photo,
-        xp: 0,
-        level: "Débutant"
+        exp: 0,
+        lvl: "Débutant"
     };
 
     const sessionid = generateToken(24);
@@ -113,11 +110,11 @@ export const createUser = async (input: { [key: string]: never }) => {
 };
 
 export const getCurrentUser = async (id: number) => {
-    let user = await Reotem.getUser(id) as Partial<User>;
+    let user = await Reotem.getUser(id) as UserSchema | Partial<UserSchema>;
 
     if (!user) return {};
 
-    user = parseUser(user as UserSchema);
+    user = parseUser(user as UserSchema) as Partial<UserSchema>;
 
     return {
         ...user,

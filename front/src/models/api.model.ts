@@ -10,11 +10,11 @@ export interface User {
     email: string;
     age: number;
     role: UserRole;
-    level: UserLevel;
-    xp: number;
+    lvl: UserLevel;
+    exp: number;
     sexe: UserSexe;
     validated?: false;
-    photo: string | null;
+    adminValidated?: false;
 }
 
 export interface NewUser {
@@ -25,9 +25,9 @@ export interface NewUser {
 export const UserMaxAge = 120;
 export const UserMinAge = 18;
 
-export const LevelBeginner = 100;
-export const LevelAdvanced = 300;
-export const LevelExpert = 600;
+export const LevelBeginner = 1000;
+export const LevelAdvanced = LevelBeginner * 2;
+export const LevelExpert = LevelAdvanced * 2;
 
 export const UserSexe = [
     "Homme", "Femme", "Autre"

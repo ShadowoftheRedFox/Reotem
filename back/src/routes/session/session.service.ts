@@ -15,7 +15,7 @@ export const getSession = async (token: string) => {
     }
 
     const DB = JSON.parse(fs.readFileSync(DB_PATH, 'utf8'));
-    let session = await Reotem.getSession(token);
+    const session = await Reotem.getSession(token);
     let user = await Reotem.getUser(session?.id) || DB.users[DB.sessions[token]];
     if (user == undefined) throw new HttpException(404);
 
@@ -30,8 +30,6 @@ export const createSession = async (mail: string, hash: string) => {
     if (!mail) {
         throw new HttpException(422, { mail: "can't be blank" });
     }
-
-    const DB = JSON.parse(fs.readFileSync(DB_PATH, 'utf8'));
 
     const user = (await Reotem.getUserByMail(mail)) as UserSchema;
 

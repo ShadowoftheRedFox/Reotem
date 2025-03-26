@@ -1,7 +1,5 @@
 import models from "../models/export_models";
 import { UserSchema } from "~/models/user";
-import mongoose from "mongoose";
-import { arrayBuffer } from "stream/consumers";
 import { NotifSchema, NotificationSchema } from "~/models/notification";
 import { NotificationQuery } from "../../../front/src/models/api.model";
 
@@ -33,10 +31,10 @@ const Reotem = {
   updateUser: async (query: number, updated: UserSchema) => {
     const data = await Reotem.getUser(query);
     if (typeof data !== "object") return;
-    for (const key in (data as any)) {
-      if (key.startsWith('$') || typeof (data as any)[key] === typeof Function || excludes.includes(key) || (updated as any)[key] === undefined) continue;
-      if ((data as any)[key] !== (updated as any)[key])
-        (data as any)[key] = (updated as any)[key];
+    for (const key in data) {
+      if (key.startsWith('$') || typeof (data as never)[key] === typeof Function || excludes.includes(key) || (updated as never)[key] === undefined) continue;
+      if ((data as never)[key] !== (updated as never)[key])
+        (data as never)[key] = (updated as never)[key];
     }
     return data.updateOne(updated);
   },
@@ -53,7 +51,7 @@ const Reotem = {
       .save()
       .then((u) => console.log(`Nouvelle session pour utilisateur -> ${u.id}`));
   },
-  getSession: async (token: String) => {
+  getSession: async (token: string) => {
     const data = await models.Session.findOne({ token: token });
     if (data) return data;
     return;
@@ -66,10 +64,10 @@ const Reotem = {
   updateSession: async (query: number, updated: UserSchema) => {
     const data = await Reotem.getUser(query);
     if (typeof data !== "object") return;
-    for (const key in (data as any)) {
-      if (key.startsWith('$') || typeof (data as any)[key] === typeof Function || excludes.includes(key) || (updated as any)[key] === undefined) continue;
-      if ((data as any)[key] !== (updated as any)[key])
-        (data as any)[key] = (updated as any)[key];
+    for (const key in data) {
+      if (key.startsWith('$') || typeof (data as never)[key] === typeof Function || excludes.includes(key) || (updated as never)[key] === undefined) continue;
+      if ((data as never)[key] !== (updated as never)[key])
+        (data as never)[key] = (updated as never)[key];
     }
     return data.updateOne(updated);
   },
@@ -106,20 +104,20 @@ const Reotem = {
   updateNotification: async (userId: number, updated: NotifSchema) => {
     const data = await Reotem.getNotification(userId, updated as NotificationQuery);
     if (typeof data !== "object") return;
-    for (const key in (data as any)) {
-      if (key.startsWith('$') || typeof (data as any)[key] === typeof Function || excludes.includes(key) || (updated as any)[key] === undefined) continue;
-      if ((data as any)[key] !== (updated as any)[key])
-        (data as any)[key] = (updated as any)[key];
+    for (const key in data) {
+      if (key.startsWith('$') || typeof (data as never)[key] === typeof Function || excludes.includes(key) || (updated as never)[key] === undefined) continue;
+      if ((data as never)[key] !== (updated as never)[key])
+        (data as never)[key] = (updated as never)[key];
     }
     return data.updateOne(updated);
   },
   updateNotifications: async (userId: number, updated: NotificationSchema) => {
     const data = await Reotem.getNotifications(userId);
     if (typeof data !== "object") return;
-    for (const key in (data as any)) {
-      if (key.startsWith('$') || typeof (data as any)[key] === typeof Function || excludes.includes(key) || (updated as any)[key] === undefined) continue;
-      if ((data as any)[key] !== (updated as any)[key])
-        (data as any)[key] = (updated as any)[key];
+    for (const key in data) {
+      if (key.startsWith('$') || typeof (data as never)[key] === typeof Function || excludes.includes(key) || (updated as never)[key] === undefined) continue;
+      if ((data as never)[key] !== (updated as never)[key])
+        (data as never)[key] = (updated as never)[key];
     }
     return data.updateOne(updated);
   },
