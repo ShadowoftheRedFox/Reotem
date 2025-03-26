@@ -1,9 +1,7 @@
 @if (user===null) {
 <app-error></app-error>
 } @else {
-@if (user.photo) {
-<img [src]="BaseUrl+user.photo" alt="Image de profile" />
-}
+<img [src]="BaseUrl+user.id+'.jpg'" alt="Image de profile" />
 <p>id: {{user.id}}</p>
 <p>firstname: {{user.firstname}}</p>
 <p>lastname: {{user.lastname}}</p>

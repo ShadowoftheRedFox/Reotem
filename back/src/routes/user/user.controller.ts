@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getNotificationAmount, getNotificationQuery, checkUserRole, getUser } from "./user.service";
+import { getNotificationAmount, getNotificationQuery, checkUserRole, getUser, postImage } from "./user.service";
 
 export const UserRouter = Router();
 export default UserRouter;
@@ -39,6 +39,16 @@ UserRouter.post('/:id', async (req, res, next) => {
         console.log(`Getting user ${req.params.id}...`);
         const user = await getUser(Number(req.params.id), req.body.session);
         res.status(200).json(user);
+    } catch (error) {
+        next(error);
+    }
+});
+
+UserRouter.post('/:id/image', async (req, res, next) => {
+    try {
+        console.log(`Changing user ${req.params.id} image...`);
+        const imgString = await postImage(Number(req.params.id), req.body.base64, req.body.session);
+        res.status(201).json({ name: imgString });
     } catch (error) {
         next(error);
     }

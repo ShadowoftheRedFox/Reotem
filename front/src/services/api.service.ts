@@ -79,6 +79,9 @@ export class APIService {
     readonly user = {
         get: (id: number, session?: string) => {
             return this.sendApiRequest<User>("POST", "user/" + id, { session: session }, `Getting user ${id}`);
+        },
+        changeImg: (id: number, base64: string, session: string) => {
+            return this.sendApiRequest<{ name: string }>("POST", "user/" + id + "/image/", { base64: base64, session: session }, `Changing user ${id} image`);
         }
     }
 
