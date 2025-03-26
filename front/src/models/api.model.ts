@@ -14,7 +14,7 @@ export interface User {
     xp: number;
     sexe: UserSexe;
     validated?: false;
-    photo: unknown | null;
+    photo: string | null;
 }
 
 export interface NewUser {

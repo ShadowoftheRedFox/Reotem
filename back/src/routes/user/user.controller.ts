@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getNotificationAmount, getNotificationQuery, checkUserRole } from "./user.service";
+import { getNotificationAmount, getNotificationQuery, checkUserRole, getUser } from "./user.service";
 
 export const UserRouter = Router();
 export default UserRouter;
@@ -29,6 +29,16 @@ UserRouter.post("/verify", async (req, res, next) => {
         console.log(`Verifying user ${req.body.session} has role...`);
         const hasRole = await checkUserRole(req.body.role, req.body.session);
         res.status(200).json(hasRole);
+    } catch (error) {
+        next(error);
+    }
+});
+
+UserRouter.post('/:id', async (req, res, next) => {
+    try {
+        console.log(`Getting user ${req.params.id}...`);
+        const user = await getUser(Number(req.params.id), req.body.session);
+        res.status(200).json(user);
     } catch (error) {
         next(error);
     }

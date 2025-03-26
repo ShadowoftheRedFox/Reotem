@@ -31,6 +31,10 @@ app.use(routes);
 
 init();
 
+// to get images
+app.use(express.static('public'))
+
+
 const errorHandler: ErrorRequestHandler = function (err, req, res, next) {
     if (err && err.name === 'UnauthorizedError') {
         return res.status(401).json({

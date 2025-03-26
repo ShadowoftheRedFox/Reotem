@@ -34,7 +34,7 @@ const userSchemaDefinition = {
     level: { type: String, required: true },
     xp: { type: Number, required: true },
     sexe: { type: String, required: true },
-    photo: { type: Buffer, default: null },
+    photo: { type: String, default: null },
     challenge: String, // can be undefined when is not challenged
     validated: String, // is a secret token, is defined when user has not validated his email yet
 }
