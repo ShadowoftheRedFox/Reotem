@@ -75,7 +75,7 @@
                 Paramétrer
             </button>
             <mat-menu #menu>
-                <button mat-menu-item (click)="objTurnOnOff()">
+                <button mat-menu-item (click)="objTurnOnOff()" [disabled]="obj().state!=='Normal'">
                     <mat-icon>{{lightObj.turnedOn?"light_off":"lightbulb"}}</mat-icon>
                     <span>{{lightObj.turnedOn?"Éteindre":"Allumer"}}</span>
                 </button>
@@ -108,7 +108,7 @@
                 Paramétrer
             </button>
             <mat-menu #menu>
-                <button mat-menu-item (click)="objTurnOnOff()">
+                <button mat-menu-item (click)="objTurnOnOff()" [disabled]="obj().state!=='Normal'">
                     <mat-icon [class]="thermostatObj.turnedOn?'icon-red':'icon-green'">power_settings_new</mat-icon>
                     <span>{{thermostatObj.turnedOn?"Éteindre":"Allumer"}}</span>
                 </button>
@@ -144,7 +144,7 @@
                 Paramétrer
             </button>
             <mat-menu #menu>
-                <button mat-menu-item (click)="objTurnOnOff()">
+                <button mat-menu-item (click)="objTurnOnOff()" [disabled]="obj().state!=='Normal'">
                     <mat-icon [class]="speakerObj.turnedOn?'icon-red':'icon-green'">power_settings_new</mat-icon>
                     <span>{{speakerObj.turnedOn?"Éteindre":"Allumer"}}</span>
                 </button>
@@ -177,7 +177,7 @@
                 Paramétrer
             </button>
             <mat-menu #menu>
-                <button mat-menu-item (click)="objTurnOnOff()">
+                <button mat-menu-item (click)="objTurnOnOff()" [disabled]="obj().state!=='Normal'">
                     <mat-icon [class]="videoprojectorObj.turnedOn?'icon-red':'icon-green'">power_settings_new</mat-icon>
                     <span>{{videoprojectorObj.turnedOn?"Éteindre":"Allumer"}}</span>
                 </button>
@@ -210,7 +210,7 @@
                 Paramétrer
             </button>
             <mat-menu #menu>
-                <button mat-menu-item (click)="objTurnOnOff()">
+                <button mat-menu-item (click)="objTurnOnOff()" [disabled]="obj().state!=='Normal'">
                     <mat-icon [class]="computerObj.turnedOn?'icon-red':'icon-green'">power_settings_new</mat-icon>
                     <span>{{computerObj.turnedOn?"Éteindre":"Allumer"}}</span>
                 </button>
@@ -304,7 +304,7 @@
                 Paramétrer
             </button>
             <mat-menu #menu>
-                <button mat-menu-item (click)="objTurnOnOff()">
+                <button mat-menu-item (click)="objTurnOnOff()" [disabled]="obj().state!=='Normal'">
                     <mat-icon>{{wifiObj.turnedOn?"light_off":"lightbulb"}}</mat-icon>
                     <span>{{wifiObj.turnedOn?"Éteindre":"Allumer"}}</span>
                 </button>

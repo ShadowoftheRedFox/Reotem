@@ -13,7 +13,7 @@
     <h2>Tout les objets:</h2>
     @if (objectList.length > 0) {
     <div [class]="bar_class">
-        @for (obj of recentlyUsed; track $index) {
+        @for (obj of objectList; track $index) {
         <app-domo [obj]="obj"></app-domo>
         }
     </div>
