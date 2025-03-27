@@ -41,6 +41,7 @@ export class UserComponent {
                 },
                 error: () => {
                     this.user = null;
+                    this.requestedUser = -2;
                 },
             });
         });

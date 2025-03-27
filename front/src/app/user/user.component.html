@@ -1,5 +1,8 @@
 @if (user===null) {
+@if (requestedUser === -2) {
 <app-error></app-error>
+}
+<p>Chargement...</p>
 } @else {
 <img [src]="BaseUrl+user.id+'.jpg'" alt="Image de profile" />
 <p>id: {{user.id}}</p>
