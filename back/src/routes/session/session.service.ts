@@ -17,10 +17,10 @@ export const getSession = async (token: string) => {
 
     const DB = JSON.parse(fs.readFileSync(DB_PATH, 'utf8'));
     const session = await Reotem.getSession(token);
-    let user: User = await Reotem.getUser(session?.id) || DB.users[DB.sessions[token]];
+    let user: Partial<User> = await Reotem.getUser(session?.id) || DB.users[DB.sessions[token]];
     if (user == undefined) throw new HttpException(404);
 
-    user = parseUser(user as never, true) as never;
+    user = parseUser(user as never, true);
 
     return { ...user };
 };
@@ -32,6 +32,10 @@ export const createSession = async (mail: string, hash: string) => {
 
     const user = (await Reotem.getUserByMail(mail)) as UserSchema;
 
+    if (user == undefined) {
+        throw new HttpException(401, { error: "invalid credentials" });
+    }
+
     if (!hash) {
         const challenge = generateToken(24);
         const password = user.password.split('$');
@@ -39,7 +43,7 @@ export const createSession = async (mail: string, hash: string) => {
         const salt = '$' + password[1] + '$' + password[2] + '$' + password[3].slice(0, 22);
         user.challenge = challenge;
 
-        await Reotem.updateUser(user.id, { challenge: challenge } as UserSchema)
+        await Reotem.updateUser(user.id, { challenge: challenge })
 
         return { challenge: challenge, salt: salt };
     }
@@ -53,7 +57,7 @@ export const createSession = async (mail: string, hash: string) => {
 
             await Reotem.deleteSession(user.id);
             await Reotem.addSession({ id: user.id, token: sessionid });
-            await Reotem.updateUser(user.id, { challenge: '' } as UserSchema)
+            await Reotem.updateUser(user.id, { challenge: undefined })
 
             return { sessionid: sessionid };
         }

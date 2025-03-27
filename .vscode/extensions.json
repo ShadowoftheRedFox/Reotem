@@ -6,6 +6,7 @@
         "wayou.vscode-todo-highlight",
         "usernamehw.errorlens",
         "editorconfig.editorconfig",
-        "dbaeumer.vscode-eslint"
+        "dbaeumer.vscode-eslint",
+        "yoavbls.pretty-ts-errors"
     ]
 }

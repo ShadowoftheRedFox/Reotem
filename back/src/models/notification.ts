@@ -3,7 +3,7 @@ const { Schema } = mongoose;
 
 const notifSchemaDefinition = {
     id: { type: Number, required: true },
-    read: { type: Boolean },
+    read: { type: Boolean, required: true },
     message: { type: String, required: true },
     title: { type: String, required: true }
 }

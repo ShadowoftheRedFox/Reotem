@@ -38,21 +38,24 @@ app.use(express.static('public'))
 
 const errorHandler: ErrorRequestHandler = function (err, req, res, next) {
     if (err && err.name === 'UnauthorizedError') {
-        return res.status(401).json({
+        res.status(401).json({
             status: 'error',
             message: 'missing authorization credentials',
         });
+        return;
     } else if (err instanceof HttpException) {
         if (err.internalLog === true) { console.error(err); } else { console.log("Error for user generated."); }
-        return res.status(err.errorCode).json({ message: err.message });
+        res.status(err.errorCode).json({ message: err.message });
+        return;
     } else if (err instanceof Error) {
         console.log(err);
-        return res.status(500).json({ message: err.message });
+        res.status(500).json({ message: err.message });
+        return;
     }
     next(err);
-} as ErrorRequestHandler;
+}
 
-app.use(errorHandler as never);
+app.use(errorHandler);
 
 // 404: Not found
 app.use(function (req, res) {

@@ -44,14 +44,14 @@ export const getNotificationQuery = async (id: number, session: string, query?: 
 
     const userNotif = await Reotem.getNotifications(id);
     if (query === undefined) {
-        return userNotif?.notifications as Notification[];
+        return userNotif?.notifications || [];
     }
 
     let queryNotifs: Notification[] = [];
     if (query.id) {
         userNotif?.notifications.forEach(notif => {
             if (notif.id === query.id) {
-                queryNotifs.push(notif as Notification);
+                queryNotifs.push(notif);
             }
         });
         return queryNotifs;
@@ -60,14 +60,14 @@ export const getNotificationQuery = async (id: number, session: string, query?: 
     if (query.read) {
         userNotif?.notifications.forEach(notif => {
             if (notif.read === query.read) {
-                queryNotifs.push(notif as Notification);
+                queryNotifs.push(notif);
             }
         });
     }
 
     if (query.limit) {
-        if (queryNotifs.length === 0) {
-            queryNotifs = userNotif?.notifications as Notification[];
+        if (queryNotifs.length === 0 && userNotif) {
+            queryNotifs = userNotif.notifications;
         }
         queryNotifs = queryNotifs.splice((query.step || 0) * query.limit, query.limit);
     }

@@ -13,8 +13,11 @@ export interface User {
     lvl: UserLevel;
     exp: number;
     sexe: UserSexe;
-    validated?: false;
+    // front should never receive the string
+    validated?: false | string;
     adminValidated?: false;
+    // front should never receive the password
+    password?: string;
 }
 
 export interface NewUser {
@@ -31,8 +34,9 @@ export const LevelExpert = LevelAdvanced * 2;
 
 export const UserSexe = [
     "Homme", "Femme", "Autre"
-];
-export type UserSexe = "Homme" | "Femme" | "Autre";
+] as const;
+
+export type UserSexe = typeof UserSexe[number];
 
 export const UserRole = [
     "Administrator",
@@ -42,14 +46,9 @@ export const UserRole = [
     "Developper",
     "Tester",
     "Intern",
-];
-export type UserRole = "Administrator" |
-    "CEO" |
-    "CO-CEO" |
-    "Project Manager" |
-    "Developper" |
-    "Tester" |
-    "Intern";
+] as const;
+
+export type UserRole = typeof UserRole[number];
 
 export const UserLevel = ["Débutant", "Avancé", "Expert"];
 export type UserLevel = "Débutant" | "Avancé" | "Expert";

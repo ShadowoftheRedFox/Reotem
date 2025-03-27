@@ -6,7 +6,7 @@ import { AnyObject, SpeakerObject } from "../../../../front/src/models/domo.mode
 
 const DB_PATH = path.join(__dirname, "..", "..", "..", "db.json");
 
-export const getAll = (query: ObjectQuery) => {
+export const getAll = (query?: ObjectQuery) => {
     const DB = JSON.parse(fs.readFileSync(DB_PATH, 'utf8'));
 
     const objects = Object.values(DB.objects as { [key: number]: AnyObject });
@@ -29,13 +29,13 @@ export const getAll = (query: ObjectQuery) => {
 
     let resultObjects = objects;
 
-    if (query.type) {
+    if (query?.type) {
         resultObjects = resultObjects.filter(o => o.objectClass == query.type)
     }
 
     const n = resultObjects.length;
 
-    if (query.limit && query.limit > 0) {
+    if (query?.limit && query.limit > 0) {
         if (query.step && query.step >= 0) {
             resultObjects = resultObjects.slice(query.step * query.limit, (query.step + 1) * query.limit);
         } else {

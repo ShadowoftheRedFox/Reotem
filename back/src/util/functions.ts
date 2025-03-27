@@ -28,7 +28,7 @@ const Reotem = {
     if (data) return data;
     return;
   },
-  updateUser: async (query: number, updated: UserSchema) => {
+  updateUser: async (query: number, updated: Partial<UserSchema>) => {
     const data = await Reotem.getUser(query);
     if (typeof data !== "object") return;
     for (const key in data) {

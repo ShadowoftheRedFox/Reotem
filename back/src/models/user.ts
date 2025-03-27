@@ -4,20 +4,6 @@ const { Schema } = mongoose;
 export const UserMaxAge = 120;
 export const UserMinAge = 18;
 
-export const UserSexe = [
-    "Homme", "Femme", "Autre"
-];
-
-export const UserRole = [
-    "Administrator",
-    "CEO",
-    "CO-CEO",
-    "Project Manager",
-    "Developper",
-    "Tester",
-    "Intern",
-];
-
 const userSchemaDefinition = {
     id: { type: Number, required: true },
     firstname: { type: String, required: true },
@@ -32,11 +18,11 @@ const userSchemaDefinition = {
     },
     role: { type: String, required: true },
     sexe: { type: String, required: true },
-    exp: {type: Number, default: 0},
-    lvl:  {type: String, default: "Débutant"},
+    exp: { type: Number, default: 0 },
+    lvl: { type: String, default: "Débutant" },
     challenge: String, // can be undefined when is not challenged
     validated: String, // is a secret token, is defined when user has not validated his email yet
-    adminValidated: {type: Boolean, default: false}
+    adminValidated: { type: Boolean, default: false }
 }
 
 
