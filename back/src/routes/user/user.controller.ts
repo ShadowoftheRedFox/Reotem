@@ -1,28 +1,11 @@
 import { Router } from "express";
-import { getNotificationAmount, getNotificationQuery, checkUserRole, getUser, postImage } from "./user.service";
+import { checkUserRole, getUser, postImage } from "./user.service";
+import NotifRouter from "./notifications/notifications.controller";
 
 export const UserRouter = Router();
 export default UserRouter;
 
-UserRouter.post('/notification/:id', async (req, res, next) => {
-    try {
-        console.log(`Getting user ${req.params.id} amount of notifications...`);
-        const amount = await getNotificationAmount(Number(req.params.id), req.body.session);
-        res.status(200).json(amount);
-    } catch (error) {
-        next(error);
-    }
-});
-
-UserRouter.post('/notifications/:id', async (req, res, next) => {
-    try {
-        console.log(`Getting user ${req.params.id} notifications...`);
-        const notifs = await getNotificationQuery(Number(req.params.id), req.body.session, req.body.query);
-        res.status(200).json(notifs);
-    } catch (error) {
-        next(error);
-    }
-});
+UserRouter.use("/notification/", NotifRouter);
 
 UserRouter.post("/verify", async (req, res, next) => {
     try {
@@ -44,7 +27,7 @@ UserRouter.post('/:id', async (req, res, next) => {
     }
 });
 
-UserRouter.post('/:id/image', async (req, res, next) => {
+UserRouter.put('/:id/image', async (req, res, next) => {
     try {
         console.log(`Changing user ${req.params.id} image...`);
         const imgString = await postImage(Number(req.params.id), req.body.base64, req.body.session);

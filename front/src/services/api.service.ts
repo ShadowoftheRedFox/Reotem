@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import * as bcrypt from "bcryptjs";
 import { baseUrl, Login, LoginChallenge, User, UserSexe, UserRole, NewUser, NotificationAmount, NotificationQuery, ObjectQuery, Notification } from '../models/api.model';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { lastValueFrom, throwError } from 'rxjs';
 import { AuthentificationService } from './authentification.service';
 import { CommunicationService } from './communication.service';
@@ -23,10 +23,9 @@ export class APIService {
 
     readonly auth = {
         login: async (mail: string, password: string) => {
-            //authentificate the user and return a session id if success
-            //the user call the api to get a challenge
+            // authenticate the user and return a session token if success
+            // the user call the api to get a challenge, which prevent the clear password from being sent
 
-            // let { challenge, salt, id } =;
             let res: LoginChallenge;
             try {
                 res = await lastValueFrom(this.sendApiRequest<LoginChallenge>("POST", "signin", { mail: mail }, "Challenge auth"));
@@ -34,13 +33,9 @@ export class APIService {
                 console.error(e)
                 return throwError(() => e);
             }
-            console.log(res)
-            const challenge: string = res.challenge;
-            const salt: string = res.salt;
 
-            const hash_password = await bcrypt.hash(password, salt);
-
-            const hash_challenge = await this.hash(challenge + hash_password);
+            const hash_password = await bcrypt.hash(password, res.salt);
+            const hash_challenge = await this.hash(res.challenge + hash_password);
 
             //the user send the hash of the challenge and the password
             return this.sendApiRequest<Login>("POST", "signin", { mail: mail, hash: hash_challenge }, "Authenticating");
@@ -83,28 +78,27 @@ export class APIService {
             return this.sendApiRequest<User>("POST", "user/" + id, { session: session }, `Getting user ${id}`);
         },
         changeImg: (id: number, base64: string, session: string) => {
-            return this.sendApiRequest<{ name: string }>("POST", "user/" + id + "/image/", { base64: base64, session: session }, `Changing user ${id} image`);
+            return this.sendApiRequest<{ name: string }>("PUT", "user/" + id + "/image/", { base64: base64, session: session }, `Changing user ${id} image`);
         }
     }
 
     readonly notifications = {
         getNum: (id: number, session: string) => {
-            return this.sendApiRequest<NotificationAmount>("POST", "user/notification/" + id, { session: session }, "Getting notifications amount");
+            return this.sendApiRequest<NotificationAmount>("POST", "user/notification/num/" + id, { session: session }, "Getting notifications amount");
         },
         getAll: (id: number, session: string, query: NotificationQuery) => {
-            return this.sendApiRequest<Notification[]>("POST", "user/notifications/" + id, { session: session, query: query }, "Getting notifications");
+            return this.sendApiRequest<Notification[]>("POST", "user/notification/" + id, { session: session, query: query }, "Getting notifications");
         },
         // TODO do the back
         delete: (ids: number[], session: string) => {
-            return this.sendApiRequest("POST", "user/notification/delete", { ids: ids, session: session }, "Delete notification");
+            return this.sendApiRequest("DELETE", "user/notification/", { ids: ids, session: session }, "Delete notification");
         },
-        // TODO do the back
         read: (ids: number[], session: string) => {
-            return this.sendApiRequest("POST", "user/notification/read", { ids: ids, session: session }, "Read notification");
+            return this.sendApiRequest("PUT", "user/notification/read", { ids: ids, session: session }, "Read notification");
         },
         // TODO do the back
         unread: (ids: number[], session: string) => {
-            return this.sendApiRequest("POST", "user/notification/unread", { ids: ids, session: session }, "Unread notification");
+            return this.sendApiRequest("PUT", "user/notification/unread", { ids: ids, session: session }, "Unread notification");
         },
     }
 
@@ -123,7 +117,8 @@ export class APIService {
 
     private sendApiRequest<T>(method: "GET" | "POST" | "PUT" | "DELETE" | "PATCH", endpoint: string, parameters: object = {}, message: string | undefined = undefined) {
         const urlParameters = (parameters != undefined && Object.keys(parameters).length > 0) ? "?data=" + JSON.stringify(parameters) : "";
-        const headers = new HttpHeaders({ "Content-Type": "application/x-www-form-urlencoded" });
+        // const headers = new HttpHeaders({ "Content-Type": "application/x-www-form-urlencoded" });
+        // const headers = new HttpHeaders({ "Content-Type": "multipart/form-data" });
 
         if (message !== undefined) {
             console.info("[API] " + message);
@@ -135,9 +130,9 @@ export class APIService {
             case "POST":
                 return this.http.post<T>(baseUrl + endpoint, parameters);
             case "PUT":
-                return this.http.put<T>(baseUrl + endpoint, parameters, { headers: headers });
+                return this.http.put<T>(baseUrl + endpoint, parameters);
             case "PATCH":
-                return this.http.patch<T>(baseUrl + endpoint, parameters, { headers: headers });
+                return this.http.patch<T>(baseUrl + endpoint, parameters);
             case "DELETE":
                 return this.http.delete<T>(baseUrl + endpoint, { body: parameters });
         }

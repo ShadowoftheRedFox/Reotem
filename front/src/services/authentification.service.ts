@@ -1,8 +1,7 @@
 import { User } from '../models/api.model';
 import { CommunicationService } from './communication.service';
 import { CookieConsentName, CookieTime } from '../models/cookie.model';
-import { DOCUMENT } from '@angular/common';
-import { Inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 
 @Injectable({
     providedIn: 'root'
@@ -18,10 +17,9 @@ export class AuthentificationService {
     cookiesConsent = false;
 
     client: User | null = null;
-    clientToken = "";
+    clientToken = this.getCookie("session");
 
     constructor(
-        @Inject(DOCUMENT) private document: Document,
         private com: CommunicationService,
     ) {
         // écoute les événements
@@ -46,7 +44,7 @@ export class AuthentificationService {
     }
 
     public getCookie(name: string) {
-        const ca: string[] = this.document.cookie.split(';');
+        const ca: string[] = (window.document).cookie.split(';');
         const caLen: number = ca.length;
         const cookieName = `${name}=`;
         let c: string;
@@ -70,7 +68,7 @@ export class AuthentificationService {
         d.setTime(d.getTime() + expireSeconds * 1000);
         const expires = `expires=${d.toUTCString()}`;
         const cpath: string = path ? `; path=${path}` : '';
-        this.document.cookie = `${name}=${value}; ${expires}${cpath};`; //SameSite=None; seulement sur https
+        window.document.cookie = `${name}=${value}; ${expires}${cpath};`; //SameSite=None; seulement sur https
     }
 
     public consent(isConsent: boolean, e: Event) {

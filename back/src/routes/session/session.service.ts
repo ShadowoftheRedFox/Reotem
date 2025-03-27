@@ -21,8 +21,6 @@ export const getSession = async (token: string) => {
 
     user = parseUser(user as never) as never;
 
-    console.log(user)
-
     return { ...user };
 };
 
@@ -51,7 +49,7 @@ export const createSession = async (mail: string, hash: string) => {
         if (hash == hash_server) {
             const sessionid = generateToken(24);
 
-        
+
             await Reotem.deleteSession(user.id);
             await Reotem.addSession({ id: user.id, token: sessionid });
             await Reotem.updateUser(user.id, { challenge: '' } as UserSchema)

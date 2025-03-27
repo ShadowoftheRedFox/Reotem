@@ -197,6 +197,10 @@ export class NotificationComponent implements AfterViewInit {
             }
         });
 
+        if (elementId != undefined) {
+            ids.push(elementId);
+        }
+
         this.api.notifications.delete(ids, this.auth.clientToken).subscribe({
             next: () => {
                 if (elementId != undefined) {
@@ -211,6 +215,7 @@ export class NotificationComponent implements AfterViewInit {
                     });
                 }
                 this.updateNotifsContent();
+                this.sendUnreadNotification();
             },
             error: () => {
                 this.popupError();
@@ -228,6 +233,10 @@ export class NotificationComponent implements AfterViewInit {
                 ids.push(this.notifications[i].id);
             }
         });
+
+        if (elementId != undefined) {
+            ids.push(elementId);
+        }
 
         this.api.notifications.read(ids, this.auth.clientToken).subscribe({
             next: () => {
@@ -261,6 +270,10 @@ export class NotificationComponent implements AfterViewInit {
                 ids.push(this.notifications[i].id);
             }
         });
+
+        if (elementId != undefined) {
+            ids.push(elementId);
+        }
 
         this.api.notifications.unread(ids, this.auth.clientToken).subscribe({
             next: () => {

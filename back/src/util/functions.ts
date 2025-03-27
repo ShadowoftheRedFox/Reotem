@@ -11,7 +11,7 @@ const Reotem = {
     const newUser = new models.User(merged);
     await newUser
       .save()
-      .then((u) => console.log(`Nouvel utilisateur -> ${u.email}`));
+      .then((u) => console.log(`New user -> ${u.email}`));
   },
   getUser: async (id: number) => {
     const data = await models.User.findOne({ id: id });
@@ -49,7 +49,7 @@ const Reotem = {
     const newSession = new models.Session(merged);
     await newSession
       .save()
-      .then((u) => console.log(`Nouvelle session pour utilisateur -> ${u.id}`));
+      .then((u) => console.log(`New session for user -> ${u.id}`));
   },
   getSession: async (token: string) => {
     const data = await models.Session.findOne({ token: token });
@@ -73,7 +73,7 @@ const Reotem = {
   },
   deleteSession: async (id: number) => {
     const data = await models.Session.findOne({ id: id });
-    console.log(`Suppression session pour utilisateur -> ${data?.id}`);
+    console.log(`Deleting session for user -> ${data?.id}`);
     if (data) return data.deleteOne();
     return;
   },
@@ -83,10 +83,10 @@ const Reotem = {
     const newNotification = new models.Notification(merged);
     await newNotification
       .save()
-      .then((u) => console.log(`Nouvel espace de notifications pour utilisateur ${u.id}`));
+      .then((u) => console.log(`New notification table for user -> ${u.id}`));
   },
   getNotification: async (userId: number, query: NotificationQuery) => {
-    const data = await models.Notification.findOne({ id: userId, notifications: { $elemMatch: query }});
+    const data = await models.Notification.findOne({ id: userId, notifications: { $elemMatch: query } });
     if (data) return data;
     return;
   },
@@ -95,13 +95,13 @@ const Reotem = {
     if (data) return data;
     return;
   },
-  addNotification: async (userId: number, notif: NotifSchema) => {    
+  addNotification: async (userId: number, notif: NotifSchema) => {
     await models.Notification.updateOne(
       { id: userId },
       { $push: { notifications: notif } });
-      console.log(`Nouvelle notification pour utilisateur ${userId} -> ${notif.message}`);
+    console.log(`New notifications for user -> ${userId} -> ${notif.id}`);
   },
-  updateNotification: async (userId: number, updated: NotifSchema) => {
+  updateNotification: async (userId: number, updated: Partial<NotifSchema>) => {
     const data = await Reotem.getNotification(userId, updated as NotificationQuery);
     if (typeof data !== "object") return;
     for (const key in data) {
@@ -111,7 +111,7 @@ const Reotem = {
     }
     return data.updateOne(updated);
   },
-  updateNotifications: async (userId: number, updated: NotificationSchema) => {
+  updateNotifications: async (userId: number, updated: Partial<NotificationSchema>) => {
     const data = await Reotem.getNotifications(userId);
     if (typeof data !== "object") return;
     for (const key in data) {
