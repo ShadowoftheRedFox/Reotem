@@ -81,12 +81,12 @@ export class SignupComponent {
             if (res.includes("+")) return this.signup.controls.email.setErrors({ email: true });
         });
 
-        // this.signup.controls.password.valueChanges.pipe(delay(300), takeUntilDestroyed()).subscribe(res => {
-        //     // check password strength
-        //     if (res) {
-
-        //     }
-        // });
+        this.signup.controls.password.valueChanges.pipe(takeUntilDestroyed()).subscribe(res => {
+            // check password strength
+            if (typeof res != 'string' || res.length < 8) {
+                return this.signup.controls.password.setErrors({ short: true });
+            }
+        });
 
         this.signup.controls.passwordConfirm.valueChanges.pipe(takeUntilDestroyed()).subscribe(res => {
             // check password equals
@@ -143,6 +143,8 @@ export class SignupComponent {
     passwordErrorMessage() {
         if (this.signup.controls.password.hasError('required')) {
             return 'Mot de passe requis';
+        } else if (this.signup.controls.password.hasError('short')) {
+            return 'Mot de passe trop court';
         } else {
             return '';
         }

@@ -101,6 +101,7 @@ export class SidebarComponent implements OnDestroy {
     user: User | null = null;
     isAdmin = false;
     readonly SiteName = SiteName;
+    readonly BaseUrl = environment.api_url;
 
     userLevelCompletion = 0;
 

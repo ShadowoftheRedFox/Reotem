@@ -201,7 +201,7 @@ mat-sidenav {
     display: block !important;
     overflow: visible;
 
-    * {
+    mat-icon {
         overflow: unset !important;
     }
 }
@@ -277,7 +277,7 @@ mat-sidenav {
     font-size: 32px;
     height: 32px;
     width: 32px;
-    overflow: unset;
+    border-radius: 100%;
 }
 
 .mat-drawer {

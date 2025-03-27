@@ -20,8 +20,10 @@ export class ThemeService {
         const CookieContent = auth.getCookie(ThemeCookie);
         if (CookieContent.length > 0) {
             this.themeChoosen = CookieContent;
-            this.setTheme(this.themeList.find(p => p.value == this.themeChoosen)?.value || "azure-blue");
+        } else {
+            this.themeChoosen = "azure-blue";
         }
+        this.setTheme(this.themeList.find(p => p.value == this.themeChoosen)?.value || "azure-blue");
     }
 
     public themeChoosen = "azure-blue";

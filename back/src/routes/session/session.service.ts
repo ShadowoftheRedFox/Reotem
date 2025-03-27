@@ -62,7 +62,7 @@ export const createSession = async (mail: string, hash: string) => {
     throw new HttpException(401, { error: "invalid credentials" });
 };
 
-export const deleteSession = (id: number, session: string) => {
+export const deleteSession = async (id: number, session: string) => {
     if (isNaN(id)) {
         throw new HttpException(422, { id: ["can't be blank"] });
     }
@@ -76,7 +76,7 @@ export const deleteSession = (id: number, session: string) => {
     if (DB.sessions[session] != id) return false;
 
     delete DB.sessions[session];
-    Reotem.deleteSession(id);
+    await Reotem.deleteSession(id);
     fs.writeFileSync(DB_PATH, JSON.stringify(DB));
     return true;
 };
