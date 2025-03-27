@@ -87,5 +87,4 @@ export interface ObjectQuery extends APIQuery {
     id?: number;
     sort?: "asc" | "desc";
     type?: ObjectClass;
-    // TODO find a way to remember recently used object by user, maybe via localStorage,
 }

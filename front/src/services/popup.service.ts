@@ -41,6 +41,4 @@ export class PopupService {
             panelClass: options.class,
         }).afterDismissed();
     }
-
-    // TODO ouvrir un composant custom, qui pourrait permettre de mettre des images en notifications, ou de customisé plus
 }

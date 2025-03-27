@@ -54,7 +54,6 @@ export class SignupComponent {
         private route: Router,
         private com: CommunicationService,
     ) {
-        // TODO do all check on the backend too
         // take until destro to prevent multiple listener when component is hidden
         // no need to check if username and/or mail is unique, api do that when creating the account
         // they would only know though when hitting create

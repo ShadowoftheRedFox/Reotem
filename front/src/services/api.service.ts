@@ -89,14 +89,12 @@ export class APIService {
         getAll: (id: number, session: string, query: NotificationQuery) => {
             return this.sendApiRequest<Notification[]>("POST", "user/notification/" + id, { session: session, query: query }, "Getting notifications");
         },
-        // TODO do the back
         delete: (ids: number[], session: string) => {
             return this.sendApiRequest("DELETE", "user/notification/", { ids: ids, session: session }, "Delete notification");
         },
         read: (ids: number[], session: string) => {
             return this.sendApiRequest("PUT", "user/notification/read", { ids: ids, session: session }, "Read notification");
         },
-        // TODO do the back
         unread: (ids: number[], session: string) => {
             return this.sendApiRequest("PUT", "user/notification/unread", { ids: ids, session: session }, "Unread notification");
         },
