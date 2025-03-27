@@ -1,13 +1,20 @@
 .bar-container {
     padding: 1em;
     margin: 1em;
-    background-color: var(--mdc-outlined-card-container-color, var(--mat-sys-surface));
+    margin-left: 0;
+    padding-left: 0;
+
+    overflow-y: auto;
+
     border-bottom-width: var(--mdc-outlined-card-outline-width, 1px);
     border-color: var(--mdc-outlined-card-outline-color, var(--mat-sys-outline-variant));
-    box-shadow: var(--mdc-outlined-card-container-elevation, var(--mat-sys-level0));
 
     h2 {
         font-size: x-large;
         margin-bottom: 0.5em;
     }
+}
+
+.drag-indicator {
+    cursor: move;
 }

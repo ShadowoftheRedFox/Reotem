@@ -72,7 +72,10 @@
                     @if (menu.id === 'CompteObj') {
                     <img #displaced_badge [hidden]="displaced_badge.classList.contains('notFound')"
                         (error)="displaced_badge.classList.add('notFound')" [src]="BaseUrl+user?.id+'.jpg'"
-                        alt="Image de profile" class="side-nav-account-image side-nav-show-icon-displaced">
+                        alt="Image de profile" class="side-nav-account-image side-nav-show-icon-displaced"
+                        (mouseleave)="menu.hover=false" (mouseover)="menu.hover=true" (focus)="menu.hover=true"
+                        [ngClass]="(menu.hover?menu.hoverClass||'':'')+' '+menu.class||''" [matTooltip]="menu.tooltip"
+                        (mouseup)="toggleSideNav()">
                     <mat-icon aria-hidden="false" (mouseleave)="menu.hover=false" (mouseover)="menu.hover=true"
                         (focus)="menu.hover=true" [ngClass]="(menu.hover?menu.hoverClass||'':'')+' '+menu.class||''"
                         [matTooltip]="menu.tooltip" (click)="toggleSideNav()" class="side-nav-show-icon-displaced"
@@ -94,7 +97,9 @@
                             @if (menu.icon) {
                             <img #badge [hidden]="badge.classList.contains('notFound')"
                                 (error)="badge.classList.add('notFound')" [src]="BaseUrl+user?.id+'.jpg'"
-                                alt="Image de profile" class="side-nav-account-image">
+                                alt="Image de profile" class="side-nav-account-image" (mouseleave)="menu.hover=false"
+                                (mouseover)="menu.hover=true" (focus)="menu.hover=true"
+                                [ngClass]="(menu.hover?menu.hoverClass||'':'')+' '+menu.class||''">
                             <mat-icon aria-hidden="false" (mouseleave)="menu.hover=false" (mouseover)="menu.hover=true"
                                 (focus)="menu.hover=true"
                                 [ngClass]="(menu.hover?menu.hoverClass||'':'')+' '+menu.class||''"

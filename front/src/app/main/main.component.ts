@@ -4,13 +4,19 @@ import { AnyObject } from '../../models/domo.model';
 import { DomoComponent } from '../../shared/domo/domo.component';
 import { CookieTime } from '../../models/cookie.model';
 import { RouterLink } from '@angular/router';
+import { CdkDropList, CdkDrag, CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { MatIconModule } from '@angular/material/icon';
+import { AuthentificationService } from '../../services/authentification.service';
 
 @Component({
     selector: 'app-main',
     standalone: true,
     imports: [
         DomoComponent,
-        RouterLink
+        RouterLink,
+        CdkDrag,
+        CdkDropList,
+        MatIconModule
     ],
     templateUrl: './main.component.html',
     styleUrl: './main.component.scss'
@@ -22,7 +28,8 @@ export class MainComponent {
     problemsObject: AnyObject[] = [];
 
     constructor(
-        private api: APIService
+        private api: APIService,
+        private auth: AuthentificationService
     ) {
         api.objects.all({ limit: 20 }).subscribe(res => {
             this.objectList = res.objects;
@@ -43,5 +50,19 @@ export class MainComponent {
 
             // console.log(res.objects[0]);
         });
+
+        const mainOrder = auth.getCookie("main_order");
+        if (mainOrder.length == 0) {
+            auth.setCookie("main_order", JSON.stringify(this.order), CookieTime.Year, "/");
+        } else {
+            this.order = JSON.parse(mainOrder);
+        }
+    }
+
+    order = ["recent", "all", "problem"];
+
+    drop(event: CdkDragDrop<string[]>) {
+        moveItemInArray(this.order, event.previousIndex, event.currentIndex);
+        this.auth.setCookie("main_order", JSON.stringify(this.order), CookieTime.Year, "/");
     }
 }

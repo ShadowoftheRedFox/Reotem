@@ -1,37 +1,50 @@
 <p>Filtre: batiment, type objet, état...</p>
-<div class="bar-container">
-    <h2>Récemment utilisé{{recentlyUsed.length>1?'s':''}}:</h2>
-    @if (recentlyUsed.length > 0){
-    <div [class]="bar_class">
-        @for (obj of recentlyUsed; track $index) {
-        <app-domo [obj]="obj"></app-domo>
+<div cdkDropList (cdkDropListDropped)="drop($event)">
+    @for (type of order; track $index) {
+    <div class="flex flex-row -flex-nowrap bar-container" cdkDrag>
+        <div class="flex items-center">
+            <mat-icon class="drag-indicator">drag_indicator</mat-icon>
+        </div>
+        @if (type === "recent") {
+        <div>
+            <h2>Récemment utilisé{{recentlyUsed.length>1?'s':''}}:</h2>
+            @if (recentlyUsed.length > 0){
+            <div [class]="bar_class">
+                @for (obj of recentlyUsed; track $index) {
+                <app-domo [obj]="obj"></app-domo>
+                }
+            </div>
+            }
+        </div>
+        } @else if (type === "all") {
+        <div>
+            <h2>Tout les objets:</h2>
+            @if (objectList.length > 0) {
+            <div [class]="bar_class">
+                @for (obj of objectList; track $index) {
+                <app-domo [obj]="obj"></app-domo>
+                }
+            </div>
+            } @else {
+            <p>
+                Aucun objet connecté. Ajoutez en avec <a routerLink="object">le gestionnaire d'objets</a>.
+            </p>
+            }
+        </div>
+        } @else if (type === "problem") {
+        <div>
+            <h2>Objets avec des problèmes:</h2>
+            @if (problemsObject.length > 0) {
+            <div [class]="bar_class">
+                @for (obj of problemsObject; track $index) {
+                <app-domo [obj]="obj"></app-domo>
+                }
+            </div>
+            } @else {
+            <p>Aucun problème</p>
+            }
+        </div>
         }
     </div>
-    }
-</div>
-<div class="bar-container">
-    <h2>Tout les objets:</h2>
-    @if (objectList.length > 0) {
-    <div [class]="bar_class">
-        @for (obj of objectList; track $index) {
-        <app-domo [obj]="obj"></app-domo>
-        }
-    </div>
-    } @else {
-    <p>
-        Aucun objet connecté. Ajoutez en avec <a routerLink="object">le gestionnaire d'objets</a>.
-    </p>
-    }
-</div>
-<div class="bar-container">
-    <h2>Objets avec des problèmes:</h2>
-    @if (problemsObject.length > 0) {
-    <div [class]="bar_class">
-        @for (obj of problemsObject; track $index) {
-        <app-domo [obj]="obj"></app-domo>
-        }
-    </div>
-    } @else {
-    <p>Aucun problème</p>
     }
 </div>
