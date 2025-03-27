@@ -2,7 +2,7 @@ import { AfterViewInit, Component, computed, Injectable, signal, ViewChild } fro
 import { CommunicationService } from '../../services/communication.service';
 import { APIService } from '../../services/api.service';
 import { AuthentificationService } from '../../services/authentification.service';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatSort, MatSortModule, Sort } from '@angular/material/sort';
 import { MatMenuModule } from '@angular/material/menu';
@@ -55,6 +55,7 @@ export interface Task {
         MatButtonModule,
         MatCheckboxModule,
         MatPaginatorModule,
+        RouterLink
     ],
     templateUrl: './notification.component.html',
     styleUrl: './notification.component.scss',

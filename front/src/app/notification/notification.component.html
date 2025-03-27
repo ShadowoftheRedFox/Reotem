@@ -1,4 +1,14 @@
 <div class="mat-elevation-z8 h-full flex flex-col justify-between">
+    @if (notifications.length === 0) {
+    <div class="h-full flex flex-col items-center justify-center gap-4">
+        <p>Aucune notification</p>
+        <a routerLink="/">
+            <button mat-raised-button>
+                Retour au menu principal
+            </button>
+        </a>
+    </div>
+    } @else {
     <table mat-table class="w-full" [dataSource]="dataSource" matSort (matSortChange)="sortNotif($event)">
         <ng-container matColumnDef="selection">
             <th mat-header-cell *matHeaderCellDef>
@@ -80,4 +90,5 @@
     <mat-paginator [pageSizeOptions]="[10, 20, 50]" showFirstLastButtons
         aria-label="Sélection d'une page de notification">
     </mat-paginator>
+    }
 </div>

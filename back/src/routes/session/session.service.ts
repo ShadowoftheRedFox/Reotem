@@ -6,6 +6,7 @@ import { generateToken } from "../../util/crypt";
 import { parseUser } from "../../util/parser";
 import Reotem from "~/util/functions";
 import { UserSchema } from "~/models/user";
+import { User } from "../../../../front/src/models/api.model";
 
 const DB_PATH = path.join(__dirname, "..", "..", "..", "db.json");
 
@@ -16,10 +17,10 @@ export const getSession = async (token: string) => {
 
     const DB = JSON.parse(fs.readFileSync(DB_PATH, 'utf8'));
     const session = await Reotem.getSession(token);
-    let user = await Reotem.getUser(session?.id) || DB.users[DB.sessions[token]];
+    let user: User = await Reotem.getUser(session?.id) || DB.users[DB.sessions[token]];
     if (user == undefined) throw new HttpException(404);
 
-    user = parseUser(user as never) as never;
+    user = parseUser(user as never, true) as never;
 
     return { ...user };
 };
