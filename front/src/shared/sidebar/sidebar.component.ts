@@ -121,7 +121,8 @@ export class SidebarComponent implements OnDestroy {
         const compteObj = this.getItem("CompteObj");
         const notifObj = this.getItem("NotificationsObj");
         const adminObj = this.getItem("AdminObj")
-        const objectManagerObj = this.getItem("ObjectManagerObj")
+        const objectManagerObj = this.getItem("ObjectManagerObj");
+        const servicesManagerObj = this.getItem("ServiceManagerObj");
         // update at each connection/disconnection
         this.com.AuthAccountUpdate.subscribe((user) => {
             if (decoObj) {
@@ -144,6 +145,9 @@ export class SidebarComponent implements OnDestroy {
                     if (objectManagerObj) {
                         objectManagerObj.hidden = false;
                     }
+                    if (servicesManagerObj) {
+                        servicesManagerObj.hidden = false;
+                    }
                 } else {
                     compteObj.title = "Compte";
                     compteObj.link = "/connection";
@@ -159,6 +163,9 @@ export class SidebarComponent implements OnDestroy {
                     }
                     if (objectManagerObj) {
                         objectManagerObj.hidden = true;
+                    }
+                    if (servicesManagerObj) {
+                        servicesManagerObj.hidden = true;
                     }
                 }
             }
@@ -204,7 +211,17 @@ export class SidebarComponent implements OnDestroy {
             id: "ObjectManagerObj",
             hoverClass: "nav-obj-manager-hover",
             hidden: true
-        }
+        },
+        {
+            title: "Services",
+            link: "/service",
+            icon: "design_services",
+            aria: "Lien pour voir aller aux services",
+            tooltip: "Gestionnaire des services",
+            id: "ServiceManagerObj",
+            hoverClass: "nav-service-manager-hover",
+            hidden: true
+        },
     ];
 
     SideNavItemsBottom: SideNavItem[] = [

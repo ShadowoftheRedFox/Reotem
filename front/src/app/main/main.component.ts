@@ -7,6 +7,8 @@ import { RouterLink } from '@angular/router';
 import { CdkDropList, CdkDrag, CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { MatIconModule } from '@angular/material/icon';
 import { AuthentificationService } from '../../services/authentification.service';
+import { CommunicationService } from '../../services/communication.service';
+import { ServiceNames } from '../service-manager/service-manager.component';
 
 @Component({
     selector: 'app-main',
@@ -27,12 +29,18 @@ export class MainComponent {
     recentlyUsed: AnyObject[] = [];
     problemsObject: AnyObject[] = [];
 
+    order = ["recent", "service", "all", "problem"];
+    readonly serviceNames = ServiceNames;
+
+
     constructor(
         private api: APIService,
-        private auth: AuthentificationService
+        private auth: AuthentificationService,
+        private com: CommunicationService
     ) {
-        api.objects.all({ limit: 20 }).subscribe(res => {
-            this.objectList = res.objects;
+        // listen to event change
+        com.DomoAllObjectsUpdate.subscribe(update => {
+            this.objectList = update;
 
             // TODO find a way for recently used (local storage?), we look at the date at the moment
             const now = new Date();
@@ -47,8 +55,11 @@ export class MainComponent {
                     this.problemsObject.push(o);
                 }
             })
+        });
 
-            // console.log(res.objects[0]);
+        api.objects.all({}).subscribe(res => {
+            com.DomoObjectsAmount = res.total;
+            com.DomoAllObjectsUpdate.next(res.objects);
         });
 
         const mainOrder = auth.getCookie("main_order");
@@ -58,8 +69,6 @@ export class MainComponent {
             this.order = JSON.parse(mainOrder);
         }
     }
-
-    order = ["recent", "all", "problem"];
 
     drop(event: CdkDragDrop<string[]>) {
         moveItemInArray(this.order, event.previousIndex, event.currentIndex);

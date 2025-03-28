@@ -157,7 +157,7 @@ export class APIService {
             },
             error: () => {
                 console.warn("Unknown token, removing");
-                this.authis.deleteCookie("session");
+                this.com.AuthAccountUpdate.next(null);
             }
         });
     }

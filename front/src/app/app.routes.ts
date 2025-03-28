@@ -15,6 +15,8 @@ import { TestComponent } from './test/test.component';
 import { testGuard } from '../guards/test.guard';
 import { ObjectComponent } from './object-manager/object/object.component';
 import { ObjectManagerComponent } from './object-manager/object-manager.component';
+import { ServiceManagerComponent } from './service-manager/service-manager.component';
+import { needAuthenticatedGuard } from '../guards/need-authenticated.guard';
 
 const TITLE_POSTFIX = " - " + environment.title;
 
@@ -48,17 +50,32 @@ export const routes: Routes = [
     {
         path: "object/:id",
         title: "Objet" + TITLE_POSTFIX,
-        component: ObjectComponent
+        component: ObjectComponent,
+        canActivate: [needAuthenticatedGuard]
     },
     {
         path: "object",
         title: "Gestionnaire d'objet" + TITLE_POSTFIX,
-        component: ObjectManagerComponent
+        component: ObjectManagerComponent,
+        canActivate: [needAuthenticatedGuard]
+    },
+    {
+        path: "service/:id",
+        title: "Services" + TITLE_POSTFIX,
+        component: ServiceManagerComponent,
+        canActivate: [needAuthenticatedGuard]
+    },
+    {
+        path: "service",
+        title: "Services" + TITLE_POSTFIX,
+        component: ServiceManagerComponent,
+        canActivate: [needAuthenticatedGuard]
     },
     {
         path: "notification",
         title: "Notification" + TITLE_POSTFIX,
-        component: NotificationComponent
+        component: NotificationComponent,
+        canActivate: [needAuthenticatedGuard]
     },
     {
         path: "administration",

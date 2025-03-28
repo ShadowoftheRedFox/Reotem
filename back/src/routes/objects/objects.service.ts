@@ -6,7 +6,7 @@ import { AnyObject, SpeakerObject } from "../../../../front/src/models/domo.mode
 
 const DB_PATH = path.join(__dirname, "..", "..", "..", "db.json");
 
-export const getAll = (query?: ObjectQuery) => {
+export const getAll = (query: ObjectQuery = {}) => {
     const DB = JSON.parse(fs.readFileSync(DB_PATH, 'utf8'));
 
     const objects = Object.values(DB.objects as { [key: number]: AnyObject });

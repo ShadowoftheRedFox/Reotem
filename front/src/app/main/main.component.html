@@ -44,6 +44,16 @@
             <p>Aucun problème</p>
             }
         </div>
+        } @else if (type === "service") {
+        <h2>Services</h2>
+        @if (serviceNames.length > 0) {
+        <!-- TODO buttons to the services -->
+        @for (service of serviceNames; track $index) {
+        <p>Boutton pour {{service.name}}</p>
+        }
+        } @else {
+        <p>Aucun service</p>
+        }
         }
     </div>
     }
