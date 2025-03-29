@@ -113,6 +113,9 @@ export class APIService {
         },
         delete: (id: number, session: string) => {
             return this.sendApiRequest("DELETE", "objects/" + id, { session: session }, "Deleting " + id);
+        },
+        create: (object: AnyObject, session: string) => {
+            return this.sendApiRequest("POST", "objects/", { session: session, object: object }, "Creating object");
         }
     }
 

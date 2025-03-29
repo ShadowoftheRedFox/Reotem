@@ -18,7 +18,9 @@
         <p class="placeholder-p" [class]="rngClass5">Chargement...</p>
     </mat-card-content>
     <mat-card-actions [class]="selectionEnabled()?'actions-checkbox':''">
+        @if (selectionEnabled()) {
         <mat-checkbox [disabled]="true">Sélectionner</mat-checkbox>
+        }
         <button mat-mini-fab disabled="">
             <mat-icon>settings</mat-icon>
         </button>
@@ -42,7 +44,9 @@
             <p>Dernière interaction: {{format()}}</p>
         </mat-card-content>
         <mat-card-actions [class]="selectionEnabled()?'actions-checkbox':''">
+            @if (selectionEnabled()) {
             <mat-checkbox (change)="selectCallback.emit(selectIndex())">Sélectionner</mat-checkbox>
+            }
             <button mat-raised-button [matMenuTriggerFor]="menu">
                 <mat-icon>settings</mat-icon>
                 Paramétrer
@@ -72,7 +76,9 @@
             <p>Dernière interaction: {{format()}}</p>
         </mat-card-content>
         <mat-card-actions [class]="selectionEnabled()?'actions-checkbox':''">
+            @if (selectionEnabled()) {
             <mat-checkbox (change)="selectCallback.emit(selectIndex())">Sélectionner</mat-checkbox>
+            }
             <button mat-raised-button [matMenuTriggerFor]="menu">
                 <mat-icon>settings</mat-icon>
                 Paramétrer
@@ -106,7 +112,9 @@
             <p>Dernière interaction: {{format()}}</p>
         </mat-card-content>
         <mat-card-actions [class]="selectionEnabled()?'actions-checkbox':''">
+            @if (selectionEnabled()) {
             <mat-checkbox (change)="selectCallback.emit(selectIndex())">Sélectionner</mat-checkbox>
+            }
             <button mat-raised-button [matMenuTriggerFor]="menu">
                 <mat-icon>settings</mat-icon>
                 Paramétrer
@@ -143,7 +151,9 @@
             <p>Dernière interaction: {{format()}}</p>
         </mat-card-content>
         <mat-card-actions [class]="selectionEnabled()?'actions-checkbox':''">
+            @if (selectionEnabled()) {
             <mat-checkbox (change)="selectCallback.emit(selectIndex())">Sélectionner</mat-checkbox>
+            }
             <button mat-raised-button [matMenuTriggerFor]="menu">
                 <mat-icon>settings</mat-icon>
                 Paramétrer
@@ -177,7 +187,9 @@
             <p>Dernière interaction: {{format()}}</p>
         </mat-card-content>
         <mat-card-actions [class]="selectionEnabled()?'actions-checkbox':''">
+            @if (selectionEnabled()) {
             <mat-checkbox (change)="selectCallback.emit(selectIndex())">Sélectionner</mat-checkbox>
+            }
             <button mat-raised-button [matMenuTriggerFor]="menu">
                 <mat-icon>settings</mat-icon>
                 Paramétrer
@@ -211,7 +223,9 @@
             <p>Dernière interaction: {{format()}}</p>
         </mat-card-content>
         <mat-card-actions [class]="selectionEnabled()?'actions-checkbox':''">
+            @if (selectionEnabled()) {
             <mat-checkbox (change)="selectCallback.emit(selectIndex())">Sélectionner</mat-checkbox>
+            }
             <button mat-raised-button [matMenuTriggerFor]="menu">
                 <mat-icon>settings</mat-icon>
                 Paramétrer
@@ -244,7 +258,9 @@
             <p>Dernière interaction: {{format()}}</p>
         </mat-card-content>
         <mat-card-actions [class]="selectionEnabled()?'actions-checkbox':''">
+            @if (selectionEnabled()) {
             <mat-checkbox (change)="selectCallback.emit(selectIndex())">Sélectionner</mat-checkbox>
+            }
             <button mat-raised-button [matMenuTriggerFor]="menu">
                 <mat-icon>settings</mat-icon>
                 Paramétrer
@@ -273,7 +289,9 @@
             <p>Dernière interaction: {{format()}}</p>
         </mat-card-content>
         <mat-card-actions [class]="selectionEnabled()?'actions-checkbox':''">
+            @if (selectionEnabled()) {
             <mat-checkbox (change)="selectCallback.emit(selectIndex())">Sélectionner</mat-checkbox>
+            }
             <button mat-raised-button [matMenuTriggerFor]="menu">
                 <mat-icon>settings</mat-icon>
                 Paramétrer
@@ -308,7 +326,9 @@
             <p>Dernière interaction: {{format()}}</p>
         </mat-card-content>
         <mat-card-actions [class]="selectionEnabled()?'actions-checkbox':''">
+            @if (selectionEnabled()) {
             <mat-checkbox (change)="selectCallback.emit(selectIndex())">Sélectionner</mat-checkbox>
+            }
             <button mat-raised-button [matMenuTriggerFor]="menu">
                 <mat-icon>settings</mat-icon>
                 Paramétrer
@@ -340,7 +360,9 @@
             <p>Dernière interaction: {{format()}}</p>
         </mat-card-content>
         <mat-card-actions [class]="selectionEnabled()?'actions-checkbox':''">
+            @if (selectionEnabled()) {
             <mat-checkbox (change)="selectCallback.emit(selectIndex())">Sélectionner</mat-checkbox>
+            }
             <button mat-raised-button [matMenuTriggerFor]="menu">
                 <mat-icon>settings</mat-icon>
                 Paramétrer

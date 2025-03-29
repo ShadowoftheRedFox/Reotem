@@ -1,7 +1,7 @@
 .filters,
 .main-container,
 .button-container {
-    margin-left: 2em;
+    margin-bottom: 1em;
 
     h2 {
         font-size: x-large;
@@ -10,4 +10,8 @@
 
 ::ng-deep .sidenav-is-mobile .filters {
     justify-content: center;
+}
+
+::ng-deep .sidenav-is-mobile .button-container>div {
+    justify-content: space-around;
 }

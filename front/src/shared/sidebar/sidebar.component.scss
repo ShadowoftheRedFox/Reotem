@@ -8,6 +8,11 @@ p {
     overflow: visible !important;
 }
 
+.sidenav-is-mobile.sidenav-container {
+    width: calc(100dvw - 10px);
+    max-width: calc(100dvw - 10px);
+}
+
 // animation quand on passe la sourie sur une icone
 mat-icon {
     transition: color 200ms ease-in-out;
