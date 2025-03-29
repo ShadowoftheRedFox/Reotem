@@ -54,8 +54,6 @@ export class UserComponent {
             this.requestedUser = Number(res["id"]);
             this.privateMode = auth.client?.id === this.requestedUser;
 
-            console.log(auth.clientToken, this.requestedUser);
-
             api.user.get(this.requestedUser, auth.clientToken).subscribe({
                 next: (res) => {
                     this.user = res;

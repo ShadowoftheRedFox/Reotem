@@ -58,8 +58,8 @@
 } @else {
 <div cdkDropList (cdkDropListDropped)="drop($event)">
     @for (type of order; track $index) {
-    <div class="flex flex-row flex-nowrap bar-container" cdkDrag>
-        <div class="flex items-center">
+    <div class="flex flex-row flex-nowrap bar-container">
+        <div class="flex items-center" cdkDrag>
             <mat-icon class="drag-indicator">drag_indicator</mat-icon>
         </div>
         @if (type === "recent") {

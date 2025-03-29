@@ -34,8 +34,12 @@ export const ObjectClass = [
     "BaseObject",
     "Erreur"
 ] as const;
-
 export type ObjectClass = typeof ObjectClass[number];
+
+export const WifiType = [
+    "Routeur", "Répéteur", "Switch"
+] as const;
+export type WifiType = typeof WifiType[number];
 
 export type AnyObject = BaseObject |
     LightObject |
@@ -116,20 +120,21 @@ export interface WindowStoreObject extends BaseObject {
     objectClass: "WindowStoreObject";
     mode: Mode;
     openState: number;
-    closeTime: number;
+    closeTime: string;
+    openTime: string;
 }
 
 export interface DoorObject extends BaseObject {
     objectClass: "DoorObject";
     locked: boolean;
     closed: boolean;
-    openTime: number;
-    closeTime: number;
+    openTime: string;
+    closeTime: string;
 }
 
 export interface WiFiObject extends BaseObject {
     objectClass: "WiFiObject";
-    type: "Routeur" | "Répéteur" | "Switch";
+    type: WifiType;
     turnedOn: boolean;
     electricityUsage: number;
 }
