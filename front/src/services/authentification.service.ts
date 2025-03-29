@@ -27,6 +27,7 @@ export class AuthentificationService {
             this.connected = res != null;
             if (res == null) {
                 this.client = null;
+                this.clientToken = "";
                 this.deleteCookie("session");
                 this.deleteCookie("UID");
             } else {

@@ -19,12 +19,16 @@ export const checkUserRole = async (role: UserRole, session: string) => {
     }
 
     // TODO Reotem.getSession(session:string) -> user.id | undefined
-    const DB = JSON.parse(readFileSync(DB_PATH, 'utf8'));
-    if (DB.sessions[session] == undefined) {
+
+    const userId = (await Reotem.getSession(session))?.id;
+
+    if (userId === undefined || isNaN(userId) || userId < 0) {
         throw new HttpException(401);
     }
 
-    return DB.users[DB.sessions[session]].role == role;
+    const userRole = (await Reotem.getUser(userId))?.role;
+
+    return userRole == role;
 }
 
 export const getUser = async (id: number, session: string = '') => {
