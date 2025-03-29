@@ -1,1 +1,88 @@
-<p>object-manager works!</p>
+<div class="filters flex flex-row flex-wrap justify-start gap-2 items-baseline">
+    <h2>Filtrer les objets:</h2>
+    <mat-form-field>
+        <mat-icon matIconPrefix>search</mat-icon>
+        <mat-label>Filtre</mat-label>
+        <input matInput placeholder="Ex. Ampoule1" [(ngModel)]="namedFilter" (ngModelChange)="namedFilterChange()">
+        @if (namedFilter) {
+        <button matSuffix mat-icon-button aria-label="Effacer" (click)="namedFilter=''">
+            <mat-icon>close</mat-icon>
+        </button>
+        }
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>Salle</mat-label>
+        <mat-select [formControl]="filteredRoom" multiple [placeholder]="roomList[0]">
+            @for (room of roomList; track room) {
+            <mat-option [value]="room">{{room}}</mat-option>
+            }
+        </mat-select>
+    </mat-form-field>
+    @if (buildingList.length > 0) {
+    <mat-form-field>
+        <mat-label>Bâtiment</mat-label>
+        <mat-select [formControl]="filteredBuilding" multiple [placeholder]="buildingList[0]">
+            @for (building of buildingList; track building) {
+            <mat-option [value]="building">{{building}}</mat-option>
+            }
+        </mat-select>
+    </mat-form-field>
+    }
+</div>
+<div class="button-container m-4">
+    <h2>Gestion des objets:</h2>
+    <div class="flex flex-row flex-wrap gap-4">
+        @for (act of actionsList; track $index) {
+        <a [routerLink]="act.link">
+            <button mat-flat-button (click)="act.callback()" [disabled]="act.disabled?!act.disabled():false">
+                <mat-icon class="symbols">{{act.icon}}</mat-icon>
+                {{act.name}}
+            </button>
+        </a>
+        }
+    </div>
+</div>
+<div>
+    @if (namedFilter !== '') {
+    <div class="flex flex-col gap-4">
+        @if (noNamedFilterResult) {
+        <div class="h-full w-full flex items-center justify-center flex-col gap-4">
+            <p>Aucun résultat</p>
+            <button mat-fab extended (click)="namedFilter=''">Supprimer le filtre</button>
+        </div>
+        } @else {
+        <div class="main-container">
+            <h2>Tout les objets filtrés:</h2>
+            <div [class]="bar_class">
+                @for (obj of objectList; track $index) {
+                <app-domo [obj]="obj" [hidden]="!applyNamedFilter(obj)" [selectionEnabled]="true" [selectIndex]="$index"
+                    (selectCallback)="domoSelected($index)"></app-domo>
+                }
+            </div>
+        </div>
+        }
+    </div>
+    } @else {
+    <div class="main-container">
+        <h2>Tout les objets:</h2>
+        <div class="flex flex-row flex-wrap">
+            @if (objectList.length === 0) {
+            <p>
+                Aucun objet connecté. Ajoutez en avec le bouton 'Ajouter'.
+            </p>
+            } @else {
+            @if (filteredObjectList.length > 0) {
+            <div [class]="bar_class">
+                @for (obj of filteredObjectList; track $index) {
+                <app-domo [obj]="obj" [selectionEnabled]="true" [selectIndex]="$index"
+                    (selectCallback)="domoSelected($index)"></app-domo>
+                }
+            </div>
+            } @else {
+            <p>Aucun objet connecté correspodant à votre filtre.</p>
+            }
+            }
+        </div>
+    </div>
+    }
+</div>

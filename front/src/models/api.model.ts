@@ -33,7 +33,9 @@ export const LevelAdvanced = LevelBeginner * 2;
 export const LevelExpert = LevelAdvanced * 2;
 
 export const UserSexe = [
-    "Homme", "Femme", "Autre"
+    "Homme",
+    "Femme",
+    "Autre"
 ] as const;
 
 export type UserSexe = typeof UserSexe[number];
@@ -50,8 +52,12 @@ export const UserRole = [
 
 export type UserRole = typeof UserRole[number];
 
-export const UserLevel = ["Débutant", "Avancé", "Expert"];
-export type UserLevel = "Débutant" | "Avancé" | "Expert";
+export const UserLevel = [
+    "Débutant",
+    "Avancé",
+    "Expert"
+] as const;
+export type UserLevel = typeof UserLevel[number];
 
 export interface LoginChallenge {
     challenge: string;

@@ -18,32 +18,31 @@ export const checkUserRole = async (role: UserRole, session: string) => {
     }
 
     // TODO Reotem.getSession(session:string) -> user.id | undefined
-    const currentSession = await Reotem.getSession(session);
-    if (currentSession == undefined) {
+
+    const userId = (await Reotem.getSession(session))?.id;
+
+    if (userId === undefined || isNaN(userId) || userId < 0) {
         throw new HttpException(401);
     }
 
-    const user = await Reotem.getUser(currentSession.id);
+    const userRole = (await Reotem.getUser(userId))?.role;
 
-    return user?.role == role;
+    return userRole == role;
 }
 
-export const getUser = async (id: number, session?: string) => {
+export const getUser = async (id: number, session: string = '') => {
     if (id < 0) {
         throw new HttpException(400);
     }
 
     const user = await Reotem.getUser(id);
+    const userSession = await Reotem.getSession(session);
 
     if (user == undefined) {
         throw new HttpException(404);
     }
 
-    // TODO Reotem.getSession(session:string) -> user.id
-    const currentSession = await Reotem.getSession(session || "");
-    const sensible = session != undefined && currentSession?.id == id;
-
-    return parseUser(user, sensible);
+    return parseUser(user, user.id === userSession?.id);
 };
 
 export const postImage = async (id: number, base64: string, session: string) => {

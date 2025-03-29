@@ -94,7 +94,6 @@
                         (click)="toggleSideNav()">
                         <div class="sidenav-item">
                             @if (menu.id === "CompteObj"){
-                            @if (menu.icon) {
                             <img #badge [hidden]="badge.classList.contains('notFound')"
                                 (error)="badge.classList.add('notFound')" [src]="BaseUrl+user?.id+'.jpg'"
                                 alt="Image de profile" class="side-nav-account-image" (mouseleave)="menu.hover=false"
@@ -105,7 +104,6 @@
                                 [ngClass]="(menu.hover?menu.hoverClass||'':'')+' '+menu.class||''"
                                 class="side-nav-account-image"
                                 [hidden]="!badge.classList.contains('notFound')">{{menu.icon}}</mat-icon>
-                            }
                             <div class="account-title">
                                 <span class="side-nav-account-name">{{menu.title}}</span>
                                 @if (getItem("AdminObj")?.hidden===false) {

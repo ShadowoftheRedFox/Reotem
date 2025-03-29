@@ -76,11 +76,11 @@ export const deleteSession = async (id: number, session: string) => {
     }
 
     // session must match the id in DB.sessions
-    const DB = JSON.parse(fs.readFileSync(DB_PATH, 'utf8'));
-    if (DB.sessions[session] != id) return false;
+    // const DB = JSON.parse(fs.readFileSync(DB_PATH, 'utf8'));
+    // if (DB.sessions[session] != id) return false;
 
-    delete DB.sessions[session];
+    // delete DB.sessions[session];
     await Reotem.deleteSession(id);
-    fs.writeFileSync(DB_PATH, JSON.stringify(DB));
+    // fs.writeFileSync(DB_PATH, JSON.stringify(DB));
     return true;
 };

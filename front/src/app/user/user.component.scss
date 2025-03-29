@@ -1,0 +1,59 @@
+img {
+    width: 100px;
+    height: auto;
+    border-radius: 100%;
+    border: 2px var(--on-back-admin) solid;
+}
+
+h2 {
+    font-size: xx-large;
+    font-weight: bold;
+}
+
+.main-header {
+    background-color: var(--back-admin);
+    margin: 1em auto;
+    padding: 1em;
+    border-radius: 20px;
+    width: max(40dvw, 300px);
+    color: var(--on-back-advanced);
+}
+
+.public {
+    background-color: var(--back-advanced);
+    color: var(--on-back-advanced);
+    border-radius: 20px;
+    padding: 2em;
+    margin: 0.5em;
+}
+
+.image-container {
+    position: relative;
+
+    .profileImageHover {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background-color: rgba(0, 0, 0, 0.4);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 100%;
+        cursor: pointer;
+
+        p {
+            text-align: center;
+        }
+    }
+}
+
+form {
+    width: max(200px, 40dvw);
+    margin: 0 auto;
+}
+
+a {
+    color: var(--on-back-advanced);
+}

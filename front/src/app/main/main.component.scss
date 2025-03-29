@@ -3,18 +3,36 @@
     margin: 1em;
     margin-left: 0;
     padding-left: 0;
+    width: 100%;
 
     overflow-y: auto;
 
     border-bottom-width: var(--mdc-outlined-card-outline-width, 1px);
     border-color: var(--mdc-outlined-card-outline-color, var(--mat-sys-outline-variant));
 
+    .bar-class {
+        padding-bottom: 4px;
+    }
+
     h2 {
         font-size: x-large;
         margin-bottom: 0.5em;
+        margin-left: 0.5em;
+    }
+
+    div>p {
+        margin-left: 1em;
     }
 }
 
 .drag-indicator {
     cursor: move;
+}
+
+.filters {
+    margin-left: 2em;
+
+    h2 {
+        font-size: x-large;
+    }
 }

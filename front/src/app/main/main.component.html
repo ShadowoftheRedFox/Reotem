@@ -1,34 +1,101 @@
-<p>Filtre: batiment, type objet, état...</p>
+<div class="filters flex flex-row flex-wrap gap-2 items-baseline">
+    <h2>Filtrer les objets et services:</h2>
+    <mat-form-field>
+        <mat-icon matIconPrefix>search</mat-icon>
+        <mat-label>Filtre</mat-label>
+        <input matInput placeholder="Ex. Ampoule1" [(ngModel)]="namedFilter" (ngModelChange)="namedFilterChange()">
+        @if (namedFilter) {
+        <button matSuffix mat-icon-button aria-label="Effacer" (click)="namedFilter=''">
+            <mat-icon>close</mat-icon>
+        </button>
+        }
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>Salle</mat-label>
+        <mat-select [formControl]="filteredRoom" multiple [placeholder]="roomList[0]">
+            @for (room of roomList; track room) {
+            <mat-option [value]="room">{{room}}</mat-option>
+            }
+        </mat-select>
+    </mat-form-field>
+    @if (buildingList.length > 0) {
+    <mat-form-field>
+        <mat-label>Bâtiment</mat-label>
+        <mat-select [formControl]="filteredBuilding" multiple [placeholder]="buildingList[0]">
+            @for (building of buildingList; track building) {
+            <mat-option [value]="building">{{building}}</mat-option>
+            }
+        </mat-select>
+    </mat-form-field>
+    }
+</div>
+@if (namedFilter !== '') {
+<div class="filter-result flex flex-col gap-4">
+    @if (noNamedFilterResult) {
+    <div class="h-full w-full flex items-center justify-center flex-col gap-4">
+        <p>Aucun résultat</p>
+        <button mat-fab extended (click)="namedFilter=''">Supprimer le filtre</button>
+    </div>
+    } @else {
+    <div class="flex flex-row gap-4 content-start">
+        @for (service of servicesList; track $index) {
+        <a [routerLink]="service.link" [hidden]="!applyNamedFilter(undefined, service)">
+            <button mat-flat-button>
+                <mat-icon [class]="'symbols ' + service.class || '' ">{{service.icon ?
+                    service.icon : 'arrow_forward'}}</mat-icon>
+                <p>{{service.name}}</p>
+            </button>
+        </a>
+        }
+    </div>
+    <div class="flex items-stretch justify-around flex-row content-around flex-wrap gap-4">
+        @for (obj of objectList; track $index) {
+        <app-domo [obj]="obj" [hidden]="!applyNamedFilter(obj)"></app-domo>
+        }
+    </div>
+    }
+</div>
+} @else {
 <div cdkDropList (cdkDropListDropped)="drop($event)">
     @for (type of order; track $index) {
-    <div class="flex flex-row -flex-nowrap bar-container" cdkDrag>
+    <div class="flex flex-row flex-nowrap bar-container" cdkDrag>
         <div class="flex items-center">
             <mat-icon class="drag-indicator">drag_indicator</mat-icon>
         </div>
         @if (type === "recent") {
         <div>
-            <h2>Récemment utilisé{{recentlyUsed.length>1?'s':''}}:</h2>
-            @if (recentlyUsed.length > 0){
+            <h2>Récemment modifié{{filteredRecentlyUsed.length>1?'s':''}}:</h2>
+            @if (recentlyUsed.length === 0) {
+            <p>Aucun objet modifié récemment.</p>
+            } @else {
+            @if (filteredRecentlyUsed.length > 0){
             <div [class]="bar_class">
-                @for (obj of recentlyUsed; track $index) {
+                @for (obj of filteredRecentlyUsed; track $index) {
                 <app-domo [obj]="obj"></app-domo>
                 }
             </div>
+            } @else {
+            <p>Aucun objet correspodant à votre filtre.</p>
+            }
             }
         </div>
         } @else if (type === "all") {
         <div>
             <h2>Tout les objets:</h2>
-            @if (objectList.length > 0) {
+            @if (objectList.length === 0) {
+            <p>
+                Aucun objet connecté. Ajoutez en avec <a routerLink="object">le gestionnaire d'objets</a>.
+            </p>
+            } @else {
+            @if (filteredObjectList.length > 0) {
             <div [class]="bar_class">
-                @for (obj of objectList; track $index) {
+                @for (obj of filteredObjectList; track $index) {
                 <app-domo [obj]="obj"></app-domo>
                 }
             </div>
             } @else {
-            <p>
-                Aucun objet connecté. Ajoutez en avec <a routerLink="object">le gestionnaire d'objets</a>.
-            </p>
+            <p>Aucun objet connecté correspodant à votre filtre.</p>
+            }
             }
         </div>
         } @else if (type === "problem") {
@@ -37,14 +104,38 @@
             @if (problemsObject.length > 0) {
             <div [class]="bar_class">
                 @for (obj of problemsObject; track $index) {
+                @if ((inFilteredRoom(obj.room) && inFilteredBuilding(obj.building))) {
                 <app-domo [obj]="obj"></app-domo>
+                } @else {
+                <p>Objet à problème caché</p>
+                }
                 }
             </div>
             } @else {
             <p>Aucun problème</p>
             }
         </div>
+        } @else if (type === "service") {
+        <div>
+            <h2>Services</h2>
+            <div [class]="bar_class + ' flex-wrap'">
+                @if (servicesList.length > 0) {
+                @for (service of servicesList; track $index) {
+                <a [routerLink]="service.link">
+                    <button mat-flat-button>
+                        <mat-icon [class]="'symbols ' + service.class || '' ">{{service.icon ?
+                            service.icon : 'arrow_forward'}}</mat-icon>
+                        <p>{{service.name}}</p>
+                    </button>
+                </a>
+                }
+                } @else {
+                <p>Aucun service</p>
+                }
+            </div>
+        </div>
         }
     </div>
     }
 </div>
+}

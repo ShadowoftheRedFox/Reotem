@@ -1,21 +1,41 @@
 import { UserRole, UserLevel } from "./api.model";
 
-export type Mode = "Automatique" | "Manuel";
+export const Mode = [
+    "Automatique",
+    "Manuel"
+] as const;
+export type Mode = typeof Mode[number];
 
-export type Connection = "Wi-Fi" | "Cablé" | "Bluetooth" | "Déconnecté" | "Autre";
+export const Connection = [
+    "Wi-Fi",
+    "Cablé",
+    "Bluetooth",
+    "Déconnecté",
+    "Autre"
+] as const;
+export type Connection = typeof Connection[number];
 
-export type ObjectState = "Normal" | "Erreur" | "Maintenance";
+export const ObjectState = [
+    "Normal",
+    "Erreur",
+    "Maintenance"
+] as const;
+export type ObjectState = typeof ObjectState[number];
 
-export type ObjectClass = "LightObject" |
-    "ThermostatObject" |
-    "SpeakerObject" |
-    "VideoProjectorObject" |
-    "ComputerObject" |
-    "WindowStoreObject" |
-    "DoorObject" |
-    "WiFiObject" |
-    "BaseObject" |
-    "Erreur";
+export const ObjectClass = [
+    "LightObject",
+    "ThermostatObject",
+    "SpeakerObject",
+    "VideoProjectorObject",
+    "ComputerObject",
+    "WindowStoreObject",
+    "DoorObject",
+    "WiFiObject",
+    "BaseObject",
+    "Erreur"
+] as const;
+
+export type ObjectClass = typeof ObjectClass[number];
 
 export type AnyObject = BaseObject |
     LightObject |
