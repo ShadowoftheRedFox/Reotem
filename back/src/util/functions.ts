@@ -119,9 +119,10 @@ const Reotem = {
   },
 
   addObject: async (object: ObjectSchema, objectData: AnyObject) => {
+    
     const merged = { ...object, ...objectData };
     const newObject = await new models.Object(merged);
-    await newObject.save().then((o) => console.log(`New object for user -> ${o.id}, Object Data : ${JSON.stringify(o.objectData)}`));
+    await newObject.save().then((o) => console.log(`New object -> ${o.id}, Object Data : ${JSON.stringify(o.objectData)}`));
   },
   // filter example {key1: value, key2: value...}
   getAllObjects: async (filter: object) => {

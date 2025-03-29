@@ -5,7 +5,7 @@ export const UserMaxAge = 120;
 export const UserMinAge = 18;
 
 const userSchemaDefinition = {
-    id: { type: Number, required: true },
+    id: { type: Number, required: true, unique: true },
     firstname: { type: String, required: true },
     lastname: { type: String, required: true },
     email: { type: String, required: true },

@@ -13,7 +13,7 @@ export const notifSchema = new Schema(notifSchemaDefinition);
 export type NotifSchema = InferRawDocType<typeof notifSchemaDefinition>;
 
 const notificationSchemaDefinition = {
-    id: { type: Number, required: true },
+    id: { type: Number, required: true, unique: true },
     notifications: [notifSchema]
 }
 

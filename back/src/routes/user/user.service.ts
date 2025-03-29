@@ -1,11 +1,10 @@
-import { readFileSync, writeFileSync } from "fs";
+import { writeFileSync } from "fs";
 import path from "path";
 import HttpException from "~/models/HttpException";
 import Reotem from "~/util/functions";
 import { UserRole } from "../../../../front/src/models/api.model"
 import { parseUser } from "~/util/parser";
 
-const DB_PATH = path.join(__dirname, "..", "..", "..", "db.json");
 const PUBLIC_PATH = path.join(__dirname, "..", "..", "..", "public/");
 
 
@@ -19,12 +18,14 @@ export const checkUserRole = async (role: UserRole, session: string) => {
     }
 
     // TODO Reotem.getSession(session:string) -> user.id | undefined
-    const DB = JSON.parse(readFileSync(DB_PATH, 'utf8'));
-    if (DB.sessions[session] == undefined) {
+    const currentSession = await Reotem.getSession(session);
+    if (currentSession == undefined) {
         throw new HttpException(401);
     }
 
-    return DB.users[DB.sessions[session]].role == role;
+    const user = await Reotem.getUser(currentSession.id);
+
+    return user?.role == role;
 }
 
 export const getUser = async (id: number, session?: string) => {
@@ -39,8 +40,8 @@ export const getUser = async (id: number, session?: string) => {
     }
 
     // TODO Reotem.getSession(session:string) -> user.id
-    const DB = JSON.parse(readFileSync(DB_PATH, 'utf8'));
-    const sensible = session != undefined && DB.sessions[session] == id;
+    const currentSession = await Reotem.getSession(session || "");
+    const sensible = session != undefined && currentSession?.id == id;
 
     return parseUser(user, sensible);
 };
@@ -56,8 +57,8 @@ export const postImage = async (id: number, base64: string, session: string) => 
         throw new HttpException(404);
     }
 
-    const DB = JSON.parse(readFileSync(DB_PATH, 'utf8'));
-    if (DB.sessions[session] != user.id) {
+    const currentSession = await Reotem.getSession(session);
+    if (currentSession?.id != user.id) {
         throw new HttpException(401);
     }
 
