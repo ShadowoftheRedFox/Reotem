@@ -1,7 +1,5 @@
 import bcrypt from "bcryptjs";
 import HttpException from "../../models/HttpException";
-import fs from "fs";
-import path from "path";
 import { UserMaxAge, UserMinAge, UserSchema } from "../../models/user";
 import { generateToken } from "../../util/crypt";
 import { parseUser } from "../../util/parser";
@@ -9,16 +7,10 @@ import { sendMail, template } from "../../util/mailer";
 import Reotem from "../../util/functions";
 import { User, UserRole, UserSexe } from "../../../../front/src/models/api.model";
 
-const DB_PATH = path.join(__dirname, "..", "..", "..", "db.json");
 
 const checkUserUniqueness = async (email: string) => {
     // TODO Reotem.checkUserUnique -> boolean
-    const DB = JSON.parse(fs.readFileSync(DB_PATH, 'utf8'));
-    Object.values(DB.users as { [key: string]: unknown }[]).forEach((user) => {
-        if ((user.email as string).toLowerCase() == email.toLowerCase()) {
-            throw new HttpException(422, { email: 'has already been taken', });
-        }
-    });
+    if (await Reotem.checkUserUnique(email)) throw new HttpException(422, { email: 'has already been taken', });
 };
 
 export const createUser = async (input: { [key: string]: string | number }) => {
@@ -75,9 +67,15 @@ export const createUser = async (input: { [key: string]: string | number }) => {
 
     const hashedPassword = await bcrypt.hash(password, bcrypt.genSaltSync(10));
 
-    const DB = JSON.parse(fs.readFileSync(DB_PATH, 'utf8'));
+    const users = await Reotem.getUsers();
+    const ids = users?.map(user => user.id);
+    let id = 0;
+    while (ids?.includes(id)) {
+        id++;
+    }
+
     let user: Partial<User> = {
-        id: Object.keys(DB.users).length,
+        id: id,
         firstname: firstname,
         lastname: lastname,
         email: email,
@@ -92,21 +90,18 @@ export const createUser = async (input: { [key: string]: string | number }) => {
 
     const sessionid = generateToken(24);
 
-    DB.sessions[sessionid] = user.id;
-    DB.users[user.id as number] = user;
-    DB.validating[user.validated as string] = user.id;
-    fs.writeFileSync(DB_PATH, JSON.stringify(DB));
-
     await Reotem.addUser(user);
     await Reotem.addSession({ id: user.id, token: sessionid });
+    await Reotem.addVerification({ id: user.id, token: user.validated });
 
 
-    user = parseUser(user as never);
 
-    const username = user.firstname + " " + user.lastname;
-
+    
+    const username = user.firstname + " " + user.lastname;    
     // send the mail with the link to validate
     sendMail(user.email as string, "Vérification de votre adresse mail", `À l'attention de ${username}`, template.validate(username, user.validated as string), username);
+    
+    user = parseUser(user as never);
 
     return { user: user, session: sessionid };
 };
@@ -130,20 +125,16 @@ export const validateUser = async (token: string, session: string) => {
         throw new HttpException(400);
     }
 
-    const DB = JSON.parse(fs.readFileSync(DB_PATH, 'utf8'));
-
-    if (DB.validating[token] != DB.sessions[session]) {
-        throw new HttpException(400);
-    }
+    const validation = await Reotem.getVerification(token)
 
     // TODO Reotem.validate(token) -> boolean
-    const user = DB.users[DB.validating[token]];
+    const user = await Reotem.getUser(validation?.id) as UserSchema;
+    if (user === undefined) throw new HttpException(404);
 
-    delete user.validated;
-    delete DB.validating[token];
+    user.validated = "";
 
-    DB.users[user.id] = user;
-    fs.writeFileSync(DB_PATH, JSON.stringify(DB));
+    await Reotem.updateUser(user.id, user);
+    await Reotem.deleteVerification(user.id);
 
     return true;
 };
@@ -152,8 +143,7 @@ export const checkTokenExists = async (token: string) => {
     if (!token) throw new HttpException(404);
 
     // TODO Reotem.tokenExists(token) -> boolean
-
-    const DB = JSON.parse(fs.readFileSync(DB_PATH, 'utf8'));
-    if (DB.validating[token] == undefined) throw new HttpException(404);
+    const verification = await Reotem.getVerification(token);
+    if (verification === undefined) throw new HttpException(404);
     return true;
 };

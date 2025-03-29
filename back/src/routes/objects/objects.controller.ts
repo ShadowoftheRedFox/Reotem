@@ -8,7 +8,7 @@ export default ObjectsRouter;
 ObjectsRouter.get('/', async (req, res, next) => {
     try {
         console.log(`getting all object ${JSON.stringify(req.query.data || {})}`);
-        const result = getAll((req.query.data || {}) as ObjectQuery);
+        const result = await getAll((req.query.data || {}) as ObjectQuery);
 
         res.status(200).json(result);
     } catch (error) {

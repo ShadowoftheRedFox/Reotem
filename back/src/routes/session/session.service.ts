@@ -1,23 +1,19 @@
 import crypto from "crypto";
 import HttpException from "../../models/HttpException";
-import fs from "fs";
-import path from "path";
 import { generateToken } from "../../util/crypt";
 import { parseUser } from "../../util/parser";
 import Reotem from "~/util/functions";
 import { UserSchema } from "~/models/user";
 import { User } from "../../../../front/src/models/api.model";
 
-const DB_PATH = path.join(__dirname, "..", "..", "..", "db.json");
 
 export const getSession = async (token: string) => {
     if (!token) {
         throw new HttpException(422, { token: "can't be blank" });
     }
 
-    const DB = JSON.parse(fs.readFileSync(DB_PATH, 'utf8'));
     const session = await Reotem.getSession(token);
-    let user: Partial<User> = await Reotem.getUser(session?.id) || DB.users[DB.sessions[token]];
+    let user: Partial<User> = (await Reotem.getUser(session?.id)) as Partial<User>;
     if (user == undefined) throw new HttpException(404);
 
     user = parseUser(user as never, true);
@@ -75,12 +71,6 @@ export const deleteSession = async (id: number, session: string) => {
         throw new HttpException(422, { session: ["can't be blank"] });
     }
 
-    // session must match the id in DB.sessions
-    // const DB = JSON.parse(fs.readFileSync(DB_PATH, 'utf8'));
-    // if (DB.sessions[session] != id) return false;
-
-    // delete DB.sessions[session];
     await Reotem.deleteSession(id);
-    // fs.writeFileSync(DB_PATH, JSON.stringify(DB));
     return true;
 };

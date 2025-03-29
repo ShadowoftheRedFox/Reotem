@@ -18,7 +18,6 @@ export const checkUserRole = async (role: UserRole, session: string) => {
     }
 
     // TODO Reotem.getSession(session:string) -> user.id | undefined
-
     const userId = (await Reotem.getSession(session))?.id;
 
     if (userId === undefined || isNaN(userId) || userId < 0) {

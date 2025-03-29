@@ -41,6 +41,11 @@ const Reotem = {
     if (data) return data.deleteOne();
     return;
   },
+  checkUserUnique: async (email: string) => {
+    const users = await Reotem.getUsers();
+    const emails = users?.map((user) => user.email);
+    return emails?.includes(email);
+  },
 
   addSession: async (session: object) => {
     const merged = Object.assign(session);
@@ -69,6 +74,32 @@ const Reotem = {
   deleteSession: async (id: number) => {
     const data = await models.Session.findOne({ id: id });
     console.log(`Deleting session for user -> ${data?.id}`);
+    if (data) return data.deleteOne();
+    return;
+  },
+
+  addVerification: async (verification: object) => {
+    const merged = Object.assign(verification);
+    const newVerification = new models.Verification(merged);
+    await newVerification.save().then((u) => console.log(`New verification for user -> ${u.id}`));
+  },
+  getVerification: async (token: string) => {
+    const data = await models.Verification.findOne({ token: token });
+    if (data) return data;
+    return;
+  },
+  updateVerification: async (query: number, updated: UserSchema) => {
+    const data = await Reotem.getUser(query);
+    if (typeof data !== "object") return;
+    for (const key in data) {
+      if (key.startsWith("$") || typeof (data as never)[key] === typeof Function || excludes.includes(key) || (updated as never)[key] === undefined) continue;
+      if ((data as never)[key] !== (updated as never)[key]) (data as never)[key] = (updated as never)[key];
+    }
+    return data.updateOne(updated);
+  },
+  deleteVerification: async (id: number) => {
+    const data = await models.Verification.findOne({ id: id });
+    console.log(`Deleting verification for user -> ${data?.id}`);
     if (data) return data.deleteOne();
     return;
   },
@@ -119,14 +150,13 @@ const Reotem = {
   },
 
   addObject: async (object: ObjectSchema, objectData: AnyObject) => {
-    
     const merged = { ...object, ...objectData };
     const newObject = await new models.Object(merged);
     await newObject.save().then((o) => console.log(`New object -> ${o.id}, Object Data : ${JSON.stringify(o.objectData)}`));
   },
   // filter example {key1: value, key2: value...}
-  getAllObjects: async (filter: object) => {
-    const data = filter === undefined ? await models.Object.find(filter) : await models.Object.find();
+  getAllObjects: async () => {
+    const data = await models.Object.find();
     if (data) return data;
     return;
   },
