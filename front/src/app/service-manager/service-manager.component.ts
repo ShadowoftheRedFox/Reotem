@@ -3,8 +3,8 @@ import { Component } from '@angular/core';
 export interface Service {
     name: string;
     link: string | string[];
-    icon: string;
-    class: string;
+    icon?: string;
+    class?: string;
 }
 
 export const ServiceNames: Service[] = [

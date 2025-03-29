@@ -8,7 +8,12 @@ import { CdkDropList, CdkDrag, CdkDragDrop, moveItemInArray } from '@angular/cdk
 import { MatIconModule } from '@angular/material/icon';
 import { AuthentificationService } from '../../services/authentification.service';
 import { CommunicationService } from '../../services/communication.service';
-import { ServiceNames } from '../service-manager/service-manager.component';
+import { Service, ServiceNames } from '../service-manager/service-manager.component';
+import { MatButtonModule } from '@angular/material/button';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 
 @Component({
     selector: 'app-main',
@@ -18,7 +23,13 @@ import { ServiceNames } from '../service-manager/service-manager.component';
         RouterLink,
         CdkDrag,
         CdkDropList,
-        MatIconModule
+        MatIconModule,
+        MatButtonModule,
+        FormsModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatSelectModule,
+        ReactiveFormsModule
     ],
     templateUrl: './main.component.html',
     styleUrl: './main.component.scss'
@@ -27,11 +38,23 @@ export class MainComponent {
     readonly bar_class = 'bar-class w-full flex flex-row flex-nowrap justify-start overflow-y-auto gap-4 items-stretch px-4';
     objectList: AnyObject[] = [];
     recentlyUsed: AnyObject[] = [];
+
+    filteredObjectList: AnyObject[] = [];
+    filteredRecentlyUsed: AnyObject[] = [];
+
     problemsObject: AnyObject[] = [];
 
     order = ["recent", "service", "all", "problem"];
-    readonly serviceNames = ServiceNames;
+    readonly servicesList = ServiceNames;
 
+    namedFilter = "";
+    noNamedFilterResult = false;
+
+    filteredBuilding = new FormControl<string[]>([]);
+    buildingList: string[] = [];
+
+    filteredRoom = new FormControl<string[]>([]);
+    roomList: string[] = [];
 
     constructor(
         private api: APIService,
@@ -41,14 +64,26 @@ export class MainComponent {
         // listen to event change
         com.DomoAllObjectsUpdate.subscribe(update => {
             this.objectList = update;
+            this.buildingList = [];
+            this.roomList = [];
+            this.filteredBuilding.reset([]);
+            this.filteredRoom.reset([]);
+            this.namedFilter = "";
 
-            // TODO find a way for recently used (local storage?), we look at the date at the moment
             const now = new Date();
             this.objectList.forEach(o => {
                 if (new Date(o.lastInteraction).getTime() >= now.getTime() - CookieTime.Day * 1000) {
                     this.recentlyUsed.push(o);
                 }
-            })
+                if (o.building != undefined && !this.buildingList.includes(o.building)) {
+                    this.buildingList.push(o.building);
+                }
+                if (!this.roomList.includes(o.room)) {
+                    this.roomList.push(o.room);
+                }
+            });
+
+            this.applyFilter();
 
             this.objectList.forEach(o => {
                 if (o.state != "Normal") {
@@ -57,17 +92,99 @@ export class MainComponent {
             })
         });
 
+        // load objects
         api.objects.all({}).subscribe(res => {
             com.DomoObjectsAmount = res.total;
             com.DomoAllObjectsUpdate.next(res.objects);
         });
 
+        // get the wanted order
         const mainOrder = auth.getCookie("main_order");
         if (mainOrder.length == 0) {
             auth.setCookie("main_order", JSON.stringify(this.order), CookieTime.Year, "/");
         } else {
             this.order = JSON.parse(mainOrder);
         }
+
+        // listen for filters
+        this.filteredRoom.valueChanges.subscribe(() => {
+            this.applyFilter();
+        });
+    }
+
+    inFilteredRoom(room: string) {
+        if (this.filteredRoom.value == null || this.filteredRoom.value.length == 0) return true;
+        return this.filteredRoom.value.includes(room);
+    }
+
+    inFilteredBuilding(building?: string) {
+        if (building === undefined) return true;
+        if (this.filteredBuilding.value == null || this.filteredBuilding.value.length == 0) return true;
+        return this.filteredBuilding.value.includes(building);
+    }
+
+    applyFilter() {
+        this.filteredObjectList = [];
+        this.filteredRecentlyUsed = [];
+        this.objectList.forEach(o => {
+            if (this.inFilteredRoom(o.room) && this.inFilteredBuilding(o.building)) {
+                this.filteredObjectList.push(o);
+            }
+        });
+        this.recentlyUsed.forEach(o => {
+            if (this.inFilteredRoom(o.room) && this.inFilteredBuilding(o.building)) {
+                this.filteredRecentlyUsed.push(o);
+            }
+        });
+    }
+
+    namedFilterChange() {
+        let atLeastOneObj = false;
+        for (const obj of this.objectList) {
+            if (this.applyNamedFilter(obj)) {
+                atLeastOneObj = true;
+                break;
+            }
+        }
+
+        let atLeastOneService = false;
+        for (const ser of this.servicesList) {
+            if (this.applyNamedFilter(undefined, ser)) {
+                atLeastOneService = true;
+                break;
+            }
+        }
+
+        this.noNamedFilterResult = !atLeastOneObj && !atLeastOneService;
+        console.log(this.noNamedFilterResult);
+    }
+
+    applyNamedFilter(obj?: AnyObject, service?: Service) {
+        if (obj === undefined && service === undefined) return false;
+        const filter = this.namedFilter.toLowerCase();
+
+        if (service != undefined) {
+            return service.name.toLowerCase().includes(filter);
+        }
+
+        if (obj != undefined) {
+            let res = false;
+            if (obj.building != undefined && obj.building.toLowerCase().includes(filter)) {
+                res = true;
+            }
+            if (
+                obj.room.toLowerCase().includes(filter) ||
+                obj.name.toLowerCase().includes(filter) ||
+                obj.state.toLowerCase().includes(filter) ||
+                obj.connection.toLowerCase().includes(filter)
+            ) {
+                res = true;
+            }
+
+            return res;
+        }
+
+        return false;
     }
 
     drop(event: CdkDragDrop<string[]>) {
