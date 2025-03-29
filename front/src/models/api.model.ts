@@ -56,7 +56,7 @@ export const UserLevel = [
     "Débutant",
     "Avancé",
     "Expert"
-];
+] as const;
 export type UserLevel = typeof UserLevel[number];
 
 export interface LoginChallenge {

@@ -118,7 +118,7 @@
         } @else if (type === "service") {
         <div>
             <h2>Services</h2>
-            <div [class]="bar_class">
+            <div [class]="bar_class + ' flex-wrap'">
                 @if (servicesList.length > 0) {
                 @for (service of servicesList; track $index) {
                 <a [routerLink]="service.link">

@@ -35,7 +35,7 @@ import { MatSelectModule } from '@angular/material/select';
     styleUrl: './main.component.scss'
 })
 export class MainComponent {
-    readonly bar_class = 'bar-class w-full flex flex-row flex-nowrap justify-start overflow-y-auto gap-4 items-stretch px-4';
+    readonly bar_class = 'bar-class w-full flex flex-row justify-start overflow-y-auto gap-4 items-stretch px-4';
     objectList: AnyObject[] = [];
     recentlyUsed: AnyObject[] = [];
 

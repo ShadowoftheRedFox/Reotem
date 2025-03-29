@@ -4,18 +4,67 @@
 }
 <p>Chargement...</p>
 } @else {
-<img [src]="BaseUrl+user.id+'.jpg'" alt="Image de profile" />
-<p>id: {{user.id}}</p>
-<p>firstname: {{user.firstname}}</p>
-<p>lastname: {{user.lastname}}</p>
-<p>role: {{user.role}}</p>
-<p>sexe: {{user.sexe}}</p>
-<p>lvl: {{user.lvl}}</p>
-@if (privateMode) {
-<p>email: {{user.email}}</p>
-<p>age: {{user.age}}</p>
-<p>validated: {{user.validated===undefined?true:false}}</p>
-<br>
-<p>PRIVATE MODE ON, vous pouvez accéder au informations privés et modifer votre profile</p>
-}
+<div class="flex flex-col justify-center">
+    <div class="main-header flex flex-row items-center justify-center gap-2">
+        @if (privateMode) {
+        <div class="image-container">
+            <img [src]="BaseUrl+user.id+'.jpg'" alt="Image de profile" #profileImage (mouseover)="imageHover = true"
+                (mouseleave)="imageHover = false" (focus)="imageHover = true" />
+            <div class="profileImageHover" [hidden]="!imageHover" (mouseover)="imageHover = true"
+                (mouseleave)="imageHover = false" (focus)="imageHover = true">
+                <p>Changer l'image</p>
+            </div>
+            <!-- TODO when on click, ask for file and upload to back -->
+        </div>
+        } @else {
+        <img [src]="BaseUrl+user.id+'.jpg'" alt="Image de profile" />
+        }
+        <p class="text-xl">{{user.firstname}} {{user.lastname}}</p>
+    </div>
+    <div class="public flex flex-col gap-1 items-start">
+        <h2>Profil:</h2>
+        <p>Rôle: {{user.role}}</p>
+        <p>Genre: {{user.sexe}}</p>
+        @if (privateMode) {
+        <div class="private flex flex-col gap-1 items-start w-full">
+            <h2>Profil privé:</h2>
+            <p>Niveau: {{user.lvl}}</p>
+            <p>Expérience: {{user.exp}}/{{maxUserLevel}}</p>
+            <p>Addresse e-mail: <a [href]="'mailto:'+user.email">{{user.email}}</a></p>
+            <p>Âge: {{user.age}}</p>
+            <p>Compte validé: {{user.validated===undefined?true:false}}</p>
+            @if (changingPassword) {
+            <form [formGroup]="changingPasswordGroup" (ngSubmit)="changePaswword()" class="flex flex-col w-full gap-1">
+                <mat-form-field>
+                    <mat-label>Ancien mot de passe</mat-label>
+                    <input matInput formControlName="oldpassword" [type]="oldPasswordHidden() ? 'password' : 'text'">
+                    <button type="button" mat-icon-button matSuffix (click)="hideOldPassword($event)"
+                        [attr.aria-label]="'Cacher le mot de passe'" [attr.aria-pressed]="oldPasswordHidden()">
+                        <mat-icon>{{oldPasswordHidden() ? 'visibility_off' : 'visibility'}}</mat-icon>
+                    </button>
+                    @if (changingPasswordGroup.controls.oldpassword.invalid) {
+                    <mat-error>{{oldpasswordError()}}</mat-error>
+                    }
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>Nouveau mot de passe</mat-label>
+                    <input matInput formControlName="newpassword" [type]="newPasswordHidden() ? 'password' : 'text'">
+                    <button type="button" mat-icon-button matSuffix (click)="hideNewPassword($event)"
+                        [attr.aria-label]="'Cacher le mot de passe'" [attr.aria-pressed]="newPasswordHidden()">
+                        <mat-icon>{{newPasswordHidden() ? 'visibility_off' : 'visibility'}}</mat-icon>
+                    </button>
+                    @if (changingPasswordGroup.controls.newpassword.invalid) {
+                    <mat-error>{{newpasswordError()}}</mat-error>
+                    }
+                </mat-form-field>
+                <button mat-raised-button type="submit" [disabled]="changingPasswordGroup.invalid">Valider</button>
+                <button mat-flat-button (click)="changingPassword = false" type="reset">Annuler</button>
+            </form>
+            } @else {
+            <button mat-raised-button (click)="changingPassword = true">Changer le mot de passe</button>
+            }
+        </div>
+        }
+    </div>
+</div>
 }
