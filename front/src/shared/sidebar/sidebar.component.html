@@ -70,6 +70,7 @@
                     @for (menu of SideNavItemsBottom; track $index) {
                     @if (menu.icon && !menu.hidden) {
                     @if (menu.id === 'CompteObj') {
+                    @if (user?.id) {
                     <img #displaced_badge [hidden]="displaced_badge.classList.contains('notFound')"
                         (error)="displaced_badge.classList.add('notFound')" [src]="BaseUrl+user?.id+'.jpg'"
                         alt="Image de profile" class="side-nav-account-image side-nav-show-icon-displaced"
@@ -86,6 +87,12 @@
                         [matTooltip]="menu.tooltip" (click)="toggleSideNav()"
                         class="side-nav-show-icon-displaced">{{menu.icon}}</mat-icon>
                     }
+                    } @else {
+                    <mat-icon aria-hidden="false" (mouseleave)="menu.hover=false" (mouseover)="menu.hover=true"
+                        (focus)="menu.hover=true" [ngClass]="(menu.hover?menu.hoverClass||'':'')+' '+menu.class||''"
+                        [matTooltip]="menu.tooltip" (click)="toggleSideNav()"
+                        class="side-nav-show-icon-displaced">{{menu.icon}}</mat-icon>
+                    }
                     }
                     <a mat-list-item (mouseleave)="menu.hover=false" (mouseover)="menu.hover=true"
                         (focus)="menu.hover=true" [ngClass]="(menu.hover?menu.hoverClass||'':'')+' '+menu.class||''"
@@ -94,7 +101,7 @@
                         (click)="toggleSideNav()">
                         <div class="sidenav-item">
                             @if (menu.id === "CompteObj"){
-                            @if (menu.icon) {
+                            @if (user?.id) {
                             <img #badge [hidden]="badge.classList.contains('notFound')"
                                 (error)="badge.classList.add('notFound')" [src]="BaseUrl+user?.id+'.jpg'"
                                 alt="Image de profile" class="side-nav-account-image" (mouseleave)="menu.hover=false"
@@ -105,6 +112,11 @@
                                 [ngClass]="(menu.hover?menu.hoverClass||'':'')+' '+menu.class||''"
                                 class="side-nav-account-image"
                                 [hidden]="!badge.classList.contains('notFound')">{{menu.icon}}</mat-icon>
+                            } @else {
+                            <mat-icon aria-hidden="false" (mouseleave)="menu.hover=false" (mouseover)="menu.hover=true"
+                                (focus)="menu.hover=true"
+                                [ngClass]="(menu.hover?menu.hoverClass||'':'')+' '+menu.class||''"
+                                class="side-nav-account-image">{{menu.icon}}</mat-icon>
                             }
                             <div class="account-title">
                                 <span class="side-nav-account-name">{{menu.title}}</span>

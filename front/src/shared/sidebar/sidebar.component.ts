@@ -203,7 +203,7 @@ export class SidebarComponent implements OnDestroy {
             hidden: true
         },
         {
-            title: "Gestionnaire",
+            title: "Objets",
             link: "/object",
             icon: "view_in_ar",
             aria: "Lien pour voir aller au gestionnaire d'objets",
