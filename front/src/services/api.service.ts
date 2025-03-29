@@ -102,7 +102,7 @@ export class APIService {
 
     readonly objects = {
         all: (query: ObjectQuery) => {
-            return this.sendApiRequest<{ objects: AnyObject[], total: number }>("GET", "objects/", query, "Getting all objects");
+            return this.sendApiRequest<{ objects: AnyObject[], total: number }>("GET", "objects", query, "Getting all objects");
         },
         get: (id: number) => {
             return this.sendApiRequest<AnyObject>("GET", "objects/" + id, {}, "Getting object " + id);
@@ -110,6 +110,9 @@ export class APIService {
         // TODO do the back
         update: <T = AnyObject>(id: number, session: string, changes: Partial<{ [key in keyof T]: T[key] }>) => {
             return this.sendApiRequest("PUT", "objects/" + id, { params: changes, session: session }, "Updating object " + id);
+        },
+        delete: (id: number, session: string) => {
+            return this.sendApiRequest("DELETE", "objects/" + id, { session: session }, "Deleting " + id);
         }
     }
 

@@ -68,14 +68,19 @@ export class ObjectManagerComponent {
         {
             name: "Effacer",
             icon: "delete",
-            callback: this.deleteObjects,
+            callback: () => this.deleteObjects(),
             disabled: this.anySlected
         },
         {
             name: "Dupliquer",
             icon: "content_copy",
-            callback: this.duplicateObjects,
+            callback: () => this.duplicateObjects(),
             disabled: this.anySlected
+        },
+        {
+            name: "Rafraîchir",
+            icon: "refresh",
+            callback: () => this.refresh()
         },
     ];
 
@@ -87,30 +92,15 @@ export class ObjectManagerComponent {
     ) {
         // listen to event change
         com.DomoAllObjectsUpdate.subscribe(update => {
-            this.objectList = update;
-            this.buildingList = [];
-            this.roomList = [];
-            this.filteredBuilding.reset([]);
-            this.filteredRoom.reset([]);
-            this.namedFilter = "";
-
-            this.objectList.forEach(o => {
-                if (o.building != undefined && !this.buildingList.includes(o.building)) {
-                    this.buildingList.push(o.building);
-                }
-                if (!this.roomList.includes(o.room)) {
-                    this.roomList.push(o.room);
-                }
-            });
-
-            this.applyFilter();
+            this.updateObjects(update);
         });
 
         // load objects
-        api.objects.all({}).subscribe(res => {
-            com.DomoObjectsAmount = res.total;
-            com.DomoAllObjectsUpdate.next(res.objects);
-        });
+        if (com.DomoObjects.length == 0) {
+            this.refresh();
+        } else {
+            this.updateObjects(com.DomoObjects);
+        }
 
         // listen for filters
         this.filteredRoom.valueChanges.subscribe(() => {
@@ -192,5 +182,32 @@ export class ObjectManagerComponent {
     duplicateObjects() {
         console.log("Not implemented yet");
         // TODO create new objects based on those ones, api call
+    }
+
+    refresh() {
+        this.api.objects.all({}).subscribe(res => {
+            this.com.DomoObjectsAmount = res.total;
+            this.com.DomoAllObjectsUpdate.next(res.objects);
+        });
+    }
+
+    updateObjects(update: AnyObject[]) {
+        this.objectList = update;
+        this.buildingList = [];
+        this.roomList = [];
+        this.filteredBuilding.reset([]);
+        this.filteredRoom.reset([]);
+        this.namedFilter = "";
+
+        this.objectList.forEach(o => {
+            if (o.building != undefined && !this.buildingList.includes(o.building)) {
+                this.buildingList.push(o.building);
+            }
+            if (!this.roomList.includes(o.room)) {
+                this.roomList.push(o.room);
+            }
+        });
+
+        this.applyFilter();
     }
 }
