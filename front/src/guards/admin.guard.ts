@@ -12,6 +12,5 @@ export const adminGuard: CanActivateFn = async () => {
 
     const api = inject(APIService);
     const res = await lastValueFrom(api.auth.verifyRole("Administrator", auth.clientToken));
-    console.log("IsAdmin: ", res);
     return res;
 };
