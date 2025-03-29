@@ -32,7 +32,7 @@
             <p>Expérience: {{user.exp}}/{{maxUserLevel}}</p>
             <p>Addresse e-mail: <a [href]="'mailto:'+user.email">{{user.email}}</a></p>
             <p>Âge: {{user.age}}</p>
-            <p>Compte validé: {{user.validated===undefined?true:false}}</p>
+            <p>Compte validé: {{user.validated===undefined?'Oui':'Non'}}</p>
             @if (changingPassword) {
             <form [formGroup]="changingPasswordGroup" (ngSubmit)="changePaswword()" class="flex flex-col w-full gap-1">
                 <mat-form-field>
