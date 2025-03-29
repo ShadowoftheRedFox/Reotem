@@ -1,0 +1,13 @@
+.filters,
+.main-container,
+.button-container {
+    margin-left: 2em;
+
+    h2 {
+        font-size: x-large;
+    }
+}
+
+::ng-deep .sidenav-is-mobile .filters {
+    justify-content: center;
+}

@@ -17,7 +17,8 @@
         <p class="placeholder-p" [class]="rngClass4">Chargement...</p>
         <p class="placeholder-p" [class]="rngClass5">Chargement...</p>
     </mat-card-content>
-    <mat-card-actions>
+    <mat-card-actions [class]="selectionEnabled()?'actions-checkbox':''">
+        <mat-checkbox [disabled]="true">Sélectionner</mat-checkbox>
         <button mat-mini-fab disabled="">
             <mat-icon>settings</mat-icon>
         </button>
@@ -40,7 +41,8 @@
             <p>Type de connexion: {{baseObj.connection}}</p>
             <p>Dernière interaction: {{format()}}</p>
         </mat-card-content>
-        <mat-card-actions>
+        <mat-card-actions [class]="selectionEnabled()?'actions-checkbox':''">
+            <mat-checkbox (change)="selectCallback.emit(selectIndex())">Sélectionner</mat-checkbox>
             <button mat-raised-button [matMenuTriggerFor]="menu">
                 <mat-icon>settings</mat-icon>
                 Paramétrer
@@ -69,7 +71,8 @@
             <p>État: {{lightObj.turnedOn?"allumée":"éteinte"}}</p>
             <p>Dernière interaction: {{format()}}</p>
         </mat-card-content>
-        <mat-card-actions>
+        <mat-card-actions [class]="selectionEnabled()?'actions-checkbox':''">
+            <mat-checkbox (change)="selectCallback.emit(selectIndex())">Sélectionner</mat-checkbox>
             <button mat-raised-button [matMenuTriggerFor]="menu">
                 <mat-icon>settings</mat-icon>
                 Paramétrer
@@ -102,7 +105,8 @@
             <p>État: {{thermostatObj.turnedOn?"allumé":"éteint"}}</p>
             <p>Dernière interaction: {{format()}}</p>
         </mat-card-content>
-        <mat-card-actions>
+        <mat-card-actions [class]="selectionEnabled()?'actions-checkbox':''">
+            <mat-checkbox (change)="selectCallback.emit(selectIndex())">Sélectionner</mat-checkbox>
             <button mat-raised-button [matMenuTriggerFor]="menu">
                 <mat-icon>settings</mat-icon>
                 Paramétrer
@@ -138,7 +142,8 @@
             }
             <p>Dernière interaction: {{format()}}</p>
         </mat-card-content>
-        <mat-card-actions>
+        <mat-card-actions [class]="selectionEnabled()?'actions-checkbox':''">
+            <mat-checkbox (change)="selectCallback.emit(selectIndex())">Sélectionner</mat-checkbox>
             <button mat-raised-button [matMenuTriggerFor]="menu">
                 <mat-icon>settings</mat-icon>
                 Paramétrer
@@ -171,7 +176,8 @@
             <p>État: {{speakerObj.turnedOn?"allumé":"éteint"}}</p>
             <p>Dernière interaction: {{format()}}</p>
         </mat-card-content>
-        <mat-card-actions>
+        <mat-card-actions [class]="selectionEnabled()?'actions-checkbox':''">
+            <mat-checkbox (change)="selectCallback.emit(selectIndex())">Sélectionner</mat-checkbox>
             <button mat-raised-button [matMenuTriggerFor]="menu">
                 <mat-icon>settings</mat-icon>
                 Paramétrer
@@ -204,7 +210,8 @@
             <p>État: {{speakerObj.turnedOn?"allumé":"éteint"}}</p>
             <p>Dernière interaction: {{format()}}</p>
         </mat-card-content>
-        <mat-card-actions>
+        <mat-card-actions [class]="selectionEnabled()?'actions-checkbox':''">
+            <mat-checkbox (change)="selectCallback.emit(selectIndex())">Sélectionner</mat-checkbox>
             <button mat-raised-button [matMenuTriggerFor]="menu">
                 <mat-icon>settings</mat-icon>
                 Paramétrer
@@ -236,7 +243,8 @@
             <p>Type de connexion: {{windowstoreObj.connection}}</p>
             <p>Dernière interaction: {{format()}}</p>
         </mat-card-content>
-        <mat-card-actions>
+        <mat-card-actions [class]="selectionEnabled()?'actions-checkbox':''">
+            <mat-checkbox (change)="selectCallback.emit(selectIndex())">Sélectionner</mat-checkbox>
             <button mat-raised-button [matMenuTriggerFor]="menu">
                 <mat-icon>settings</mat-icon>
                 Paramétrer
@@ -264,7 +272,8 @@
             <p>Type de connexion {{doorObj.connection}}</p>
             <p>Dernière interaction: {{format()}}</p>
         </mat-card-content>
-        <mat-card-actions>
+        <mat-card-actions [class]="selectionEnabled()?'actions-checkbox':''">
+            <mat-checkbox (change)="selectCallback.emit(selectIndex())">Sélectionner</mat-checkbox>
             <button mat-raised-button [matMenuTriggerFor]="menu">
                 <mat-icon>settings</mat-icon>
                 Paramétrer
@@ -298,7 +307,8 @@
             <p>État: {{speakerObj.turnedOn?"allumé":"éteint"}}</p>
             <p>Dernière interaction: {{format()}}</p>
         </mat-card-content>
-        <mat-card-actions>
+        <mat-card-actions [class]="selectionEnabled()?'actions-checkbox':''">
+            <mat-checkbox (change)="selectCallback.emit(selectIndex())">Sélectionner</mat-checkbox>
             <button mat-raised-button [matMenuTriggerFor]="menu">
                 <mat-icon>settings</mat-icon>
                 Paramétrer
@@ -329,7 +339,8 @@
             <p>Statut: {{obj().state}}</p>
             <p>Dernière interaction: {{format()}}</p>
         </mat-card-content>
-        <mat-card-actions>
+        <mat-card-actions [class]="selectionEnabled()?'actions-checkbox':''">
+            <mat-checkbox (change)="selectCallback.emit(selectIndex())">Sélectionner</mat-checkbox>
             <button mat-raised-button [matMenuTriggerFor]="menu">
                 <mat-icon>settings</mat-icon>
                 Paramétrer

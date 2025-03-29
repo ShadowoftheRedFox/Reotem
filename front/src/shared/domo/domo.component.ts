@@ -1,4 +1,4 @@
-import { Component, input, TemplateRef } from '@angular/core';
+import { Component, input, output, TemplateRef } from '@angular/core';
 import { AnyObject, BaseObject, ComputerObject, DoorObject, LightObject, SpeakerObject, ThermostatObject, VideoProjectorObject, WiFiObject, WindowStoreObject } from '../../models/domo.model';
 import { NgTemplateOutlet } from '@angular/common';
 import { MatCardModule } from "@angular/material/card"
@@ -10,6 +10,7 @@ import { APIService } from '../../services/api.service';
 import { AuthentificationService } from '../../services/authentification.service';
 import { Router } from '@angular/router';
 import { PopupService } from '../../services/popup.service';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @Component({
     selector: 'app-domo',
@@ -18,7 +19,8 @@ import { PopupService } from '../../services/popup.service';
         MatCardModule,
         MatButtonModule,
         MatIconModule,
-        MatMenuModule
+        MatMenuModule,
+        MatCheckboxModule
     ],
     templateUrl: './domo.component.html',
     styleUrl: './domo.component.scss'
@@ -42,6 +44,15 @@ export class DomoComponent {
         state: "Erreur",
         objectClass: "Erreur"
     });
+
+    // to show check box on the card
+    selectionEnabled = input<boolean>(false);
+    // whether or not the checkbox is disabled
+    selectDisabled = input<boolean>(false);
+    // index returned in the callback
+    selectIndex = input<number>(-1);
+    // callback when checked
+    selectCallback = output<number>();
 
     lightObj = this.obj() as LightObject;
     thermostatObj = this.obj() as ThermostatObject;

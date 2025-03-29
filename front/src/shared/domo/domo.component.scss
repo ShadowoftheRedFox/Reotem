@@ -12,6 +12,11 @@
     flex-direction: row-reverse;
 }
 
+.actions-checkbox {
+    flex-direction: row;
+    justify-content: space-between;
+}
+
 .light-header-image {
     background-image: url('/assets/img/objects/light.png');
     background-size: cover;

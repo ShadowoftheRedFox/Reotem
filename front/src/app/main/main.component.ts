@@ -159,7 +159,6 @@ export class MainComponent {
         }
 
         this.noNamedFilterResult = !atLeastOneObj && !atLeastOneService;
-        console.log(this.noNamedFilterResult);
     }
 
     applyNamedFilter(obj?: AnyObject, service?: Service) {
