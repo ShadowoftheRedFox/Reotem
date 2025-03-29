@@ -110,6 +110,9 @@ export class MainComponent {
         this.filteredRoom.valueChanges.subscribe(() => {
             this.applyFilter();
         });
+        this.filteredBuilding.valueChanges.subscribe(() => {
+            this.applyFilter();
+        });
     }
 
     inFilteredRoom(room: string) {
@@ -118,8 +121,8 @@ export class MainComponent {
     }
 
     inFilteredBuilding(building?: string) {
-        if (building === undefined) return true;
         if (this.filteredBuilding.value == null || this.filteredBuilding.value.length == 0) return true;
+        if (building === undefined) return false;
         return this.filteredBuilding.value.includes(building);
     }
 

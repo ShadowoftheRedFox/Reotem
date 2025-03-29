@@ -12,7 +12,7 @@
     </mat-form-field>
     <mat-form-field>
         <mat-label>Salle</mat-label>
-        <mat-select [formControl]="filteredRoom" multiple>
+        <mat-select [formControl]="filteredRoom" multiple [placeholder]="roomList[0]">
             @for (room of roomList; track room) {
             <mat-option [value]="room">{{room}}</mat-option>
             }
@@ -21,7 +21,7 @@
     @if (buildingList.length > 0) {
     <mat-form-field>
         <mat-label>Bâtiment</mat-label>
-        <mat-select [formControl]="filteredBuilding" multiple>
+        <mat-select [formControl]="filteredBuilding" multiple [placeholder]="buildingList[0]">
             @for (building of buildingList; track building) {
             <mat-option [value]="building">{{building}}</mat-option>
             }
