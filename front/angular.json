@@ -65,8 +65,8 @@
                             },
                             {
                                 "inject": false,
-                                "input": "src/assets/styles/purple-green.scss",
-                                "bundleName": "purple-green"
+                                "input": "src/assets/styles/purple-red.scss",
+                                "bundleName": "purple-red"
                             },
                             {
                                 "inject": false,
@@ -170,8 +170,8 @@
                             },
                             {
                                 "inject": false,
-                                "input": "src/assets/styles/purple-green.scss",
-                                "bundleName": "purple-green"
+                                "input": "src/assets/styles/purple-red.scss",
+                                "bundleName": "purple-red"
                             },
                             {
                                 "inject": false,

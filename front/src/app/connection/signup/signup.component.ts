@@ -165,6 +165,8 @@ export class SignupComponent {
 
     testSignup() {
         if (!this.signup.valid) return;
+
+        // TODO send age with the current date - value.age * years
         this.api.auth.create(
             this.signup.value.firstname!,
             this.signup.value.lastname!,
