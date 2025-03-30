@@ -8,7 +8,7 @@
     <div class="main-header flex flex-row items-center justify-center gap-2">
         @if (privateMode) {
         <div class="image-container">
-            <img [src]="BaseUrl+user.id+'.jpg'" alt="Image de profile" #profileImage (mouseover)="imageHover = true"
+            <img [src]="imgSource" alt="Image de profile" #profileImage (mouseover)="imageHover = true"
                 (mouseleave)="imageHover = false" (focus)="imageHover = true" />
             <!-- eslint-disable-next-line @angular-eslint/template/interactive-supports-focus -->
             <div class="profileImageHover" [hidden]="!imageHover" (mouseover)="imageHover = true"
@@ -21,7 +21,7 @@
             <!-- TODO when on click, ask for file and upload to back -->
         </div>
         } @else {
-        <img [src]="BaseUrl+user.id+'.jpg'" alt="Image de profile" />
+        <img [src]="imgSource" alt="Image de profile" />
         }
         <p class="text-xl">{{user.firstname}} {{user.lastname}}</p>
     </div>

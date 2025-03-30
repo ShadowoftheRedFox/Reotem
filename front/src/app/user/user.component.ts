@@ -43,6 +43,7 @@ export class UserComponent {
     maxUserLevel = LevelBeginner;
 
     imageHover = false;
+    imgSource = '';
 
     usernameGroup = new FormGroup({
         firstname: new FormControl('', [Validators.required]),
@@ -76,6 +77,8 @@ export class UserComponent {
             api.user.get(this.requestedUser, auth.clientToken).subscribe({
                 next: (res) => {
                     this.user = res;
+                    this.imgSource = this.BaseUrl + this.user.id + '.jpg';
+
                     switch (this.user.lvl) {
                         case 'Débutant':
                             this.maxUserLevel = LevelBeginner;
@@ -127,6 +130,9 @@ export class UserComponent {
         reader.onload = () => {
             // TODO send to back
             console.log(reader.result);
+            if (typeof reader.result == 'string') {
+                this.imgSource = reader.result;
+            }
         };
         reader.onerror = (err) => {
             console.warn('Error while reading image: ', err);
