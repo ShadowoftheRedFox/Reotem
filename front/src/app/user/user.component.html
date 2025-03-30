@@ -4,7 +4,7 @@
 }
 <p>Chargement...</p>
 } @else {
-<div class="flex flex-col justify-center">
+<div class="flex flex-col justify-center items-stretch">
     <div class="main-header flex flex-row items-center justify-center gap-2">
         @if (privateMode) {
         <div class="image-container">
@@ -26,45 +26,167 @@
         <p>Rôle: {{user.role}}</p>
         <p>Genre: {{user.sexe}}</p>
         @if (privateMode) {
-        <div class="private flex flex-col gap-1 items-start w-full">
-            <h2>Profil privé:</h2>
-            <p>Niveau: {{user.lvl}}</p>
-            <p>Expérience: {{user.exp}}/{{maxUserLevel}}</p>
-            <p>Addresse e-mail: <a [href]="'mailto:'+user.email">{{user.email}}</a></p>
-            <p>Âge: {{user.age}}</p>
-            <p>Compte validé: {{user.validated===undefined?'Oui':'Non'}}</p>
-            @if (changingPassword) {
-            <form [formGroup]="changingPasswordGroup" (ngSubmit)="changePaswword()" class="flex flex-col w-full gap-1">
-                <mat-form-field>
-                    <mat-label>Ancien mot de passe</mat-label>
-                    <input matInput formControlName="oldpassword" [type]="oldPasswordHidden() ? 'password' : 'text'">
-                    <button type="button" mat-icon-button matSuffix (click)="hideOldPassword($event)"
-                        [attr.aria-label]="'Cacher le mot de passe'" [attr.aria-pressed]="oldPasswordHidden()">
-                        <mat-icon>{{oldPasswordHidden() ? 'visibility_off' : 'visibility'}}</mat-icon>
-                    </button>
-                    @if (changingPasswordGroup.controls.oldpassword.invalid) {
-                    <mat-error>{{oldpasswordError()}}</mat-error>
-                    }
-                </mat-form-field>
-                <mat-form-field>
-                    <mat-label>Nouveau mot de passe</mat-label>
-                    <input matInput formControlName="newpassword" [type]="newPasswordHidden() ? 'password' : 'text'">
-                    <button type="button" mat-icon-button matSuffix (click)="hideNewPassword($event)"
-                        [attr.aria-label]="'Cacher le mot de passe'" [attr.aria-pressed]="newPasswordHidden()">
-                        <mat-icon>{{newPasswordHidden() ? 'visibility_off' : 'visibility'}}</mat-icon>
-                    </button>
-                    @if (changingPasswordGroup.controls.newpassword.invalid) {
-                    <mat-error>{{newpasswordError()}}</mat-error>
-                    }
-                </mat-form-field>
-                <button mat-raised-button type="submit" [disabled]="changingPasswordGroup.invalid">Valider</button>
-                <button mat-flat-button (click)="changingPassword = false" type="reset">Annuler</button>
-            </form>
-            } @else {
-            <button mat-raised-button (click)="changingPassword = true">Changer le mot de passe</button>
-            }
-        </div>
+        <h2>Profil privé:</h2>
+        <p>Niveau: {{user.lvl}}</p>
+        <p>Expérience: {{user.exp}}/{{maxUserLevel}}</p>
+        <p>Addresse email: <a [href]="'mailto:'+user.email">{{user.email}}</a></p>
+        <p>Âge: {{user.age}}</p>
+        <p>Compte validé: {{user.validated===undefined?'Oui':'Non'}}</p>
         }
+    </div>
+    <div class="private flex justify-center">
+        <div class="flex flex-col items-stretch text-center gap-4">
+            <h2>Paramètres</h2>
+            <mat-accordion>
+                <mat-expansion-panel>
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>Nom et prénom</mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <div class="param">
+                        <form [formGroup]="usernameGroup" (ngSubmit)="changeUsername()"
+                            class="flex flex-col w-full gap-1">
+                            <mat-form-field>
+                                <mat-label>Prénom</mat-label>
+                                <input matInput placeholder="Jean" formControlName="firstname" />
+                                @if (usernameGroup.controls.firstname.invalid) {
+                                <mat-error>{{genericError(usernameGroup.controls.firstname)}}</mat-error>
+                                }
+                            </mat-form-field>
+                            <mat-form-field>
+                                <mat-label>Nom</mat-label>
+                                <input matInput placeholder="Dupont" formControlName="lastname" />
+                                @if (usernameGroup.controls.lastname.invalid) {
+                                <mat-error>{{genericError(usernameGroup.controls.lastname)}}</mat-error>
+                                }
+                            </mat-form-field>
+                            <mat-form-field>
+                                <mat-label>Mot de passe</mat-label>
+                                <input matInput formControlName="password"
+                                    [type]="usernamePasswordHidden() ? 'password' : 'text'">
+                                <button type="button" mat-icon-button matSuffix (click)="hideUsernamePassword($event)"
+                                    [attr.aria-label]="'Cacher le mot de passe'"
+                                    [attr.aria-pressed]="usernamePasswordHidden()">
+                                    <mat-icon>{{usernamePasswordHidden() ? 'visibility_off' : 'visibility'}}</mat-icon>
+                                </button>
+                                @if (usernameGroup.controls.password.invalid) {
+                                <mat-error>{{genericError(usernameGroup.controls.password)}}</mat-error>
+                                }
+                            </mat-form-field>
+                            <button mat-flat-button type="submit" [disabled]="usernameGroup.invalid">
+                                Changer de nom/prénom</button>
+                        </form>
+                    </div>
+                </mat-expansion-panel>
+
+                <mat-expansion-panel>
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>Genre</mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <div class="param">
+                        <form [formGroup]="sexeGroup" (ngSubmit)="changeSexe()" class="flex flex-col w-full gap-1">
+                            <mat-form-field>
+                                <mat-label>Genre</mat-label>
+                                <mat-select formControlName="sexe">
+                                    @for (s of UserSexe; track $index) {
+                                    <mat-option [value]="s">{{s}}</mat-option>
+                                    }
+                                </mat-select>
+                                @if (sexeGroup.controls.sexe.invalid) {
+                                <mat-error>{{genericError(sexeGroup.controls.sexe)}}</mat-error>
+                                }
+                            </mat-form-field>
+                            <mat-form-field>
+                                <mat-label>Mot de passe</mat-label>
+                                <input matInput formControlName="password"
+                                    [type]="sexePasswordHidden() ? 'password' : 'text'">
+                                <button type="button" mat-icon-button matSuffix (click)="hideSexePassword($event)"
+                                    [attr.aria-label]="'Cacher le mot de passe'"
+                                    [attr.aria-pressed]="sexePasswordHidden()">
+                                    <mat-icon>{{sexePasswordHidden() ? 'visibility_off' : 'visibility'}}</mat-icon>
+                                </button>
+                                @if (sexeGroup.controls.password.invalid) {
+                                <mat-error>{{genericError(sexeGroup.controls.password)}}</mat-error>
+                                }
+                            </mat-form-field>
+                            <button mat-flat-button type="submit" [disabled]="sexeGroup.invalid">
+                                Changer de genre</button>
+                        </form>
+                    </div>
+                </mat-expansion-panel>
+
+                <mat-expansion-panel>
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>Adresse email</mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <div class="param">
+                        <form [formGroup]="emailGroup" (ngSubmit)="changeSexe()" class="flex flex-col w-full gap-1">
+                            <mat-form-field>
+                                <mat-label>Email</mat-label>
+                                <input matInput formControlName="email" type="email">
+                                @if (emailGroup.controls.email.invalid) {
+                                <mat-error>{{genericError(emailGroup.controls.email)}}</mat-error>
+                                }
+                            </mat-form-field>
+                            <mat-form-field>
+                                <mat-label>Mot de passe</mat-label>
+                                <input matInput formControlName="password"
+                                    [type]="emailPasswordHidden() ? 'password' : 'text'">
+                                <button type="button" mat-icon-button matSuffix (click)="hideEmailPassword($event)"
+                                    [attr.aria-label]="'Cacher le mot de passe'"
+                                    [attr.aria-pressed]="emailPasswordHidden()">
+                                    <mat-icon>{{emailPasswordHidden() ? 'visibility_off' : 'visibility'}}</mat-icon>
+                                </button>
+                                @if (emailGroup.controls.password.invalid) {
+                                <mat-error>{{genericError(emailGroup.controls.password)}}</mat-error>
+                                }
+                            </mat-form-field>
+                            <button mat-flat-button type="submit" [disabled]="emailGroup.invalid"
+                                matTooltip="Vous devrez revalider votre nouvelle adresse email">
+                                Changer d'adresse email</button>
+                        </form>
+                    </div>
+                </mat-expansion-panel>
+
+                <mat-expansion-panel>
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>Mot de passe</mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <div class="param">
+                        <form [formGroup]="passwordGroup" (ngSubmit)="changePaswword()"
+                            class="flex flex-col w-full gap-1">
+                            <mat-form-field>
+                                <mat-label>Mot de passe</mat-label>
+                                <input matInput formControlName="oldpassword"
+                                    [type]="oldPasswordHidden() ? 'password' : 'text'">
+                                <button type="button" mat-icon-button matSuffix (click)="hideOldPassword($event)"
+                                    [attr.aria-label]="'Cacher le mot de passe'"
+                                    [attr.aria-pressed]="oldPasswordHidden()">
+                                    <mat-icon>{{oldPasswordHidden() ? 'visibility_off' : 'visibility'}}</mat-icon>
+                                </button>
+                                @if (passwordGroup.controls.oldpassword.invalid) {
+                                <mat-error>{{genericError(passwordGroup.controls.oldpassword)}}</mat-error>
+                                }
+                            </mat-form-field>
+                            <mat-form-field>
+                                <mat-label>Nouveau mot de passe</mat-label>
+                                <input matInput formControlName="newpassword"
+                                    [type]="newPasswordHidden() ? 'password' : 'text'">
+                                <button type="button" mat-icon-button matSuffix (click)="hideNewPassword($event)"
+                                    [attr.aria-label]="'Cacher le mot de passe'"
+                                    [attr.aria-pressed]="newPasswordHidden()">
+                                    <mat-icon>{{newPasswordHidden() ? 'visibility_off' : 'visibility'}}</mat-icon>
+                                </button>
+                                @if (passwordGroup.controls.newpassword.invalid) {
+                                <mat-error>{{genericError(passwordGroup.controls.newpassword)}}</mat-error>
+                                }
+                            </mat-form-field>
+                            <button mat-flat-button type="submit" [disabled]="passwordGroup.invalid">
+                                Changer de mot de passe</button>
+                        </form>
+                    </div>
+                </mat-expansion-panel>
+            </mat-accordion>
+        </div>
     </div>
 </div>
 }

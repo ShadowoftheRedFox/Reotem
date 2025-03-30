@@ -68,8 +68,8 @@ export class ThemeService {
             backgroundColor: "#fff",
             buttonColor: "#ffc107",
             headingColor: "#673ab7",
-            label: "Violet & Vert",
-            value: "purple-green"
+            label: "Violet & Rouge",
+            value: "purple-red"
         },
         {
             backgroundColor: "#fff",

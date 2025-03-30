@@ -19,12 +19,30 @@ h2 {
     color: var(--on-back-advanced);
 }
 
-.public {
+.public,
+.private {
     background-color: var(--back-advanced);
     color: var(--on-back-advanced);
     border-radius: 20px;
     padding: 2em;
     margin: 0.5em;
+}
+
+.param {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    padding: 2em;
+    position: relative;
+    z-index: 1;
+
+    p {
+        text-align: center;
+        font-size: x-large;
+        margin-bottom: 8px;
+    }
 }
 
 .image-container {

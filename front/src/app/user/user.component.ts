@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { AuthentificationService } from '../../services/authentification.service';
 import { APIService } from '../../services/api.service';
 import { CommunicationService } from '../../services/communication.service';
-import { LevelAdvanced, LevelBeginner, LevelExpert, User } from '../../models/api.model';
+import { LevelAdvanced, LevelBeginner, LevelExpert, User, UserSexe } from '../../models/api.model';
 import { ErrorComponent } from '../error/error.component';
 import { environment } from '../../environments/environment';
 import { MatButtonModule } from '@angular/material/button';
@@ -11,6 +11,9 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatSelectModule } from '@angular/material/select';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 @Component({
     selector: 'app-user',
@@ -20,27 +23,43 @@ import { MatIconModule } from '@angular/material/icon';
         MatInputModule,
         MatFormFieldModule,
         ReactiveFormsModule,
-        MatIconModule
+        MatIconModule,
+        MatTooltipModule,
+        MatSelectModule,
+        MatExpansionModule,
     ],
     templateUrl: './user.component.html',
     styleUrl: './user.component.scss'
 })
 export class UserComponent {
     readonly BaseUrl = environment.api_url;
+    readonly UserSexe = UserSexe;
 
     requestedUser = -1;
     // if it's the own user looking at his profile
     privateMode = false;
 
     user: User | null = null;
-
     maxUserLevel = LevelBeginner;
 
     imageHover = false;
-    changingPassword = false;
-    changingPasswordGroup = new FormGroup({
-        oldpassword: new FormControl('', [Validators.required]),
-        newpassword: new FormControl('', [Validators.required]),
+
+    usernameGroup = new FormGroup({
+        firstname: new FormControl('', [Validators.required]),
+        lastname: new FormControl('', [Validators.required]),
+        password: new FormControl('', [Validators.required, Validators.minLength(8)]),
+    });
+    sexeGroup = new FormGroup({
+        sexe: new FormControl<UserSexe>('Autre', [Validators.required]),
+        password: new FormControl('', [Validators.required, Validators.minLength(8)]),
+    });
+    emailGroup = new FormGroup({
+        email: new FormControl('', [Validators.required, Validators.email]),
+        password: new FormControl('', [Validators.required, Validators.minLength(8)]),
+    });
+    passwordGroup = new FormGroup({
+        oldpassword: new FormControl('', [Validators.required, Validators.minLength(8)]),
+        newpassword: new FormControl('', [Validators.required, Validators.minLength(8)]),
     });
 
     constructor(
@@ -68,6 +87,12 @@ export class UserComponent {
                             this.maxUserLevel = LevelExpert;
                             break;
                     }
+
+                    if (this.privateMode) {
+                        this.sexeGroup.setValue({ sexe: this.user.sexe, password: '' });
+                        this.emailGroup.setValue({ email: this.user.email, password: '' });
+                        this.usernameGroup.setValue({ firstname: this.user.firstname, lastname: this.user.lastname, password: '' });
+                    }
                 },
                 error: () => {
                     this.user = null;
@@ -84,53 +109,69 @@ export class UserComponent {
             }
         });
 
-        this.changingPasswordGroup.controls.newpassword.valueChanges.subscribe(res => {
+        this.passwordGroup.controls.newpassword.valueChanges.subscribe(res => {
             // check password strength
             if (typeof res != 'string' || res.length < 8) {
-                return this.changingPasswordGroup.controls.newpassword.setErrors({ short: true });
+                return this.passwordGroup.controls.newpassword.setErrors({ short: true });
             }
         })
     }
 
+    // TODO send to api, and like when connecting, use a challenge
+    changeUsername() {
+        if (this.usernameGroup.invalid) return;
+    }
+    changeEmail() {
+        if (this.emailGroup.invalid) return;
+    }
+    changeSexe() {
+        if (this.sexeGroup.invalid) return;
+    }
     // TODO send password to back, and create formcontrol
     changePaswword() {
-        if (this.changingPasswordGroup.invalid) return;
-        this.changingPassword = false;
+        if (this.passwordGroup.invalid) return;
     }
 
-    oldpasswordError() {
-        const ctrl = this.changingPasswordGroup.controls.oldpassword;
+    genericError(ctrl: FormControl) {
         if (ctrl.hasError('required')) {
-            return 'Mot de passe requis';
+            return "Champ requis";
+        } else if (ctrl.hasError('email')) {
+            return "Email invalide";
+        } else if (ctrl.hasError('minlength')) {
+            return ctrl.getError('minlength').requiredLength + " caractères requis";
         } else if (ctrl.hasError('invalid')) {
-            return 'Mot de passe incorrect'
-        } else {
-            return '';
+            return 'Mot de passe invalide';
         }
+        return '';
     }
 
-    newpasswordError() {
-        const ctrl = this.changingPasswordGroup.controls.newpassword;
-        if (ctrl.hasError('required')) {
-            return 'Mot de passe requis';
-        } else if (ctrl.hasError('short')) {
-            return 'Mot de passe trop court'
-        } else {
-            return '';
-        }
+    usernamePasswordHidden = signal(true);
+    hideUsernamePassword(event: MouseEvent) {
+        this.usernamePasswordHidden.set(!this.usernamePasswordHidden());
+        event.stopPropagation();
+    }
+
+    sexePasswordHidden = signal(true);
+    hideSexePassword(event: MouseEvent) {
+        this.sexePasswordHidden.set(!this.sexePasswordHidden());
+        event.stopPropagation();
+    }
+
+    emailPasswordHidden = signal(true);
+    hideEmailPassword(event: MouseEvent) {
+        this.emailPasswordHidden.set(!this.emailPasswordHidden());
+        event.stopPropagation();
     }
 
     oldPasswordHidden = signal(true);
     hideOldPassword(event: MouseEvent) {
         this.oldPasswordHidden.set(!this.oldPasswordHidden());
-        // empeche les autres objetsqui devrait l'avoir de l'avoir
         event.stopPropagation();
     }
 
     newPasswordHidden = signal(true);
     hideNewPassword(event: MouseEvent) {
         this.newPasswordHidden.set(!this.newPasswordHidden());
-        // empeche les autres objetsqui devrait l'avoir de l'avoir
         event.stopPropagation();
     }
 }
