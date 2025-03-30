@@ -10,10 +10,14 @@
         <div class="image-container">
             <img [src]="BaseUrl+user.id+'.jpg'" alt="Image de profile" #profileImage (mouseover)="imageHover = true"
                 (mouseleave)="imageHover = false" (focus)="imageHover = true" />
+            <!-- eslint-disable-next-line @angular-eslint/template/interactive-supports-focus -->
             <div class="profileImageHover" [hidden]="!imageHover" (mouseover)="imageHover = true"
-                (mouseleave)="imageHover = false" (focus)="imageHover = true">
+                (mouseleave)="imageHover = false" (focus)="imageHover = true" (click)="imageInput.click()"
+                (focus)="imageInput.click()" (keyup)="imageInput.click()">
                 <p>Changer l'image</p>
             </div>
+            <input #imageInput id="imageInput" name="imageInput" type="file" hidden
+                accept="image/png, image/jpeg, image/jpg" (change)="changeImage($event)" />
             <!-- TODO when on click, ask for file and upload to back -->
         </div>
         } @else {

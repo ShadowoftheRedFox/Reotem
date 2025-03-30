@@ -117,6 +117,21 @@ export class UserComponent {
         })
     }
 
+    changeImage(event: Event) {
+        if (!event || !event.target) return;
+        const input = (event.target as HTMLInputElement);
+        if (!input.files || input.files.length == 0) return;
+        const file = input.files.item(0) as File;
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => {
+            // TODO send to back
+            console.log(reader.result);
+        };
+        reader.onerror = (err) => {
+            console.warn('Error while reading image: ', err);
+        };
+    }
     // TODO send to api, and like when connecting, use a challenge
     changeUsername() {
         if (this.usernameGroup.invalid) return;
