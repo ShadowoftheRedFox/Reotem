@@ -8,7 +8,7 @@ export interface User {
     firstname: string;
     lastname: string;
     email: string;
-    age: number;
+    age: string;
     role: UserRole;
     lvl: UserLevel;
     exp: number;
