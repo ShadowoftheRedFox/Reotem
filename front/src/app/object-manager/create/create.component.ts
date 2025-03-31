@@ -250,7 +250,7 @@ export class CreateComponent {
         if (this.formGroup.invalid) return;
 
         const object: AnyObject = {
-            _id: "error",
+            id: "error",
             name: this.formGroup.value.name as string,
             room: this.formGroup.value.room as string,
             building: this.formGroup.value.building as string | undefined,

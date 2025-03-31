@@ -18,7 +18,7 @@ export class NotificationService {
     ) {
         com.AuthAccountUpdate.subscribe(user => {
             if (user == null) return;
-            api.notifications.getNum(user._id, auth.clientToken).subscribe({
+            api.notifications.getNum(user.id, auth.clientToken).subscribe({
                 next: res => {
                     if (res.amount == 0) return;
                     com.NotifUpdate.next(res.amount);

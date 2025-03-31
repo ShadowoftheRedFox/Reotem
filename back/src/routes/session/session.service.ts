@@ -39,7 +39,7 @@ export const createSession = async (mail: string, hash: string) => {
         const salt = '$' + password[1] + '$' + password[2] + '$' + password[3].slice(0, 22);
         user.challenge = challenge;
 
-        await Reotem.updateUser(user._id, { challenge: challenge })
+        await Reotem.updateUser(user.id, { challenge: challenge })
 
         return { challenge: challenge, salt: salt };
     }
@@ -51,9 +51,9 @@ export const createSession = async (mail: string, hash: string) => {
             const sessionid = generateToken(24);
 
 
-            await Reotem.deleteSession(user._id);
-            await Reotem.addSession({ _id: user._id, token: sessionid });
-            await Reotem.updateUser(user._id, { challenge: undefined })
+            await Reotem.deleteSession(user.id);
+            await Reotem.addSession({ id: user.id, token: sessionid });
+            await Reotem.updateUser(user.id, { challenge: undefined })
 
             return { sessionid: sessionid };
         }

@@ -32,7 +32,7 @@ export class AuthentificationService {
                 this.deleteCookie("UID");
             } else {
                 this.client = res;
-                this.setCookie("UID", this.client._id + "", CookieTime.Day, "/");
+                this.setCookie("UID", this.client.id + "", CookieTime.Day, "/");
             }
         });
 

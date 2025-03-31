@@ -2,6 +2,7 @@ import mongoose, { InferRawDocType } from "mongoose";
 const { Schema } = mongoose;
 
 const sessionSchemaDefinition = {
+    
     id: { type: String, required: true },
     token: {type: String, required: true}
 }

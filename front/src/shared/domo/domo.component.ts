@@ -34,7 +34,7 @@ export class DomoComponent {
     ) { }
 
     obj = input<AnyObject>({
-        _id: "errors",
+        id: "errors",
         connection: "Déconnecté",
         lastInteraction: new Date(0).toISOString(),
         name: "Erreur",
@@ -105,11 +105,11 @@ export class DomoComponent {
     }
 
     objDetail() {
-        this.router.navigate(["object", this.obj()._id]);
+        this.router.navigate(["object", this.obj().id]);
     }
 
     objTurnOnOff() {
-        this.api.objects.update<SpeakerObject>(this.obj()._id, this.auth.clientToken, { "turnedOn": !this.speakerObj.turnedOn }).subscribe({
+        this.api.objects.update<SpeakerObject>(this.obj().id, this.auth.clientToken, { "turnedOn": !this.speakerObj.turnedOn }).subscribe({
             next: () => {
                 (this.obj() as SpeakerObject).turnedOn = !this.speakerObj.turnedOn;
                 this.updateState();
@@ -120,7 +120,7 @@ export class DomoComponent {
     }
 
     doorLock() {
-        this.api.objects.update<DoorObject>(this.obj()._id, this.auth.clientToken, { "locked": !this.doorObj.locked }).subscribe({
+        this.api.objects.update<DoorObject>(this.obj().id, this.auth.clientToken, { "locked": !this.doorObj.locked }).subscribe({
             next: () => {
                 (this.obj() as DoorObject).locked = !this.doorObj.locked;
                 this.updateState();

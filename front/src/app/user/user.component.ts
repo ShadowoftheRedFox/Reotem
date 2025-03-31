@@ -72,12 +72,12 @@ export class UserComponent {
         // get the id params
         route.params.subscribe(res => {
             this.requestedUser = res["id"];
-            this.privateMode = auth.client?._id === this.requestedUser;
+            this.privateMode = auth.client?.id === this.requestedUser;
 
             api.user.get(this.requestedUser, auth.clientToken).subscribe({
                 next: (res) => {
                     this.user = res;
-                    this.imgSource = this.BaseUrl + this.user._id + '.jpg';
+                    this.imgSource = this.BaseUrl + this.user.id + '.jpg';
 
                     switch (this.user.lvl) {
                         case 'Débutant':
@@ -108,7 +108,7 @@ export class UserComponent {
         com.AuthAccountUpdate.subscribe(user => {
             if (user == null) {
                 this.privateMode = false;
-            } else if (user._id == this.requestedUser) {
+            } else if (user.id == this.requestedUser) {
                 this.privateMode = true;
             }
         });

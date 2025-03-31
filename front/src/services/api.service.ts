@@ -49,7 +49,7 @@ export class APIService {
         disconnect: () => {
             if (!this.authis.client) return;
             const session = this.authis.clientToken;
-            const id = this.authis.client._id;
+            const id = this.authis.client.id;
             this.sendApiRequest("DELETE", "disconnect/" + id, { session: session }, "Disconnecting").subscribe({
                 next: () => {
                     this.authis.deleteCookie("session");

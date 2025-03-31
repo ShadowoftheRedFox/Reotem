@@ -2,7 +2,8 @@ import mongoose, { InferRawDocType } from "mongoose";
 const { Schema } = mongoose;
 
 const notifSchemaDefinition = {
-    _id: { type: String, required: true },
+  
+    id: { type: String, required: true },
     read: { type: Boolean, required: true },
     message: { type: String, required: true },
     title: { type: String, required: true }

@@ -6,7 +6,6 @@ import { parseUser } from "../../util/parser";
 import { sendMail, template } from "../../util/mailer";
 import Reotem from "../../util/functions";
 import { User, UserRole, UserSexe } from "../../../../front/src/models/api.model";
-import { Types } from "mongoose";
 
 const checkUserUniqueness = async (email: string) => {
   // TODO Reotem.checkUserUnique -> boolean
@@ -70,7 +69,6 @@ export const createUser = async (input: { [key: string]: string | number }) => {
   const birthDate = new Date(`${new Date(Date.now()).getFullYear() - age}-01-01T00:00:00.000Z`).toISOString();
   
   let user: Partial<User> = {
-    _id: new Types.ObjectId().toString(),
     firstname: firstname,
     lastname: lastname,
     email: email,
@@ -87,8 +85,8 @@ export const createUser = async (input: { [key: string]: string | number }) => {
   const sessionid = generateToken(24);
 
   await Reotem.addUser(user);
-  await Reotem.addSession({ id: user._id, token: sessionid });
-  await Reotem.addVerification({ id: user._id, token: user.validated });
+  await Reotem.addSession({ id: user.id, token: sessionid });
+  await Reotem.addVerification({ id: user.id, token: user.validated });
 
   const username = user.firstname + " " + user.lastname;
   // send the mail with the link to validate
@@ -126,8 +124,8 @@ export const validateUser = async (token: string, session: string) => {
 
   user.validated = "";
 
-  await Reotem.updateUser(user._id, user);
-  await Reotem.deleteVerification(user._id);
+  await Reotem.updateUser(user.id, user);
+  await Reotem.deleteVerification(user.id);
 
   return true;
 };

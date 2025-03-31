@@ -50,7 +50,7 @@ export const getNotificationQuery = async (id: string, session: string, query?: 
     let queryNotifs: Notification[] = [];
     if (query.id) {
         userNotif?.notifications.forEach(notif => {
-            if (notif._id === query.id) {
+            if (notif.id === query.id) {
                 queryNotifs.push(notif);
             }
         });
@@ -90,7 +90,7 @@ export const setNotificationRead = async (ids: string[], session: string) => {
     }
 
     userNotifications.forEach(n => {
-        if (ids.includes(n._id)) {
+        if (ids.includes(n.id)) {
             n.read = true;
         }
     });
@@ -117,7 +117,7 @@ export const setNotificationUnread = async (ids: string[], session: string) => {
     }
 
     userNotifications.forEach(n => {
-        if (ids.includes(n._id)) {
+        if (ids.includes(n.id)) {
             n.read = false;
         }
     });

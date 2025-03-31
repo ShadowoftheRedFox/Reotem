@@ -4,7 +4,7 @@ import { ObjectClass } from "./domo.model";
 export const baseUrl = environment.api_url;
 
 export interface User {
-    _id: string;
+    id: string;
     firstname: string;
     lastname: string;
     email: string;
@@ -74,7 +74,7 @@ export interface NotificationAmount {
 }
 
 export interface Notification {
-    _id: string;
+    id: string;
     read: boolean;
     message: string;
     title: string;

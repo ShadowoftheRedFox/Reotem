@@ -82,7 +82,9 @@ export type AnyObject = LightObjectSchema | ThermostatObjectSchema | SpeakerObje
 
 const objectData: AnyObject = {};
 const objectSchemaDefinition = {
-    _id: { type: String, required: true },
+  
+  
+    id: { type: String, required: true },
     name: String,
     room: String,
     building: String,
