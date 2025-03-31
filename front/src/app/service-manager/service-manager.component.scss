@@ -1,0 +1,12 @@
+.filters {
+    margin: 1em;
+
+    h2 {
+        font-size: x-large;
+    }
+}
+
+
+::ng-deep .sidenav-is-mobile .filters {
+    justify-content: center;
+}
