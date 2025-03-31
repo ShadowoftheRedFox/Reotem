@@ -34,8 +34,10 @@
                 </mat-form-field>
                 }
             </div>
-            <div
-                [ngTemplateOutlet]="tab.id === 'electricity' ? electricity : (tab.id === 'maintenance' ? maintenance : null )">
+            <div class="main">
+                <div
+                    [ngTemplateOutlet]="tab.id === 'electricity' ? electricity : (tab.id === 'maintenance' ? maintenance : null )">
+                </div>
             </div>
         </div>
     </mat-tab>
@@ -44,6 +46,7 @@
 }
 
 <ng-template #electricity>
+    <h2>Information sur la consomation d'électricité</h2>
     <p>Consommation globale: {{electricityData.global}}Wh</p>
     <p>Consommation journalière: {{electricityData.daily}}Wh</p>
     <p>Consommation mensuel: {{electricityData.monthly}}Wh</p>
@@ -53,25 +56,36 @@
         }
     </p>
     <p>Nombre d'objets sur batterie: {{electricityData.batteries}}</p>
-    @if (objList.length>0) {
-    <!-- pie chart -->
+    @if (objList.length>0&&electricityData.global>0) {
+    <div class="chart">
+        <apx-chart [series]="chartOptions.series" [chart]="chartOptions.chart" [labels]="chartOptions.labels"
+            [responsive]="chartOptions.responsive"></apx-chart>
+    </div>
     }
 </ng-template>
 
 <ng-template #maintenance>
-    <p>Objet en état d'erreur:</p>
+    <h2>Objet en état d'erreur:</h2>
     @if (errorObject.length>0) {
-    <div>
+    <div [class]="bar">
         @for (obj of errorObject; track $index) {
+        <app-domo [obj]="obj" [detailOnly]="true"></app-domo>
+        <app-domo [obj]="obj" [detailOnly]="true"></app-domo>
+        <app-domo [obj]="obj" [detailOnly]="true"></app-domo>
+        <app-domo [obj]="obj" [detailOnly]="true"></app-domo>
+        <app-domo [obj]="obj" [detailOnly]="true"></app-domo>
+        <app-domo [obj]="obj" [detailOnly]="true"></app-domo>
+        <app-domo [obj]="obj" [detailOnly]="true"></app-domo>
+        <app-domo [obj]="obj" [detailOnly]="true"></app-domo>
         <app-domo [obj]="obj" [detailOnly]="true"></app-domo>
         }
     </div>
     } @else {
     <p matTooltip="pour l'instant...">Tout va bien, il n'y a pas d'erreur</p>
     }
-    <p>Objet en maintenance:</p>
+    <h2 class="mt-4">Objet en maintenance:</h2>
     @if (maintainedObject.length>0) {
-    <div>
+    <div [class]="bar">
         @for (obj of maintainedObject; track $index) {
         <app-domo [obj]="obj" [detailOnly]="true"></app-domo>
         }

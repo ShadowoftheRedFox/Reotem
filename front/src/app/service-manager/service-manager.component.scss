@@ -1,17 +1,29 @@
 .filters {
     margin: 1em;
+}
 
-    h2 {
-        font-size: x-large;
+h2 {
+    font-size: x-large;
+}
+
+::ng-deep .sidenav-is-mobile {
+    .filters {
+        justify-content: center;
+    }
+
+    .bar {
+        height: 560px;
+        flex-wrap: wrap;
+        flex-direction: column;
     }
 }
 
-
-::ng-deep .sidenav-is-mobile .filters {
-    justify-content: center;
+.main {
+    margin: 0 2em;
 }
 
-apx-chart * {
-    min-width: 300px !important;
-    min-height: 300px !important;
+.chart {
+    max-width: 600px;
+    margin: 0 auto;
+    margin-top: 4em;
 }

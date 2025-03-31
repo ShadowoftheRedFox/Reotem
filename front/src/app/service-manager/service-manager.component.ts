@@ -13,6 +13,21 @@ import { MatSelectModule } from '@angular/material/select';
 import { DomoComponent } from '../../shared/domo/domo.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
+import { ChartComponent } from "ng-apexcharts";
+
+import {
+    ApexNonAxisChartSeries,
+    ApexResponsive,
+    ApexChart
+} from "ng-apexcharts";
+
+export interface ChartOptions {
+    series: ApexNonAxisChartSeries;
+    chart: ApexChart;
+    responsive: ApexResponsive[];
+    labels: string[];
+};
+
 export interface Service {
     name: string;
     id: "electricity" | "maintenance",
@@ -51,12 +66,14 @@ export const ServiceNames: Service[] = [
         MatSelectModule,
         DomoComponent,
         MatTooltipModule,
+        ChartComponent,
     ],
     templateUrl: './service-manager.component.html',
     styleUrl: './service-manager.component.scss'
 })
 export class ServiceManagerComponent {
     readonly tabs = ServiceNames;
+    readonly bar = "bar flex flex-row content-start gap-4 overflow-y-auto"
 
     filteredBuilding = new FormControl<string>("");
     buildingList: string[] = [];
@@ -75,6 +92,8 @@ export class ServiceManagerComponent {
         threshold: 0,
         batteries: 0,
     }
+
+    chartOptions!: ChartOptions;
 
     maintainedObject: AnyObject[] = [];
     errorObject: AnyObject[] = [];
@@ -99,20 +118,22 @@ export class ServiceManagerComponent {
             this.objList = update;
             this.updateData();
         });
-        this.api.objects.all({}).subscribe(res => {
-            this.com.DomoObjectsAmount = res.total;
-            this.com.DomoAllObjectsUpdate.next(res.objects);
-        });
+        if (this.objList.length == 0) {
+            this.api.objects.all({}).subscribe(res => {
+                this.com.DomoObjectsAmount = res.total;
+                this.com.DomoAllObjectsUpdate.next(res.objects);
+            });
+        }
 
         // reset list if we change the other
-        // this.filteredBuilding.valueChanges.subscribe(() => {
-        //     this.filteredRoom.reset("", { emitEvent: false });
-        //     this.updateData();
-        // });
-        // this.filteredRoom.valueChanges.subscribe(() => {
-        //     this.filteredBuilding.reset("", { emitEvent: false });
-        //     this.updateData();
-        // });
+        this.filteredBuilding.valueChanges.subscribe(() => {
+            // this.filteredRoom.reset("", { emitEvent: false });
+            this.updateData();
+        });
+        this.filteredRoom.valueChanges.subscribe(() => {
+            // this.filteredBuilding.reset("", { emitEvent: false });
+            this.updateData();
+        });
     }
 
     updateData() {
@@ -137,16 +158,13 @@ export class ServiceManagerComponent {
         const labels: string[] = [];
 
         this.objList.forEach(obj => {
-            if (obj.electricityUsage &&
+            console.log(obj);
+            if (obj.electricityUsage != undefined &&
                 obj.room.includes(this.filteredRoom.value || '') &&
                 (obj.building || '').includes(this.filteredBuilding.value || '')) {
                 this.electricityData.global += obj.electricityUsage;
                 this.electricityData.threshold += obj.consomationThreshold || 0;
 
-                series.push(obj.electricityUsage);
-                labels.push(obj.name);
-                series.push(obj.electricityUsage);
-                labels.push(obj.name);
                 series.push(obj.electricityUsage);
                 labels.push(obj.name);
             }
@@ -157,6 +175,28 @@ export class ServiceManagerComponent {
 
         this.electricityData.daily = this.electricityData.global * 24;
         this.electricityData.monthly = this.electricityData.daily * 30;
+
+        this.chartOptions = {
+            series: series,
+            chart: {
+                width: "100%",
+                type: "pie"
+            },
+            labels: labels,
+            responsive: [
+                {
+                    breakpoint: 600,
+                    options: {
+                        chart: {
+                            width: "100%"
+                        },
+                        legend: {
+                            position: "bottom"
+                        }
+                    }
+                }
+            ]
+        };
     }
 
     updateMaintenance() {
