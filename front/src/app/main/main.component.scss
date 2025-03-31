@@ -36,3 +36,8 @@
         font-size: x-large;
     }
 }
+
+::ng-deep .sidenav-is-mobile .filters {
+    justify-content: center;
+    margin: 0;
+}

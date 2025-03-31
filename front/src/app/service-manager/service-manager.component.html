@@ -1,1 +1,23 @@
-<p>service-manager works!</p>
+@if (loading) {
+<div class="h-full w-full flex items-center justify-center">
+    <p>Chargement des données...</p>
+</div>
+}@else {
+<mat-tab-group [(selectedIndex)]="selectedIndex">
+    @for (tab of tabs; track tab) {
+    <mat-tab>
+        <ng-template mat-tab-label>
+            <mat-icon class="symbols">{{tab.icon}}</mat-icon>
+            {{tab.name}}
+        </ng-template>
+        @if (tab.id === 'water') {
+        <p>a?</p>
+        } @else if (tab.id === 'electricity') {
+        <p>dza</p>
+        } @else if (tab.id === 'maintenance') {
+        <p>azd</p>
+        }
+    </mat-tab>
+    }
+</mat-tab-group>
+}
