@@ -67,7 +67,7 @@ export const routes: Routes = [
         canActivate: [authGuard]
     },
     {
-        path: "service/:id",
+        path: "service/:tab",
         title: "Services" + TITLE_POSTFIX,
         component: ServiceManagerComponent,
         canActivate: [authGuard]
