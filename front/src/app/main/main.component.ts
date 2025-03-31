@@ -15,6 +15,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 
+// fixed number of items in order, reset automatically the cookie if it changes
+const OrderItems = 4;
+
 @Component({
     selector: 'app-main',
     standalone: true,
@@ -100,7 +103,7 @@ export class MainComponent {
 
         // get the wanted order
         const mainOrder = auth.getCookie("main_order");
-        if (mainOrder.length == 0) {
+        if (mainOrder.length != OrderItems) {
             auth.setCookie("main_order", JSON.stringify(this.order), CookieTime.Year, "/");
         } else {
             this.order = JSON.parse(mainOrder);
