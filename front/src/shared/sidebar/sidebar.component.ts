@@ -134,7 +134,7 @@ export class SidebarComponent implements OnDestroy {
                     compteObj.image = "Icone";
                     compteObj.tooltip = "Accéder à votre profil";
                     compteObj.aria = "Lien vers votre page de profil";
-                    compteObj.link = ["/user", user.id + ''];
+                    compteObj.link = ["/user", user._id + ''];
 
                     if (adminObj) {
                         adminObj.hidden = user.role != "Administrator";

@@ -4,7 +4,7 @@ import { ObjectClass } from "./domo.model";
 export const baseUrl = environment.api_url;
 
 export interface User {
-    id: number;
+    _id: string;
     firstname: string;
     lastname: string;
     email: string;
@@ -18,6 +18,7 @@ export interface User {
     adminValidated?: false;
     // front should never receive the password
     password?: string;
+    lastLogin: string;
 }
 
 export interface NewUser {
@@ -73,7 +74,7 @@ export interface NotificationAmount {
 }
 
 export interface Notification {
-    id: number;
+    _id: string;
     read: boolean;
     message: string;
     title: string;
@@ -86,7 +87,7 @@ export interface APIQuery {
 
 export interface NotificationQuery extends APIQuery {
     read?: boolean;
-    id?: number;
+    id?: string;
 }
 
 export interface ObjectQuery extends APIQuery {

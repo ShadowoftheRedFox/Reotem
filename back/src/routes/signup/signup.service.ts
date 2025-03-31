@@ -6,6 +6,7 @@ import { parseUser } from "../../util/parser";
 import { sendMail, template } from "../../util/mailer";
 import Reotem from "../../util/functions";
 import { User, UserRole, UserSexe } from "../../../../front/src/models/api.model";
+import { Types } from "mongoose";
 
 const checkUserUniqueness = async (email: string) => {
   // TODO Reotem.checkUserUnique -> boolean
@@ -67,15 +68,9 @@ export const createUser = async (input: { [key: string]: string | number }) => {
   const hashedPassword = await bcrypt.hash(password, bcrypt.genSaltSync(10));
 
   const birthDate = new Date(`${new Date(Date.now()).getFullYear() - age}-01-01T00:00:00.000Z`).toISOString();
-  const users = await Reotem.getUsers();
-  const ids = users?.map((user) => user.id);
-  let id = 0;
-  while (ids?.includes(id)) {
-    id++;
-  }
-
+  
   let user: Partial<User> = {
-    id: id,
+    _id: new Types.ObjectId().toString(),
     firstname: firstname,
     lastname: lastname,
     email: email,
@@ -86,13 +81,14 @@ export const createUser = async (input: { [key: string]: string | number }) => {
     validated: generateToken(10),
     exp: 0,
     lvl: "Débutant",
+    lastLogin: new Date(Date.now()).toISOString()
   };
 
   const sessionid = generateToken(24);
 
   await Reotem.addUser(user);
-  await Reotem.addSession({ id: user.id, token: sessionid });
-  await Reotem.addVerification({ id: user.id, token: user.validated });
+  await Reotem.addSession({ id: user._id, token: sessionid });
+  await Reotem.addVerification({ id: user._id, token: user.validated });
 
   const username = user.firstname + " " + user.lastname;
   // send the mail with the link to validate
@@ -103,7 +99,7 @@ export const createUser = async (input: { [key: string]: string | number }) => {
   return { user: user, session: sessionid };
 };
 
-export const getCurrentUser = async (id: number) => {
+export const getCurrentUser = async (id: string) => {
   let user = (await Reotem.getUser(id)) as Partial<UserSchema>;
 
   if (!user) return {};
@@ -112,7 +108,7 @@ export const getCurrentUser = async (id: number) => {
 
   return {
     ...user,
-    token: generateToken(user.id),
+    token: generateToken(0),
   };
 };
 
@@ -130,8 +126,8 @@ export const validateUser = async (token: string, session: string) => {
 
   user.validated = "";
 
-  await Reotem.updateUser(user.id, user);
-  await Reotem.deleteVerification(user.id);
+  await Reotem.updateUser(user._id, user);
+  await Reotem.deleteVerification(user._id);
 
   return true;
 };

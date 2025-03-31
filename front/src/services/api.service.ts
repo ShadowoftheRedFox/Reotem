@@ -49,7 +49,7 @@ export class APIService {
         disconnect: () => {
             if (!this.authis.client) return;
             const session = this.authis.clientToken;
-            const id = this.authis.client.id;
+            const id = this.authis.client._id;
             this.sendApiRequest("DELETE", "disconnect/" + id, { session: session }, "Disconnecting").subscribe({
                 next: () => {
                     this.authis.deleteCookie("session");
@@ -74,28 +74,28 @@ export class APIService {
     }
 
     readonly user = {
-        get: (id: number, session?: string) => {
+        get: (id: string, session?: string) => {
             return this.sendApiRequest<User>("POST", "user/" + id, { session: session }, `Getting user ${id}`);
         },
-        changeImg: (id: number, base64: string, session: string) => {
+        changeImg: (id: string, base64: string, session: string) => {
             return this.sendApiRequest<{ name: string }>("PUT", "user/" + id + "/image/", { base64: base64, session: session }, `Changing user ${id} image`);
         }
     }
 
     readonly notifications = {
-        getNum: (id: number, session: string) => {
+        getNum: (id: string, session: string) => {
             return this.sendApiRequest<NotificationAmount>("POST", "user/notification/num/" + id, { session: session }, "Getting notifications amount");
         },
-        getAll: (id: number, session: string, query: NotificationQuery) => {
+        getAll: (id: string, session: string, query: NotificationQuery) => {
             return this.sendApiRequest<Notification[]>("POST", "user/notification/" + id, { session: session, query: query }, "Getting notifications");
         },
-        delete: (ids: number[], session: string) => {
+        delete: (ids: string[], session: string) => {
             return this.sendApiRequest("DELETE", "user/notification/", { ids: ids, session: session }, "Delete notification");
         },
-        read: (ids: number[], session: string) => {
+        read: (ids: string[], session: string) => {
             return this.sendApiRequest("PUT", "user/notification/read", { ids: ids, session: session }, "Read notification");
         },
-        unread: (ids: number[], session: string) => {
+        unread: (ids: string[], session: string) => {
             return this.sendApiRequest("PUT", "user/notification/unread", { ids: ids, session: session }, "Unread notification");
         },
     }
@@ -104,18 +104,17 @@ export class APIService {
         all: (query: ObjectQuery) => {
             return this.sendApiRequest<{ objects: AnyObject[], total: number }>("GET", "objects", query, "Getting all objects");
         },
-        get: (id: number) => {
+        get: (id: string) => {
             return this.sendApiRequest<AnyObject>("GET", "objects/" + id, {}, "Getting object " + id);
         },
-        // TODO do the back
-        update: <T = AnyObject>(id: number, session: string, changes: Partial<{ [key in keyof T]: T[key] }>) => {
-            return this.sendApiRequest("PUT", "objects/" + id, { params: changes, session: session }, "Updating object " + id);
+        update: <T = AnyObject>(id: string, session: string, changes: Partial<{ [key in keyof T]: T[key] }>) => {
+            return this.sendApiRequest("PUT", "objects/update/" + id, { params: changes, session: session }, "Updating object " + id);
         },
-        delete: (id: number, session: string) => {
-            return this.sendApiRequest("DELETE", "objects/" + id, { session: session }, "Deleting " + id);
+        delete: (id: string, session: string) => {
+            return this.sendApiRequest("DELETE", "objects/delete/" + id, { session: session }, "Deleting " + id);
         },
         create: (object: AnyObject, session: string) => {
-            return this.sendApiRequest("POST", "objects/", { session: session, object: object }, "Creating object");
+            return this.sendApiRequest("POST", "objects/create/", { session: session, object: object }, "Creating object");
         }
     }
 

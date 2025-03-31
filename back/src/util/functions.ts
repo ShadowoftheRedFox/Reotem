@@ -12,8 +12,8 @@ const Reotem = {
     const newUser = new models.User(merged);
     await newUser.save().then((u) => console.log(`New user -> ${u.email}`));
   },
-  getUser: async (id: number) => {
-    const data = await models.User.findOne({ id: id });
+  getUser: async (id: string) => {
+    const data = await models.User.findOne({ _id: id });
     if (data) return data;
     return;
   },
@@ -27,7 +27,7 @@ const Reotem = {
     if (data) return data;
     return;
   },
-  updateUser: async (query: number, updated: Partial<UserSchema>) => {
+  updateUser: async (query: string, updated: Partial<UserSchema>) => {
     const data = await Reotem.getUser(query);
     if (typeof data !== "object") return;
     for (const key in data) {
@@ -36,8 +36,8 @@ const Reotem = {
     }
     return data.updateOne(updated);
   },
-  deleteUser: async (id: number) => {
-    const data = await models.User.findOne({ id: id });
+  deleteUser: async (id: string) => {
+    const data = await models.User.findOne({ _id: id });
     if (data) return data.deleteOne();
     return;
   },
@@ -50,7 +50,7 @@ const Reotem = {
   addSession: async (session: object) => {
     const merged = Object.assign(session);
     const newSession = new models.Session(merged);
-    await newSession.save().then((u) => console.log(`New session for user -> ${u.id}`));
+    await newSession.save().then((u) => console.log(`New session for user -> ${u._id}`));
   },
   getSession: async (token: string) => {
     const data = await models.Session.findOne({ token: token });
@@ -62,7 +62,7 @@ const Reotem = {
     if (data) return data;
     return;
   },
-  updateSession: async (query: number, updated: UserSchema) => {
+  updateSession: async (query: string, updated: UserSchema) => {
     const data = await Reotem.getUser(query);
     if (typeof data !== "object") return;
     for (const key in data) {
@@ -71,9 +71,9 @@ const Reotem = {
     }
     return data.updateOne(updated);
   },
-  deleteSession: async (id: number) => {
-    const data = await models.Session.findOne({ id: id });
-    console.log(`Deleting session for user -> ${data?.id}`);
+  deleteSession: async (id: string) => {
+    const data = await models.Session.findOne({ _id: id });
+    console.log(`Deleting session for user -> ${data?._id}`);
     if (data) return data.deleteOne();
     return;
   },
@@ -81,14 +81,14 @@ const Reotem = {
   addVerification: async (verification: object) => {
     const merged = Object.assign(verification);
     const newVerification = new models.Verification(merged);
-    await newVerification.save().then((u) => console.log(`New verification for user -> ${u.id}`));
+    await newVerification.save().then((u) => console.log(`New verification for user -> ${u._id}`));
   },
   getVerification: async (token: string) => {
     const data = await models.Verification.findOne({ token: token });
     if (data) return data;
     return;
   },
-  updateVerification: async (query: number, updated: UserSchema) => {
+  updateVerification: async (query: string, updated: UserSchema) => {
     const data = await Reotem.getUser(query);
     if (typeof data !== "object") return;
     for (const key in data) {
@@ -97,9 +97,9 @@ const Reotem = {
     }
     return data.updateOne(updated);
   },
-  deleteVerification: async (id: number) => {
-    const data = await models.Verification.findOne({ id: id });
-    console.log(`Deleting verification for user -> ${data?.id}`);
+  deleteVerification: async (id: string) => {
+    const data = await models.Verification.findOne({ _id: id });
+    console.log(`Deleting verification for user -> ${data?._id}`);
     if (data) return data.deleteOne();
     return;
   },
@@ -107,23 +107,23 @@ const Reotem = {
   addNotifications: async (notifications: object) => {
     const merged = Object.assign(notifications);
     const newNotification = new models.Notification(merged);
-    await newNotification.save().then((u) => console.log(`New notification table for user -> ${u.id}`));
+    await newNotification.save().then((u) => console.log(`New notification table for user -> ${u._id}`));
   },
-  getNotification: async (userId: number, query: NotificationQuery) => {
-    const data = await models.Notification.findOne({ id: userId, notifications: { $elemMatch: query } });
+  getNotification: async (userId: string, query: NotificationQuery) => {
+    const data = await models.Notification.findOne({ _id: userId, notifications: { $elemMatch: query } });
     if (data) return data;
     return;
   },
-  getNotifications: async (id: number) => {
-    const data = await models.Notification.findOne({ id: id });
+  getNotifications: async (id: string) => {
+    const data = await models.Notification.findOne({ _id: id });
     if (data) return data;
     return;
   },
-  addNotification: async (userId: number, notif: NotifSchema) => {
-    await models.Notification.updateOne({ id: userId }, { $push: { notifications: notif } });
-    console.log(`New notifications for user -> ${userId} -> ${notif.id}`);
+  addNotification: async (userId: string, notif: NotifSchema) => {
+    await models.Notification.updateOne({ _id: userId }, { $push: { notifications: notif } });
+    console.log(`New notifications for user -> ${userId} -> ${notif._id}`);
   },
-  updateNotification: async (userId: number, updated: Partial<NotifSchema>) => {
+  updateNotification: async (userId: string, updated: Partial<NotifSchema>) => {
     const data = await Reotem.getNotification(userId, updated as NotificationQuery);
     if (typeof data !== "object") return;
     for (const key in data) {
@@ -132,7 +132,7 @@ const Reotem = {
     }
     return data.updateOne(updated);
   },
-  updateNotifications: async (userId: number, updated: Partial<NotificationSchema>) => {
+  updateNotifications: async (userId: string, updated: Partial<NotificationSchema>) => {
     const data = await Reotem.getNotifications(userId);
     if (typeof data !== "object") return;
     for (const key in data) {
@@ -141,9 +141,9 @@ const Reotem = {
     }
     return data.updateOne(updated);
   },
-  deleteNotification: async (userId: number, notificationId: number) => {
+  deleteNotification: async (userId: string, notificationId: string) => {
     const data = await Reotem.getNotifications(userId);
-    const delPos = data?.notifications.map((notif) => notif.id).indexOf(notificationId);
+    const delPos = data?.notifications.map((notif) => notif._id).indexOf(notificationId);
     data?.notifications.splice(delPos as number, 1);
     await Reotem.updateNotifications(data?.id, data as NotificationSchema);
     return;
@@ -152,7 +152,7 @@ const Reotem = {
   addObject: async (object: ObjectSchema, objectData: AnyObject) => {
     const merged = { ...object, ...objectData };
     const newObject = await new models.Object(merged);
-    await newObject.save().then((o) => console.log(`New object -> ${o.id}, Object Data : ${JSON.stringify(o.objectData)}`));
+    await newObject.save().then((o) => console.log(`New object -> ${o._id}, Object Data : ${JSON.stringify(o.objectData)}`));
   },
   // filter example {key1: value, key2: value...}
   getAllObjects: async () => {
@@ -160,12 +160,12 @@ const Reotem = {
     if (data) return data;
     return;
   },
-  getObject: async (id: number) => {
-    const data = await models.Object.findOne({ id: id });
+  getObject: async (id: string) => {
+    const data = await models.Object.findOne({ _id: id });
     if (data) return data;
     return;
   },
-  updateObject: async (objectId: number, updated: ObjectSchema) => {
+  updateObject: async (objectId: string, updated: ObjectSchema) => {
     const data = await Reotem.getObject(objectId);
     if (typeof data !== "object") return;
     for (const key in data) {
@@ -174,9 +174,9 @@ const Reotem = {
     }
     return data.updateOne(updated);
   },
-  deleteObject: async (id: number) => {
-    const data = await models.Object.findOne({ id: id });
-    console.log(`Deleting session for user -> ${data?.id}`);
+  deleteObject: async (id: string) => {
+    const data = await models.Object.findOne({ _id: id });
+    console.log(`Deleting session for user -> ${data?._id}`);
     if (data) return data.deleteOne();
     return;
   },

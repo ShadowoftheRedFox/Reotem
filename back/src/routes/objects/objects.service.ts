@@ -26,8 +26,8 @@ export const getAll = async (query: ObjectQuery = {}) => {
     return { objects: resultObjects, total: n };
 };
 
-export const getOne = async (id: number) => {
-    if (isNaN(id) || id < 0) {
+export const getOne = async (id: string) => {
+    if (id === "") {
         throw new HttpException(422);
     }
 

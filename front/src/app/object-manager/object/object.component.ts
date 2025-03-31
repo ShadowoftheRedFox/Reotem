@@ -14,7 +14,7 @@ const TITLE_POSTFIX = " - " + environment.title;
     styleUrl: './object.component.scss'
 })
 export class ObjectComponent {
-    requestedObject = -1;
+    requestedObject = "error";
 
     obj: AnyObject | null = null;
     lightObj!: LightObject;
@@ -33,7 +33,7 @@ export class ObjectComponent {
     ) {
         // get the id params
         route.params.subscribe(res => {
-            this.requestedObject = Number(res["id"]);
+            this.requestedObject = res["id"];
 
             api.objects.get(this.requestedObject).subscribe({
                 next: (res) => {

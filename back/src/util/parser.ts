@@ -3,7 +3,7 @@ import { User, UserLevel, UserRole, UserSexe } from "../../../front/src/models/a
 
 export const parseUser = (user: UserSchema, sensible = false): Partial<User> => {
     return {
-        id: user.id,
+        _id: user._id,
         firstname: user.firstname,
         lastname: user.lastname,
         email: sensible ? user.email : undefined,

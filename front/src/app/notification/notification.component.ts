@@ -93,7 +93,7 @@ export class NotificationComponent implements AfterViewInit {
             return;
         }
 
-        api.notifications.getAll(auth.client.id, auth.clientToken, { limit: 10 }).subscribe({
+        api.notifications.getAll(auth.client._id, auth.clientToken, { limit: 10 }).subscribe({
             next: (res) => {
                 this.notifications = res;
                 this.updateNotifsContent();
@@ -140,7 +140,7 @@ export class NotificationComponent implements AfterViewInit {
 
             switch (sort.active as Columns) {
                 case "id":
-                    return this.compare(a.id, b.id, isAsc);
+                    return this.compare(a._id, b._id, isAsc);
                 case "title":
                     return this.compare(a.title, b.title, isAsc);
                 case "message":
@@ -159,9 +159,9 @@ export class NotificationComponent implements AfterViewInit {
 
     // interactions
 
-    notifIdToIndex(id: number) {
+    notifIdToIndex(id: string) {
         for (let i = 0; i < this.notifications.length; i++) {
-            if (this.notifications[i].id == id) return i;
+            if (this.notifications[i]._id == id) return i;
         }
         return -1;
     }
@@ -187,14 +187,14 @@ export class NotificationComponent implements AfterViewInit {
         });
     }
 
-    delete(elementId?: number) {
-        const ids: number[] = [];
+    delete(elementId?: string) {
+        const ids: string[] = [];
         const aid: number[] = [];
 
         this.task().subtasks?.forEach((t, i) => {
             if (t.checked) {
                 aid.push(i);
-                ids.push(this.notifications[i].id);
+                ids.push(this.notifications[i]._id);
             }
         });
 
@@ -206,7 +206,7 @@ export class NotificationComponent implements AfterViewInit {
             next: () => {
                 if (elementId != undefined) {
                     this.notifications.forEach((n, i) => {
-                        if (n.id == elementId) {
+                        if (n._id == elementId) {
                             this.notifications.splice(i, 1);
                         }
                     });
@@ -224,14 +224,14 @@ export class NotificationComponent implements AfterViewInit {
         })
     }
 
-    read(elementId?: number) {
-        const ids: number[] = [];
+    read(elementId?: string) {
+        const ids: string[] = [];
         const aid: number[] = [];
 
         this.task().subtasks?.forEach((t, i) => {
             if (t.checked) {
                 aid.push(i);
-                ids.push(this.notifications[i].id);
+                ids.push(this.notifications[i]._id);
             }
         });
 
@@ -243,7 +243,7 @@ export class NotificationComponent implements AfterViewInit {
             next: () => {
                 if (elementId != undefined) {
                     this.notifications.forEach((n, i) => {
-                        if (n.id == elementId) {
+                        if (n._id == elementId) {
                             this.notifications[i].read = true;
                         }
                     });
@@ -261,14 +261,14 @@ export class NotificationComponent implements AfterViewInit {
         })
     }
 
-    unread(elementId?: number) {
-        const ids: number[] = [];
+    unread(elementId?: string) {
+        const ids: string[] = [];
         const aid: number[] = [];
 
         this.task().subtasks?.forEach((t, i) => {
             if (t.checked) {
                 aid.push(i);
-                ids.push(this.notifications[i].id);
+                ids.push(this.notifications[i]._id);
             }
         });
 
@@ -280,7 +280,7 @@ export class NotificationComponent implements AfterViewInit {
             next: () => {
                 if (elementId != undefined) {
                     this.notifications.forEach((n, i) => {
-                        if (n.id == elementId) {
+                        if (n._id == elementId) {
                             this.notifications[i].read = false;
                         }
                     });

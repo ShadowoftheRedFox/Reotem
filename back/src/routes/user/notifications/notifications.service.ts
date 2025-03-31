@@ -2,8 +2,8 @@ import { Notification, NotificationQuery } from "../../../../../front/src/models
 import HttpException from "~/models/HttpException";
 import Reotem from "~/util/functions";
 
-export const getNotificationAmount = async (id: number, session: string) => {
-    if (id < 0 || !session) {
+export const getNotificationAmount = async (id: string, session: string) => {
+    if (id === "" || !session) {
         throw new HttpException(400);
     }
 
@@ -32,8 +32,8 @@ export const getNotificationAmount = async (id: number, session: string) => {
     return { amount: amount };
 };
 
-export const getNotificationQuery = async (id: number, session: string, query?: NotificationQuery): Promise<Notification[]> => {
-    if (id < 0 || !session) {
+export const getNotificationQuery = async (id: string, session: string, query?: NotificationQuery): Promise<Notification[]> => {
+    if (id === "" || !session) {
         throw new HttpException(400);
     }
 
@@ -50,7 +50,7 @@ export const getNotificationQuery = async (id: number, session: string, query?: 
     let queryNotifs: Notification[] = [];
     if (query.id) {
         userNotif?.notifications.forEach(notif => {
-            if (notif.id === query.id) {
+            if (notif._id === query.id) {
                 queryNotifs.push(notif);
             }
         });
@@ -74,7 +74,7 @@ export const getNotificationQuery = async (id: number, session: string, query?: 
     return queryNotifs;
 }
 
-export const setNotificationRead = async (ids: number[], session: string) => {
+export const setNotificationRead = async (ids: string[], session: string) => {
     if (!Array.isArray(ids) || ids.length == 0) {
         throw new HttpException(422, { ids: "empty" });
     }
@@ -90,7 +90,7 @@ export const setNotificationRead = async (ids: number[], session: string) => {
     }
 
     userNotifications.forEach(n => {
-        if (ids.includes(n.id)) {
+        if (ids.includes(n._id)) {
             n.read = true;
         }
     });
@@ -101,7 +101,7 @@ export const setNotificationRead = async (ids: number[], session: string) => {
     });
 }
 
-export const setNotificationUnread = async (ids: number[], session: string) => {
+export const setNotificationUnread = async (ids: string[], session: string) => {
     if (!Array.isArray(ids) || ids.length == 0) {
         throw new HttpException(422);
     }
@@ -117,7 +117,7 @@ export const setNotificationUnread = async (ids: number[], session: string) => {
     }
 
     userNotifications.forEach(n => {
-        if (ids.includes(n.id)) {
+        if (ids.includes(n._id)) {
             n.read = false;
         }
     });
@@ -127,7 +127,7 @@ export const setNotificationUnread = async (ids: number[], session: string) => {
         notifications: userNotifications
     });
 }
-export const deletingNotification = async (ids: number[], session: string) => {
+export const deletingNotification = async (ids: string[], session: string) => {
     if (!Array.isArray(ids) || ids.length == 0) {
         throw new HttpException(422);
     }

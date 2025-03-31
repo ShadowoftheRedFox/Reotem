@@ -53,7 +53,7 @@ export type AnyObject = BaseObject |
     BaseObjectError;
 
 export interface BaseObject {
-    id: number;
+    _id: string;
     name: string;
     room: string;
     building?: string;

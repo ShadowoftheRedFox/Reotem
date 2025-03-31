@@ -179,7 +179,7 @@ export class SignupComponent {
             next: res => {
                 this.com.AuthTokenUpdate.next(res.session);
                 this.com.AuthAccountUpdate.next(res.user);
-                this.route.navigate(["user", res.user.id]);
+                this.route.navigate(["user", res.user._id]);
             },
             error: err => {
                 if (!err.error.message) {

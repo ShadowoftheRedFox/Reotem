@@ -71,7 +71,7 @@
                     @if (menu.icon && !menu.hidden) {
                     @if (menu.id === 'CompteObj') {
                     <img #displaced_badge [hidden]="displaced_badge.classList.contains('notFound')"
-                        (error)="displaced_badge.classList.add('notFound')" [src]="BaseUrl+user?.id+'.jpg'"
+                        (error)="displaced_badge.classList.add('notFound')" [src]="BaseUrl+user?._id+'.jpg'"
                         alt="Image de profile" class="side-nav-account-image side-nav-show-icon-displaced"
                         (mouseleave)="menu.hover=false" (mouseover)="menu.hover=true" (focus)="menu.hover=true"
                         [ngClass]="(menu.hover?menu.hoverClass||'':'')+' '+menu.class||''" [matTooltip]="menu.tooltip"
@@ -95,7 +95,7 @@
                         <div class="sidenav-item">
                             @if (menu.id === "CompteObj"){
                             <img #badge [hidden]="badge.classList.contains('notFound')"
-                                (error)="badge.classList.add('notFound')" [src]="BaseUrl+user?.id+'.jpg'"
+                                (error)="badge.classList.add('notFound')" [src]="BaseUrl+user?._id+'.jpg'"
                                 alt="Image de profile" class="side-nav-account-image" (mouseleave)="menu.hover=false"
                                 (mouseover)="menu.hover=true" (focus)="menu.hover=true"
                                 [ngClass]="(menu.hover?menu.hoverClass||'':'')+' '+menu.class||''">

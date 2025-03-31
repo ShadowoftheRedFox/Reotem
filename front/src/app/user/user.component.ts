@@ -35,7 +35,7 @@ export class UserComponent {
     readonly BaseUrl = environment.api_url;
     readonly UserSexe = UserSexe;
 
-    requestedUser = -1;
+    requestedUser = "";
     // if it's the own user looking at his profile
     privateMode = false;
 
@@ -71,13 +71,13 @@ export class UserComponent {
     ) {
         // get the id params
         route.params.subscribe(res => {
-            this.requestedUser = Number(res["id"]);
-            this.privateMode = auth.client?.id === this.requestedUser;
+            this.requestedUser = res["id"];
+            this.privateMode = auth.client?._id === this.requestedUser;
 
             api.user.get(this.requestedUser, auth.clientToken).subscribe({
                 next: (res) => {
                     this.user = res;
-                    this.imgSource = this.BaseUrl + this.user.id + '.jpg';
+                    this.imgSource = this.BaseUrl + this.user._id + '.jpg';
 
                     switch (this.user.lvl) {
                         case 'Débutant':
@@ -100,7 +100,7 @@ export class UserComponent {
                 },
                 error: () => {
                     this.user = null;
-                    this.requestedUser = -2;
+                    this.requestedUser = "";
                 },
             });
         });
@@ -108,7 +108,7 @@ export class UserComponent {
         com.AuthAccountUpdate.subscribe(user => {
             if (user == null) {
                 this.privateMode = false;
-            } else if (user.id == this.requestedUser) {
+            } else if (user._id == this.requestedUser) {
                 this.privateMode = true;
             }
         });

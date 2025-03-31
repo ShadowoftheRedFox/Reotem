@@ -77,7 +77,10 @@ export class ObjectManagerComponent {
         {
             name: "Effacer",
             icon: "delete",
-            callback: () => this.deleteObjects(),
+            callback: () => {
+                console.log(this);
+                this.deleteObjects(1)
+            },
             disabled: this.anySlected
         },
         {
@@ -186,8 +189,8 @@ export class ObjectManagerComponent {
         this.onlyOne.set(count === 1);
     }
 
-    deleteObjects() {
-        console.log("Not implemented yet");
+    deleteObjects(index: number) {
+        console.log("Deleting object ", index);
         // TODO api call
     }
 
