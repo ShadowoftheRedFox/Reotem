@@ -6,7 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { APIService } from '../../../services/api.service';
-import { AnyObject, ComputerObject, Connection, DoorObject, LightObject, Mode, ObjectClass, ObjectState, SpeakerObject, ThermostatObject, VideoProjectorObject, WiFiObject, WifiType, WindowStoreObject } from '../../../models/domo.model';
+import { AnyObject, Connection, Mode, ObjectClass, ObjectState, WifiType } from '../../../models/domo.model';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { Router, RouterLink } from '@angular/router';
 import { AuthentificationService } from '../../../services/authentification.service';
@@ -142,7 +142,6 @@ export class EditComponent {
         private router: Router,
         private popup: PopupService
     ) {
-        // TODO fill form and get correct id
         this.ErreurListener();
     }
 
@@ -267,58 +266,58 @@ export class EditComponent {
             case 'BaseObject':
                 break
             case 'LightObject':
-                (object as LightObject).turnedOn = this.formGroup.value.LightObjectGroup?.turnedOn as boolean;
-                (object as LightObject).electricityUsage = Math.floor(Math.random() * 100);
-                (object as LightObject).consomationThreshold = this.formGroup.value.LightObjectGroup?.consomationThreshold as number;
-                (object as LightObject).battery = (this.formGroup.value.LightObjectGroup?.battery ? Math.floor(Math.random() * 100) : undefined);
-                (object as LightObject).mode = this.formGroup.value.LightObjectGroup?.mode as Mode;
+                (object as Record<string, unknown>)["turnedOn"] = this.formGroup.value.LightObjectGroup?.turnedOn as boolean;
+                (object as Record<string, unknown>)["electricityUsage"] = Math.floor(Math.random() * 100);
+                (object as Record<string, unknown>)["consomationThreshold"] = this.formGroup.value.LightObjectGroup?.consomationThreshold as number;
+                (object as Record<string, unknown>)["battery"] = (this.formGroup.value.LightObjectGroup?.battery ? Math.floor(Math.random() * 100) : undefined);
+                (object as Record<string, unknown>)["mode"] = this.formGroup.value.LightObjectGroup?.mode as Mode;
                 break;
             case 'ThermostatObject':
-                (object as ThermostatObject).turnedOn = this.formGroup.value.ThermostatObjectGroup?.turnedOn as boolean;
-                (object as ThermostatObject).electricityUsage = Math.floor(Math.random() * 100);
-                (object as ThermostatObject).consomationThreshold = this.formGroup.value.ThermostatObjectGroup?.consomationThreshold as number;
-                (object as ThermostatObject).battery = (this.formGroup.value.ThermostatObjectGroup?.battery ? Math.floor(Math.random() * 100) : undefined);
-                (object as ThermostatObject).mode = this.formGroup.value.ThermostatObjectGroup?.mode as Mode;
-                (object as ThermostatObject).targetTemp = this.formGroup.value.ThermostatObjectGroup?.targetTemp as number;
-                (object as ThermostatObject).currentTemp = 20 + Math.floor(Math.random() * 10);
+                (object as Record<string, unknown>)["turnedOn"] = this.formGroup.value.ThermostatObjectGroup?.turnedOn as boolean;
+                (object as Record<string, unknown>)["electricityUsage"] = Math.floor(Math.random() * 100);
+                (object as Record<string, unknown>)["consomationThreshold"] = this.formGroup.value.ThermostatObjectGroup?.consomationThreshold as number;
+                (object as Record<string, unknown>)["battery"] = (this.formGroup.value.ThermostatObjectGroup?.battery ? Math.floor(Math.random() * 100) : undefined);
+                (object as Record<string, unknown>)["mode"] = this.formGroup.value.ThermostatObjectGroup?.mode as Mode;
+                (object as Record<string, unknown>)["targetTemp"] = this.formGroup.value.ThermostatObjectGroup?.targetTemp as number;
+                (object as Record<string, unknown>)["currentTemp"] = 20 + Math.floor(Math.random() * 10);
                 break;
             case 'SpeakerObject':
-                (object as SpeakerObject).turnedOn = this.formGroup.value.SpeakerObjectGroup?.turnedOn as boolean;
-                (object as SpeakerObject).electricityUsage = Math.floor(Math.random() * 100);
-                (object as SpeakerObject).consomationThreshold = this.formGroup.value.SpeakerObjectGroup?.consomationThreshold as number;
-                (object as SpeakerObject).battery = (this.formGroup.value.SpeakerObjectGroup?.battery ? Math.floor(Math.random() * 100) : undefined);
+                (object as Record<string, unknown>)["turnedOn"] = this.formGroup.value.SpeakerObjectGroup?.turnedOn as boolean;
+                (object as Record<string, unknown>)["electricityUsage"] = Math.floor(Math.random() * 100);
+                (object as Record<string, unknown>)["consomationThreshold"] = this.formGroup.value.SpeakerObjectGroup?.consomationThreshold as number;
+                (object as Record<string, unknown>)["battery"] = (this.formGroup.value.SpeakerObjectGroup?.battery ? Math.floor(Math.random() * 100) : undefined);
                 break;
             case 'VideoProjectorObject':
-                (object as VideoProjectorObject).turnedOn = this.formGroup.value.VideoProjectorObjectGroup?.turnedOn as boolean;
-                (object as VideoProjectorObject).electricityUsage = Math.floor(Math.random() * 100);
-                (object as VideoProjectorObject).consomationThreshold = this.formGroup.value.VideoProjectorObjectGroup?.consomationThreshold as number;
+                (object as Record<string, unknown>)["turnedOn"] = this.formGroup.value.VideoProjectorObjectGroup?.turnedOn as boolean;
+                (object as Record<string, unknown>)["electricityUsage"] = Math.floor(Math.random() * 100);
+                (object as Record<string, unknown>)["consomationThreshold"] = this.formGroup.value.VideoProjectorObjectGroup?.consomationThreshold as number;
                 break;
             case 'ComputerObject':
-                (object as ComputerObject).turnedOn = this.formGroup.value.ComputerObjectGroup?.turnedOn as boolean;
-                (object as ComputerObject).electricityUsage = Math.floor(Math.random() * 100);
-                (object as ComputerObject).consomationThreshold = this.formGroup.value.ComputerObjectGroup?.consomationThreshold as number;
-                (object as ComputerObject).battery = (this.formGroup.value.ComputerObjectGroup?.battery ? Math.floor(Math.random() * 100) : undefined);
+                (object as Record<string, unknown>)["turnedOn"] = this.formGroup.value.ComputerObjectGroup?.turnedOn as boolean;
+                (object as Record<string, unknown>)["electricityUsage"] = Math.floor(Math.random() * 100);
+                (object as Record<string, unknown>)["consomationThreshold"] = this.formGroup.value.ComputerObjectGroup?.consomationThreshold as number;
+                (object as Record<string, unknown>)["battery"] = (this.formGroup.value.ComputerObjectGroup?.battery ? Math.floor(Math.random() * 100) : undefined);
                 break;
             case 'WindowStoreObject':
-                (object as WindowStoreObject).openState = Math.floor(Math.random() * 100);
-                (object as WindowStoreObject).closeTime = (this.formGroup.value.WindowStoreObjectGroup?.closeTime as Date).toISOString();
-                (object as WindowStoreObject).openTime = (this.formGroup.value.WindowStoreObjectGroup?.openTime as Date).toISOString();
-                (object as WindowStoreObject).mode = this.formGroup.value.WindowStoreObjectGroup?.mode as Mode;
+                (object as Record<string, unknown>)["openState"] = Math.floor(Math.random() * 100);
+                (object as Record<string, unknown>)["closeTime"] = (this.formGroup.value.WindowStoreObjectGroup?.closeTime as Date).toISOString();
+                (object as Record<string, unknown>)["openTime"] = (this.formGroup.value.WindowStoreObjectGroup?.openTime as Date).toISOString();
+                (object as Record<string, unknown>)["mode"] = this.formGroup.value.WindowStoreObjectGroup?.mode as Mode;
                 break;
             case 'DoorObject':
-                (object as DoorObject).closeTime = (this.formGroup.value.DoorObjectGroup?.closeTime as Date).toISOString();
-                (object as DoorObject).openTime = (this.formGroup.value.DoorObjectGroup?.openTime as Date).toISOString();
-                (object as DoorObject).locked = this.formGroup.value.DoorObjectGroup?.locked as boolean;
-                (object as DoorObject).closed = this.formGroup.value.DoorObjectGroup?.closed as boolean;
+                (object as Record<string, unknown>)["closeTime"] = (this.formGroup.value.DoorObjectGroup?.closeTime as Date).toISOString();
+                (object as Record<string, unknown>)["openTime"] = (this.formGroup.value.DoorObjectGroup?.openTime as Date).toISOString();
+                (object as Record<string, unknown>)["locked"] = this.formGroup.value.DoorObjectGroup?.locked as boolean;
+                (object as Record<string, unknown>)["closed"] = this.formGroup.value.DoorObjectGroup?.closed as boolean;
                 break;
             case 'WiFiObject':
-                (object as WiFiObject).turnedOn = this.formGroup.value.WiFiObjectGroup?.turnedOn as boolean;
-                (object as WiFiObject).electricityUsage = Math.floor(Math.random() * 100);
-                (object as WiFiObject).type = this.formGroup.value.WiFiObjectGroup?.type as WifiType;
+                (object as Record<string, unknown>)["turnedOn"] = this.formGroup.value.WiFiObjectGroup?.turnedOn as boolean;
+                (object as Record<string, unknown>)["electricityUsage"] = Math.floor(Math.random() * 100);
+                (object as Record<string, unknown>)["type"] = this.formGroup.value.WiFiObjectGroup?.type as WifiType;
                 break;
         }
 
-        this.api.objects.update(object.id, this.auth.clientToken, object).subscribe({
+        this.api.objects.create(object, this.auth.clientToken).subscribe({
             next: () => {
                 this.router.navigate(['/object']);
             },

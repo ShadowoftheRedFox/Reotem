@@ -53,6 +53,8 @@ export class DomoComponent {
     selectIndex = input<number>(-1);
     // callback when checked
     selectCallback = output<number>();
+    // only display the detail in the menu
+    detailOnly = input<boolean>(false);
 
     lightObj = this.obj() as LightObject;
     thermostatObj = this.obj() as ThermostatObject;

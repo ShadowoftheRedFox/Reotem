@@ -16,7 +16,7 @@
                 <mat-form-field>
                     <mat-label>Salle</mat-label>
                     <mat-select [formControl]="filteredRoom" [placeholder]="roomList[0]">
-                        <mat-option value="">Aucun</mat-option>
+                        <mat-option value="">Toutes</mat-option>
                         @for (room of roomList; track room) {
                         <mat-option [value]="room">{{room}}</mat-option>
                         }
@@ -26,7 +26,7 @@
                 <mat-form-field>
                     <mat-label>Bâtiment</mat-label>
                     <mat-select [formControl]="filteredBuilding" [placeholder]="buildingList[0]">
-                        <mat-option value="">Aucun</mat-option>
+                        <mat-option value="">Tous</mat-option>
                         @for (building of buildingList; track building) {
                         <mat-option [value]="building">{{building}}</mat-option>
                         }
@@ -44,9 +44,39 @@
 }
 
 <ng-template #electricity>
-    <p>Electricity</p>
+    <p>Consommation globale: {{electricityData.global}}Wh</p>
+    <p>Consommation journalière: {{electricityData.daily}}Wh</p>
+    <p>Consommation mensuel: {{electricityData.monthly}}Wh</p>
+    <p>Limite de consomation global: {{electricityData.threshold}}Wh
+        @if (electricityData.global>electricityData.threshold){
+        <span style="color:var(--mat-sys-error)">(Dépassé !)</span>
+        }
+    </p>
+    <p>Nombre d'objets sur batterie: {{electricityData.batteries}}</p>
+    @if (objList.length>0) {
+    <!-- pie chart -->
+    }
 </ng-template>
 
 <ng-template #maintenance>
-    <p>Maintenance</p>
+    <p>Objet en état d'erreur:</p>
+    @if (errorObject.length>0) {
+    <div>
+        @for (obj of errorObject; track $index) {
+        <app-domo [obj]="obj" [detailOnly]="true"></app-domo>
+        }
+    </div>
+    } @else {
+    <p matTooltip="pour l'instant...">Tout va bien, il n'y a pas d'erreur</p>
+    }
+    <p>Objet en maintenance:</p>
+    @if (maintainedObject.length>0) {
+    <div>
+        @for (obj of maintainedObject; track $index) {
+        <app-domo [obj]="obj" [detailOnly]="true"></app-domo>
+        }
+    </div>
+    } @else {
+    <p>Il n'y a aucun objet en maintenance</p>
+    }
 </ng-template>

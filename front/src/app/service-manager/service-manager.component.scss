@@ -10,3 +10,8 @@
 ::ng-deep .sidenav-is-mobile .filters {
     justify-content: center;
 }
+
+apx-chart * {
+    min-width: 300px !important;
+    min-height: 300px !important;
+}

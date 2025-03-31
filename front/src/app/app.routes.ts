@@ -77,13 +77,13 @@ export const routes: Routes = [
         path: "service/:tab",
         title: "Services" + TITLE_POSTFIX,
         component: ServiceManagerComponent,
-        canActivate: [authGuard]
+        // canActivate: [authGuard]
     },
     {
         path: "service",
         title: "Services" + TITLE_POSTFIX,
         component: ServiceManagerComponent,
-        canActivate: [authGuard]
+        // canActivate: [authGuard]
     },
     {
         path: "notification",

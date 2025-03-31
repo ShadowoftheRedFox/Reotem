@@ -10,6 +10,8 @@ import { NgTemplateOutlet } from '@angular/common';
 import { CommunicationService } from '../../services/communication.service';
 import { AnyObject } from '../../models/domo.model';
 import { MatSelectModule } from '@angular/material/select';
+import { DomoComponent } from '../../shared/domo/domo.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 export interface Service {
     name: string;
@@ -46,7 +48,9 @@ export const ServiceNames: Service[] = [
         ReactiveFormsModule,
         FormsModule,
         NgTemplateOutlet,
-        MatSelectModule
+        MatSelectModule,
+        DomoComponent,
+        MatTooltipModule,
     ],
     templateUrl: './service-manager.component.html',
     styleUrl: './service-manager.component.scss'
@@ -64,10 +68,16 @@ export class ServiceManagerComponent {
     loading = false;
     objList: AnyObject[] = [];
 
-    electricity = {
+    electricityData = {
         global: 0,
         daily: 0,
+        monthly: 0,
+        threshold: 0,
+        batteries: 0,
     }
+
+    maintainedObject: AnyObject[] = [];
+    errorObject: AnyObject[] = [];
 
     constructor(
         private api: APIService,
@@ -95,12 +105,14 @@ export class ServiceManagerComponent {
         });
 
         // reset list if we change the other
-        this.filteredBuilding.valueChanges.subscribe(() => {
-            this.filteredRoom.reset("", { emitEvent: false });
-        });
-        this.filteredRoom.valueChanges.subscribe(() => {
-            this.filteredBuilding.reset("", { emitEvent: false });
-        });
+        // this.filteredBuilding.valueChanges.subscribe(() => {
+        //     this.filteredRoom.reset("", { emitEvent: false });
+        //     this.updateData();
+        // });
+        // this.filteredRoom.valueChanges.subscribe(() => {
+        //     this.filteredBuilding.reset("", { emitEvent: false });
+        //     this.updateData();
+        // });
     }
 
     updateData() {
@@ -118,12 +130,46 @@ export class ServiceManagerComponent {
     }
 
     updateElectricity() {
+        this.electricityData.global = 0;
+        this.electricityData.batteries = 0;
+
+        const series: number[] = [];
+        const labels: string[] = [];
+
         this.objList.forEach(obj => {
-            console.log(obj);
+            if (obj.electricityUsage &&
+                obj.room.includes(this.filteredRoom.value || '') &&
+                (obj.building || '').includes(this.filteredBuilding.value || '')) {
+                this.electricityData.global += obj.electricityUsage;
+                this.electricityData.threshold += obj.consomationThreshold || 0;
+
+                series.push(obj.electricityUsage);
+                labels.push(obj.name);
+                series.push(obj.electricityUsage);
+                labels.push(obj.name);
+                series.push(obj.electricityUsage);
+                labels.push(obj.name);
+            }
+            if (obj.battery) {
+                this.electricityData.batteries++;
+            }
         });
+
+        this.electricityData.daily = this.electricityData.global * 24;
+        this.electricityData.monthly = this.electricityData.daily * 30;
     }
 
     updateMaintenance() {
-        console.log("");
+        this.maintainedObject = [];
+        this.errorObject = [];
+
+        this.objList.forEach(obj => {
+            if (obj.state === "Maintenance") {
+                this.maintainedObject.push(obj);
+            }
+            if (obj.state === "Erreur") {
+                this.errorObject.push(obj);
+            }
+        });
     }
 }
