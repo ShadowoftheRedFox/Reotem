@@ -10,6 +10,7 @@ import { AuthentificationService } from '../../../services/authentification.serv
 import { CommunicationService } from '../../../services/communication.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+//import Reotem from '../../../../../back/src/util/functions'
 
 @Component({
     selector: 'app-signin',
@@ -85,6 +86,7 @@ export class SigninComponent {
                     const session = res.sessionid;
                     this.com.AuthTokenUpdate.next(session);
                     this.api.auth.get(session).subscribe(res => {
+                        console.log(res)
                         this.com.AuthAccountUpdate.next(res);
                         this.router.navigate(["/"]);
                     });

@@ -20,7 +20,7 @@ UserRouter.post("/verify", async (req, res, next) => {
 UserRouter.post('/:id', async (req, res, next) => {
     try {
         console.log(`Getting user ${req.params.id}...`);
-        const user = await getUser(Number(req.params.id), req.body.session);
+        const user = await getUser(req.params.id, req.body.session);
         res.status(200).json(user);
     } catch (error) {
         next(error);
@@ -30,7 +30,7 @@ UserRouter.post('/:id', async (req, res, next) => {
 UserRouter.put('/:id/image', async (req, res, next) => {
     try {
         console.log(`Changing user ${req.params.id} image...`);
-        const imgString = await postImage(Number(req.params.id), req.body.base64, req.body.session);
+        const imgString = await postImage(req.params.id, req.body.base64, req.body.session);
         res.status(201).json({ name: imgString });
     } catch (error) {
         next(error);

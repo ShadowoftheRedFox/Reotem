@@ -35,7 +35,7 @@ export class UserComponent {
     readonly BaseUrl = environment.api_url;
     readonly UserSexe = UserSexe;
 
-    requestedUser = -1;
+    requestedUser = "";
     // if it's the own user looking at his profile
     privateMode = false;
 
@@ -71,7 +71,7 @@ export class UserComponent {
     ) {
         // get the id params
         route.params.subscribe(res => {
-            this.requestedUser = Number(res["id"]);
+            this.requestedUser = res["id"];
             this.privateMode = auth.client?.id === this.requestedUser;
 
             api.user.get(this.requestedUser, auth.clientToken).subscribe({
@@ -92,6 +92,7 @@ export class UserComponent {
                     }
 
                     if (this.privateMode) {
+                        this.user.age = `${new Date(Date.now()).getFullYear() - new Date(this.user?.age).getFullYear()}`;
                         this.sexeGroup.setValue({ sexe: this.user.sexe, password: '' });
                         this.emailGroup.setValue({ email: this.user.email, password: '' });
                         this.usernameGroup.setValue({ firstname: this.user.firstname, lastname: this.user.lastname, password: '' });
@@ -99,7 +100,7 @@ export class UserComponent {
                 },
                 error: () => {
                     this.user = null;
-                    this.requestedUser = -2;
+                    this.requestedUser = "";
                 },
             });
         });

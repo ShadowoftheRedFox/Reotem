@@ -34,7 +34,7 @@ export class DomoComponent {
     ) { }
 
     obj = input<AnyObject>({
-        id: -1,
+        id: "errors",
         connection: "Déconnecté",
         lastInteraction: new Date(0).toISOString(),
         name: "Erreur",

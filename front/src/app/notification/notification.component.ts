@@ -159,7 +159,7 @@ export class NotificationComponent implements AfterViewInit {
 
     // interactions
 
-    notifIdToIndex(id: number) {
+    notifIdToIndex(id: string) {
         for (let i = 0; i < this.notifications.length; i++) {
             if (this.notifications[i].id == id) return i;
         }
@@ -187,8 +187,8 @@ export class NotificationComponent implements AfterViewInit {
         });
     }
 
-    delete(elementId?: number) {
-        const ids: number[] = [];
+    delete(elementId?: string) {
+        const ids: string[] = [];
         const aid: number[] = [];
 
         this.task().subtasks?.forEach((t, i) => {
@@ -224,8 +224,8 @@ export class NotificationComponent implements AfterViewInit {
         })
     }
 
-    read(elementId?: number) {
-        const ids: number[] = [];
+    read(elementId?: string) {
+        const ids: string[] = [];
         const aid: number[] = [];
 
         this.task().subtasks?.forEach((t, i) => {
@@ -261,8 +261,8 @@ export class NotificationComponent implements AfterViewInit {
         })
     }
 
-    unread(elementId?: number) {
-        const ids: number[] = [];
+    unread(elementId?: string) {
+        const ids: string[] = [];
         const aid: number[] = [];
 
         this.task().subtasks?.forEach((t, i) => {

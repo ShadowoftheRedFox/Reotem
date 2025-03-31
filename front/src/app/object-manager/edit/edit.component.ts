@@ -251,7 +251,7 @@ export class EditComponent {
         if (this.formGroup.invalid) return;
 
         const object: AnyObject = {
-            id: -1,
+            id: "error",
             name: this.formGroup.value.name as string,
             room: this.formGroup.value.room as string,
             building: this.formGroup.value.building as string | undefined,

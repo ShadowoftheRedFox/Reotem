@@ -1,78 +1,81 @@
-import { readFileSync, writeFileSync } from "fs";
+import { writeFileSync } from "fs";
 import path from "path";
 import HttpException from "~/models/HttpException";
 import Reotem from "~/util/functions";
-import { UserRole } from "../../../../front/src/models/api.model"
+import { UserRole } from "../../../../front/src/models/api.model";
 import { parseUser } from "~/util/parser";
 
-const DB_PATH = path.join(__dirname, "..", "..", "..", "db.json");
 const PUBLIC_PATH = path.join(__dirname, "..", "..", "..", "public/");
 
-
 export const checkUserRole = async (role: UserRole, session: string) => {
-    if (!role || !session) {
-        throw new HttpException(404);
-    }
+  if (!role || !session) {
+    throw new HttpException(404);
+  }
 
-    if (!UserRole.includes(role)) {
-        throw new HttpException(400, { role: "unknown" });
-    }
+  if (!UserRole.includes(role)) {
+    throw new HttpException(400, { role: "unknown" });
+  }
 
-    // TODO Reotem.getSession(session:string) -> user.id | undefined
+  // TODO Reotem.getSession(session:string) -> user.id | undefined
+  const userId = (await Reotem.getSession(session))?.id.toString();
 
-    const userId = (await Reotem.getSession(session))?.id;
+  if (userId === undefined || userId === "") {
+    throw new HttpException(401);
+  }
 
-    if (userId === undefined || isNaN(userId) || userId < 0) {
-        throw new HttpException(401);
-    }
+  const userRole = (await Reotem.getUser(userId))?.role;
 
-    const userRole = (await Reotem.getUser(userId))?.role;
-
-    return userRole == role;
-}
-
-export const getUser = async (id: number, session: string = '') => {
-    if (id < 0) {
-        throw new HttpException(400);
-    }
-
-    const user = await Reotem.getUser(id);
-    const userSession = await Reotem.getSession(session);
-
-    if (user == undefined) {
-        throw new HttpException(404);
-    }
-
-    return parseUser(user, user.id === userSession?.id);
+  return userRole == role;
 };
 
-export const postImage = async (id: number, base64: string, session: string) => {
-    if (id < 0) {
-        throw new HttpException(400);
-    }
+export const getUser = async (id: string, session: string = "") => {
+  if (id === "") {
+    throw new HttpException(400);
+  }
 
-    const user = await Reotem.getUser(id);
+  const user = await Reotem.getUser(id);
+  const userSession = await Reotem.getSession(session);
 
-    if (user == undefined) {
-        throw new HttpException(404);
-    }
+  if (user == undefined) {
+    throw new HttpException(404);
+  }
 
-    const DB = JSON.parse(readFileSync(DB_PATH, 'utf8'));
-    if (DB.sessions[session] != user.id) {
-        throw new HttpException(401);
-    }
+  //TODO TO DELETE IF ALL USERS HAVE ISO DATE FORMAT (Users Remaining: Ploof and Admin [if admin has age])
+  if (!isNaN(parseInt(user.age)) && parseInt(user.age) < 120) {
+    user.age = `${new Date(Date.now()).getFullYear() - parseInt(user.age)}-01-01T00:00:01.972Z`;
+    await Reotem.updateUser(user.id, user); 
+  }
 
-    // Captured img [base64 string]
-    console.log(base64)
+  return parseUser(user, user.id === userSession?.id);
+};
 
-    // Convert base64 --> img.jpeg
-    const buffer = Buffer.from(base64, 'base64');
-    console.log(buffer)
+export const postImage = async (id: string, base64: string, session: string) => {
+  if (id === "") {
+    throw new HttpException(400);
+  }
 
-    const imgName = id + '.jpeg';
+  const user = await Reotem.getUser(id);
 
-    // save image under the account id
-    writeFileSync(PUBLIC_PATH + imgName, buffer)
+  if (user == undefined) {
+    throw new HttpException(404);
+  }
 
-    return imgName;
-}
+  const currentSession = await Reotem.getSession(session);
+  if (currentSession?.id != user.id) {
+    throw new HttpException(401);
+  }
+
+  // Captured img [base64 string]
+  console.log(base64);
+
+  // Convert base64 --> img.jpeg
+  const buffer = Buffer.from(base64, "base64");
+  console.log(buffer);
+
+  const imgName = id + ".jpeg";
+
+  // save image under the account id
+  writeFileSync(PUBLIC_PATH + imgName, buffer);
+
+  return imgName;
+};

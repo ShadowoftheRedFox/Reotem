@@ -31,8 +31,7 @@ SessionRouter.post('/signin', async (req, res, next) => {
 
 SessionRouter.delete('/disconnect/:id', async (req, res, next) => {
     try {
-        console.log(`deleting session ${req.params.id}`);
-        if (await deleteSession(Number(req.params.id), req.body.session)) {
+        if (await deleteSession(req.params.id, req.body.session)) {
             res.status(200).json();
         } else {
             res.status(400).json();
