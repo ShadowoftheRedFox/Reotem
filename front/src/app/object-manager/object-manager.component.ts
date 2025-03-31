@@ -56,6 +56,7 @@ export class ObjectManagerComponent {
 
     selectedObjects = new Map<number, boolean>();
     anySlected = signal(false);
+    onlyOne = signal(false);
 
     readonly actionsList: Action[] = [
         {
@@ -64,6 +65,14 @@ export class ObjectManagerComponent {
             callback: () => {
                 this.router.navigate(['object', 'create']);
             }
+        },
+        {
+            name: "Modifier",
+            icon: "edit",
+            callback: () => {
+                this.router.navigate(['object', 'edit'])
+            },
+            disabled: this.onlyOne
         },
         {
             name: "Effacer",
@@ -166,12 +175,15 @@ export class ObjectManagerComponent {
     domoSelected(index: number) {
         this.selectedObjects.set(index, !(this.selectedObjects.get(index) || false));
         let temp = false;
+        let count = 0;
         this.selectedObjects.forEach((v) => {
             if (v === true) {
                 temp = true;
+                count++;
             }
         });
         this.anySlected.set(temp);
+        this.onlyOne.set(count === 1);
     }
 
     deleteObjects() {

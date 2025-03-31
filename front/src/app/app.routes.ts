@@ -18,6 +18,7 @@ import { ObjectManagerComponent } from './object-manager/object-manager.componen
 import { ServiceManagerComponent } from './service-manager/service-manager.component';
 import { authGuard } from '../guards/auth.guard';
 import { CreateComponent } from './object-manager/create/create.component';
+import { EditComponent } from './object-manager/edit/edit.component';
 
 const TITLE_POSTFIX = " - " + environment.title;
 
@@ -52,6 +53,12 @@ export const routes: Routes = [
         path: "object/create",
         title: "Création d'objet" + TITLE_POSTFIX,
         component: CreateComponent,
+        canActivate: [authGuard]
+    },
+    {
+        path: "object/edit",
+        title: "Édition d'objet" + TITLE_POSTFIX,
+        component: EditComponent,
         canActivate: [authGuard]
     },
     {
