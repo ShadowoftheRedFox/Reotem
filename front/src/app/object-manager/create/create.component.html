@@ -189,16 +189,20 @@
         </mat-form-field>
         <mat-form-field>
             <mat-label>Heure d'ouverture</mat-label>
-            <input matInput type="time" formControlName="openTime" />
+            <input matInput [matTimepicker]="pickerOpenWindowStore" formControlName="openTime" />
+            <mat-timepicker-toggle matIconSuffix [for]="pickerOpenWindowStore" />
+            <mat-timepicker #pickerOpenWindowStore interval="30min"></mat-timepicker>
             @if (WindowStoreObjectGroup.controls.openTime.invalid) {
-            <mat-error>{{modeErrorMessage(WindowStoreObjectGroup.controls.openTime)}}</mat-error>
+            <mat-error>{{timeErrorMessage(WindowStoreObjectGroup.controls.openTime)}}</mat-error>
             }
         </mat-form-field>
         <mat-form-field>
             <mat-label>Heure de fermeture</mat-label>
-            <input matInput type="time" formControlName="closeTime" />
+            <input matInput [matTimepicker]="pickerCloseWindowStore" formControlName="closeTime" />
+            <mat-timepicker-toggle matIconSuffix [for]="pickerCloseWindowStore" />
+            <mat-timepicker #pickerCloseWindowStore interval="30min"></mat-timepicker>
             @if (WindowStoreObjectGroup.controls.closeTime.invalid) {
-            <mat-error>{{modeErrorMessage(WindowStoreObjectGroup.controls.closeTime)}}</mat-error>
+            <mat-error>{{timeErrorMessage(WindowStoreObjectGroup.controls.closeTime)}}</mat-error>
             }
         </mat-form-field>
         <button mat-raised-button type="submit"
@@ -208,16 +212,20 @@
     <form [formGroup]="DoorObjectGroup" (ngSubmit)="addObject()" class="flex flex-col">
         <mat-form-field>
             <mat-label>Heure d'ouverture</mat-label>
-            <input matInput type="time" formControlName="openTime" />
+            <input matInput [matTimepicker]="pickerOpenDoor" formControlName="openTime" />
+            <mat-timepicker-toggle matIconSuffix [for]="pickerOpenDoor" />
+            <mat-timepicker #pickerOpenDoor interval="30min"></mat-timepicker>
             @if (DoorObjectGroup.controls.openTime.invalid) {
-            <mat-error>{{modeErrorMessage(DoorObjectGroup.controls.openTime)}}</mat-error>
+            <mat-error>{{timeErrorMessage(DoorObjectGroup.controls.openTime)}}</mat-error>
             }
         </mat-form-field>
         <mat-form-field>
             <mat-label>Heure de fermeture</mat-label>
-            <input matInput type="time" formControlName="closeTime" />
+            <input matInput [matTimepicker]="pickerCloseDoor" formControlName="closeTime" />
+            <mat-timepicker-toggle matIconSuffix [for]="pickerCloseDoor" />
+            <mat-timepicker #pickerCloseDoor interval="30min"></mat-timepicker>
             @if (DoorObjectGroup.controls.closeTime.invalid) {
-            <mat-error>{{modeErrorMessage(DoorObjectGroup.controls.closeTime)}}</mat-error>
+            <mat-error>{{timeErrorMessage(DoorObjectGroup.controls.closeTime)}}</mat-error>
             }
         </mat-form-field>
         <div>
@@ -245,8 +253,7 @@
         <div>
             <mat-checkbox formControlName="turnedOn">Allumé</mat-checkbox>
         </div>
-        <button mat-raised-button type="submit"
-            [disabled]="formGroup.invalid || WiFiObjectGroup.invalid">Valider</button>
+        <button mat-raised-button type="submit" [disabled]="formGroup.invalid">Valider</button>
     </form>
     } @else if (formGroup.value.objectClass === "Erreur") {
     <p>Cette classe est uniquement pour le développement.</p>

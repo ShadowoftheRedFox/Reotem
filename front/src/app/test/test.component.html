@@ -12,3 +12,10 @@
 <a [routerLink]="['/object']">
     <button mat-button>Object</button>
 </a>
+
+<mat-form-field>
+    <mat-label>Pick a time</mat-label>
+    <input matInput [matTimepicker]="picker">
+    <mat-timepicker-toggle matIconSuffix [for]="picker" />
+    <mat-timepicker #picker />
+</mat-form-field>
