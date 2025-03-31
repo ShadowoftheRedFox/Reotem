@@ -1,4 +1,4 @@
-@if (obj().id!=="error") {
+@if (obj()._id!=="error") {
 <div [ngTemplateOutlet]="objectClassToTemplate(light, thermostat, speaker, videoprojector, computer, windowstore, door, wifi, error, base)"
     class="mobile-width">
 </div>
@@ -51,7 +51,7 @@
                 <mat-icon>settings</mat-icon>
                 Paramétrer
             </button>
-            <mat-menu #menu>
+            <mat-menu #menu xPosition="after">
                 <button mat-menu-item (click)="objDetail()">
                     <mat-icon>view_in_ar</mat-icon>
                     <span>Détail</span>
@@ -83,11 +83,13 @@
                 <mat-icon>settings</mat-icon>
                 Paramétrer
             </button>
-            <mat-menu #menu>
+            <mat-menu #menu xPosition="after">
+                @if (detailOnly()!==true) {
                 <button mat-menu-item (click)="objTurnOnOff()" [disabled]="obj().state!=='Normal'">
                     <mat-icon>{{lightObj.turnedOn?"light_off":"lightbulb"}}</mat-icon>
                     <span>{{lightObj.turnedOn?"Éteindre":"Allumer"}}</span>
                 </button>
+                }
                 <button mat-menu-item (click)="objDetail()">
                     <mat-icon>view_in_ar</mat-icon>
                     <span>Détail</span>
@@ -119,11 +121,13 @@
                 <mat-icon>settings</mat-icon>
                 Paramétrer
             </button>
-            <mat-menu #menu>
+            <mat-menu #menu xPosition="after">
+                @if (detailOnly()!==true) {
                 <button mat-menu-item (click)="objTurnOnOff()" [disabled]="obj().state!=='Normal'">
                     <mat-icon [class]="thermostatObj.turnedOn?'icon-red':'icon-green'">power_settings_new</mat-icon>
                     <span>{{thermostatObj.turnedOn?"Éteindre":"Allumer"}}</span>
                 </button>
+                }
                 <button mat-menu-item (click)="objDetail()">
                     <mat-icon>view_in_ar</mat-icon>
                     <span>Détail</span>
@@ -158,11 +162,13 @@
                 <mat-icon>settings</mat-icon>
                 Paramétrer
             </button>
-            <mat-menu #menu>
+            <mat-menu #menu xPosition="after">
+                @if (detailOnly()!==true) {
                 <button mat-menu-item (click)="objTurnOnOff()" [disabled]="obj().state!=='Normal'">
                     <mat-icon [class]="speakerObj.turnedOn?'icon-red':'icon-green'">power_settings_new</mat-icon>
                     <span>{{speakerObj.turnedOn?"Éteindre":"Allumer"}}</span>
                 </button>
+                }
                 <button mat-menu-item (click)="objDetail()">
                     <mat-icon>view_in_ar</mat-icon>
                     <span>Détail</span>
@@ -194,11 +200,13 @@
                 <mat-icon>settings</mat-icon>
                 Paramétrer
             </button>
-            <mat-menu #menu>
+            <mat-menu #menu xPosition="after">
+                @if (detailOnly()!==true) {
                 <button mat-menu-item (click)="objTurnOnOff()" [disabled]="obj().state!=='Normal'">
                     <mat-icon [class]="videoprojectorObj.turnedOn?'icon-red':'icon-green'">power_settings_new</mat-icon>
                     <span>{{videoprojectorObj.turnedOn?"Éteindre":"Allumer"}}</span>
                 </button>
+                }
                 <button mat-menu-item (click)="objDetail()">
                     <mat-icon>view_in_ar</mat-icon>
                     <span>Détail</span>
@@ -230,11 +238,13 @@
                 <mat-icon>settings</mat-icon>
                 Paramétrer
             </button>
-            <mat-menu #menu>
+            <mat-menu #menu xPosition="after">
+                @if (detailOnly()!==true) {
                 <button mat-menu-item (click)="objTurnOnOff()" [disabled]="obj().state!=='Normal'">
                     <mat-icon [class]="computerObj.turnedOn?'icon-red':'icon-green'">power_settings_new</mat-icon>
                     <span>{{computerObj.turnedOn?"Éteindre":"Allumer"}}</span>
                 </button>
+                }
                 <button mat-menu-item (click)="objDetail()">
                     <mat-icon>view_in_ar</mat-icon>
                     <span>Détail</span>
@@ -265,7 +275,7 @@
                 <mat-icon>settings</mat-icon>
                 Paramétrer
             </button>
-            <mat-menu #menu>
+            <mat-menu #menu xPosition="after">
                 <button mat-menu-item (click)="objDetail()">
                     <mat-icon>view_in_ar</mat-icon>
                     <span>Détail</span>
@@ -296,12 +306,14 @@
                 <mat-icon>settings</mat-icon>
                 Paramétrer
             </button>
-            <mat-menu #menu>
+            <mat-menu #menu xPosition="after">
+                @if (detailOnly()!==true) {
                 <button mat-menu-item (click)="doorLock()">
                     <mat-icon
                         [class]="doorObj.locked?'icon-green':'icon-red'">{{doorObj.locked?'lock_open':'lock'}}</mat-icon>
                     <span>{{doorObj.locked?'Dévérouiller':'Vérouiller'}}</span>
                 </button>
+                }
                 <button mat-menu-item (click)="objDetail()">
                     <mat-icon>view_in_ar</mat-icon>
                     <span>Détail</span>
@@ -333,11 +345,13 @@
                 <mat-icon>settings</mat-icon>
                 Paramétrer
             </button>
-            <mat-menu #menu>
+            <mat-menu #menu xPosition="after">
+                @if (detailOnly()!==true) {
                 <button mat-menu-item (click)="objTurnOnOff()" [disabled]="obj().state!=='Normal'">
                     <mat-icon>{{wifiObj.turnedOn?"light_off":"lightbulb"}}</mat-icon>
                     <span>{{wifiObj.turnedOn?"Éteindre":"Allumer"}}</span>
                 </button>
+                }
                 <button mat-menu-item (click)="objDetail()">
                     <mat-icon>view_in_ar</mat-icon>
                     <span>Détail</span>
@@ -367,7 +381,7 @@
                 <mat-icon>settings</mat-icon>
                 Paramétrer
             </button>
-            <mat-menu #menu>
+            <mat-menu #menu xPosition="after">
                 <button mat-menu-item (click)="objDetail()">
                     <mat-icon>view_in_ar</mat-icon>
                     <span>Détail</span>

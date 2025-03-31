@@ -1,5 +1,14 @@
 import { UserRole, UserLevel } from "./api.model";
 
+type Only<T, U> = {
+    [P in keyof T]: T[P]
+} &
+    Omit<{
+        [P in keyof U]?: never
+    }, keyof T>;
+
+type Either<T, U> = Only<T, U> | Only<U, T>;
+
 export const Mode = [
     "Automatique",
     "Manuel"
@@ -41,19 +50,29 @@ export const WifiType = [
 ] as const;
 export type WifiType = typeof WifiType[number];
 
-export type AnyObject = BaseObject |
-    LightObject |
-    ThermostatObject |
-    SpeakerObject |
-    VideoProjectorObject |
-    ComputerObject |
-    WindowStoreObject |
-    DoorObject |
-    WiFiObject |
-    BaseObjectError;
+export type AnyObject =
+    Either<BaseObject,
+        Either<LightObject,
+            Either<ThermostatObject,
+                Either<SpeakerObject,
+                    Either<VideoProjectorObject,
+                        Either<ComputerObject,
+                            Either<WindowStoreObject,
+                                Either<DoorObject,
+                                    Either<WiFiObject,
+                                        BaseObjectError
+                                    >
+                                >
+                            >
+                        >
+                    >
+                >
+            >
+        >
+    >;
 
 export interface BaseObject {
-    id: string;
+    _id: string;
     name: string;
     room: string;
     building?: string;
@@ -66,11 +85,11 @@ export interface BaseObject {
 }
 
 interface BaseObjectError extends BaseObject {
-    objectClass: "Erreur"
+    objectClass: "Erreur";
 }
 
 export interface BaseObjectOnly extends BaseObject {
-    objectClass: "BaseObject"
+    objectClass: "BaseObject";
 }
 
 export interface LightObject extends BaseObject {
@@ -134,9 +153,9 @@ export interface DoorObject extends BaseObject {
 
 export interface WiFiObject extends BaseObject {
     objectClass: "WiFiObject";
+    electricityUsage: number;
     type: WifiType;
     turnedOn: boolean;
-    electricityUsage: number;
 }
 
 // alarms (fire or security)
