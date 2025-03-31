@@ -40,8 +40,9 @@ export const getUser = async (id: number, session: string = "") => {
     throw new HttpException(404);
   }
 
-  if (!isNaN(parseInt(user.age))) {
-    user.age = new Date(`${new Date(Date.now()).getFullYear() - parseInt(user.age)}-01-01T00:00:00.000Z`).toISOString();
+  //TODO TO DELETE IF ALL USERS HAVE ISO DATE FORMAT (Users Remaining: Ploof and Admin [if admin has age])
+  if (!isNaN(parseInt(user.age)) && parseInt(user.age) < 120) {
+    user.age = `${new Date(Date.now()).getFullYear() - parseInt(user.age)}-01-01T00:00:01.972Z`;
     await Reotem.updateUser(user.id, user); 
   }
 
