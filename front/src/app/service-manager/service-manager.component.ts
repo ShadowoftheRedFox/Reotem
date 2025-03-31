@@ -204,10 +204,14 @@ export class ServiceManagerComponent {
         this.errorObject = [];
 
         this.objList.forEach(obj => {
-            if (obj.state === "Maintenance") {
+            if (obj.state === "Maintenance" &&
+                obj.room.includes(this.filteredRoom.value || '') &&
+                (obj.building || '').includes(this.filteredBuilding.value || '')) {
                 this.maintainedObject.push(obj);
             }
-            if (obj.state === "Erreur") {
+            if (obj.state === "Erreur" &&
+                obj.room.includes(this.filteredRoom.value || '') &&
+                (obj.building || '').includes(this.filteredBuilding.value || '')) {
                 this.errorObject.push(obj);
             }
         });
