@@ -17,7 +17,7 @@ const userSchemaDefinition = {
   lvl: { type: String, default: "Débutant" },
   challenge: String, // can be undefined when is not challenged
   validated: String, // is a secret token, is defined when user has not validated his email yet
-  adminValidated: { type: Boolean, default: false },
+  adminValidated: { type: Boolean, default: null },
   lastLogin: String,
 };
 

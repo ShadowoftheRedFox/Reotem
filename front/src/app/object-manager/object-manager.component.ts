@@ -86,7 +86,8 @@ export class ObjectManagerComponent {
         {
             name: "Dupliquer",
             icon: "content_copy",
-            callback: () => this.duplicateObjects(),
+            callback: () =>
+                this.duplicateObjects(Array.from(this.selectedObjects.keys())),
             disabled: this.anySelected,
         },
         {
@@ -213,16 +214,37 @@ export class ObjectManagerComponent {
         // TODO api call
         indexes.forEach((index) => {
             console.log(this.objectList[index]);
-            this.api.objects.delete(
-                this.objectList[index].id,
-                this.auth.clientToken
-            );
+            this.api.objects
+                .delete(this.objectList[index].id, this.auth.clientToken)
+                .subscribe({
+                    next: (res) => {
+                        console.log(res)
+                    },
+                    error: (err) => {
+                        console.log(err)
+                    },
+                });;
         });
     }
 
-    duplicateObjects() {
-        console.log("Not implemented yet");
+    duplicateObjects(indexes: number[]) {
         // TODO create new objects based on those ones, api call
+        console.log("Dupping objects ", indexes);
+        console.log(this.objectList);
+        // TODO api call
+        indexes.forEach((index) => {
+            console.log(this.objectList[index]);
+            this.api.objects
+                .dupplicate(this.objectList[index].id, this.auth.clientToken)
+                .subscribe({
+                    next: (res) => {
+                        console.log(res);
+                    },
+                    error: (err) => {
+                        console.log(err);
+                    },
+                });
+        });
     }
 
     refresh() {

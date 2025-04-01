@@ -8,7 +8,7 @@ import { CommunicationService } from './communication.service';
 import { AnyObject } from '../models/domo.model';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: "root",
 })
 export class APIService {
     constructor(
@@ -20,7 +20,6 @@ export class APIService {
         this.authenticate();
     }
 
-
     readonly auth = {
         login: async (mail: string, password: string) => {
             // authenticate the user and return a session token if success
@@ -28,98 +27,237 @@ export class APIService {
 
             let res: LoginChallenge;
             try {
-                res = await lastValueFrom(this.sendApiRequest<LoginChallenge>("POST", "signin", { mail: mail }, "Challenge auth"));
+                res = await lastValueFrom(
+                    this.sendApiRequest<LoginChallenge>(
+                        "POST",
+                        "signin",
+                        { mail: mail },
+                        "Challenge auth"
+                    )
+                );
             } catch (e) {
-                console.error(e)
+                console.error(e);
                 return throwError(() => e);
             }
 
             const hash_password = await bcrypt.hash(password, res.salt);
-            const hash_challenge = await this.hash(res.challenge + hash_password);
+            const hash_challenge = await this.hash(
+                res.challenge + hash_password
+            );
 
             //the user send the hash of the challenge and the password
-            return this.sendApiRequest<Login>("POST", "signin", { mail: mail, hash: hash_challenge }, "Authenticating");
+            return this.sendApiRequest<Login>(
+                "POST",
+                "signin",
+                { mail: mail, hash: hash_challenge },
+                "Authenticating"
+            );
         },
-        create: (firstname: string, lastname: string, email: string, age: number, role: UserRole, sexe: UserSexe, password: string) => {
-            return this.sendApiRequest<NewUser>("POST", "signup/", { firstname: firstname, lastname: lastname, email: email, age: age, role: role, sexe: sexe, password: password }, "Creating account");
+        create: (
+            firstname: string,
+            lastname: string,
+            email: string,
+            age: number,
+            role: UserRole,
+            sexe: UserSexe,
+            password: string
+        ) => {
+            return this.sendApiRequest<NewUser>(
+                "POST",
+                "signup/",
+                {
+                    firstname: firstname,
+                    lastname: lastname,
+                    email: email,
+                    age: age,
+                    role: role,
+                    sexe: sexe,
+                    password: password,
+                },
+                "Creating account"
+            );
         },
         get: (sessionid: string) => {
-            return this.sendApiRequest<User>("GET", "signin/" + sessionid, undefined, "Getting account");
+            return this.sendApiRequest<User>(
+                "GET",
+                "signin/" + sessionid,
+                undefined,
+                "Getting account"
+            );
         },
         disconnect: () => {
             if (!this.authis.client) return;
             const session = this.authis.clientToken;
             const id = this.authis.client.id;
-            this.sendApiRequest("DELETE", "disconnect/" + id, { session: session }, "Disconnecting").subscribe({
+            this.sendApiRequest(
+                "DELETE",
+                "disconnect/" + id,
+                { session: session },
+                "Disconnecting"
+            ).subscribe({
                 next: () => {
                     this.authis.deleteCookie("session");
                     this.authis.deleteCookie("UID");
                     this.com.AuthAccountUpdate.next(null);
                     this.com.AuthTokenUpdate.next("");
                 },
-                error: err => {
+                error: (err) => {
                     console.error(err);
-                }
+                },
             });
         },
         validate: (token: string, session: string) => {
-            return lastValueFrom(this.sendApiRequest<boolean>("POST", "signup/validating", { token: token, session: session }))
+            return lastValueFrom(
+                this.sendApiRequest<boolean>("POST", "signup/validating", {
+                    token: token,
+                    session: session,
+                })
+            );
         },
         tokenExists: async (token: string) => {
-            return lastValueFrom(this.sendApiRequest<boolean>("POST", "signup/token", { token: token }));
+            return lastValueFrom(
+                this.sendApiRequest<boolean>("POST", "signup/token", {
+                    token: token,
+                })
+            );
         },
         verifyRole: (role: UserRole, session: string) => {
-            return this.sendApiRequest<boolean>("POST", "user/verify", { role: role, session: session }, "Verifying role");
-        }
-    }
+            return this.sendApiRequest<boolean>(
+                "POST",
+                "user/verify",
+                { role: role, session: session },
+                "Verifying role"
+            );
+        },
+    };
 
     readonly user = {
         get: (id: string, session?: string) => {
-            return this.sendApiRequest<User>("POST", "user/" + id, { session: session }, `Getting user ${id}`);
+            return this.sendApiRequest<User>(
+                "POST",
+                "user/" + id,
+                { session: session },
+                `Getting user ${id}`
+            );
         },
         changeImg: (id: string, base64: string, session: string) => {
-            return this.sendApiRequest<{ name: string }>("PUT", "user/" + id + "/image/", { base64: base64, session: session }, `Changing user ${id} image`);
-        }
-    }
+            return this.sendApiRequest<{ name: string }>(
+                "PUT",
+                "user/" + id + "/image/",
+                { base64: base64, session: session },
+                `Changing user ${id} image`
+            );
+        },
+    };
 
     readonly notifications = {
         getNum: (id: string, session: string) => {
-            return this.sendApiRequest<NotificationAmount>("POST", "user/notification/num/" + id, { session: session }, "Getting notifications amount");
+            return this.sendApiRequest<NotificationAmount>(
+                "POST",
+                "user/notification/num/" + id,
+                { session: session },
+                "Getting notifications amount"
+            );
         },
         getAll: (id: string, session: string, query: NotificationQuery) => {
-            return this.sendApiRequest<Notification[]>("POST", "user/notification/" + id, { session: session, query: query }, "Getting notifications");
+            return this.sendApiRequest<Notification[]>(
+                "POST",
+                "user/notification/" + id,
+                { session: session, query: query },
+                "Getting notifications"
+            );
         },
         delete: (ids: string[], session: string) => {
-            return this.sendApiRequest("DELETE", "user/notification/", { ids: ids, session: session }, "Delete notification");
+            return this.sendApiRequest(
+                "DELETE",
+                "user/notification/",
+                { ids: ids, session: session },
+                "Delete notification"
+            );
         },
         read: (ids: string[], session: string) => {
-            return this.sendApiRequest("PUT", "user/notification/read", { ids: ids, session: session }, "Read notification");
+            return this.sendApiRequest(
+                "PUT",
+                "user/notification/read",
+                { ids: ids, session: session },
+                "Read notification"
+            );
         },
         unread: (ids: string[], session: string) => {
-            return this.sendApiRequest("PUT", "user/notification/unread", { ids: ids, session: session }, "Unread notification");
+            return this.sendApiRequest(
+                "PUT",
+                "user/notification/unread",
+                { ids: ids, session: session },
+                "Unread notification"
+            );
         },
-    }
+    };
 
     readonly objects = {
         all: (query: ObjectQuery) => {
-            return this.sendApiRequest<{ objects: AnyObject[], total: number }>("GET", "objects", query, "Getting all objects");
+            return this.sendApiRequest<{ objects: AnyObject[]; total: number }>(
+                "GET",
+                "objects",
+                query,
+                "Getting all objects"
+            );
         },
         get: (id: string) => {
-            return this.sendApiRequest<AnyObject>("GET", "objects/" + id, {}, "Getting object " + id);
+            return this.sendApiRequest<AnyObject>(
+                "GET",
+                "objects/" + id,
+                {},
+                "Getting object " + id
+            );
         },
-        update: <T = AnyObject>(id: string, session: string, changes: Partial<{ [key in keyof T]: T[key] }>) => {
-            return this.sendApiRequest("PUT", "objects/update/" + id, { params: changes, session: session }, "Updating object " + id);
+        update: <T = AnyObject>(
+            id: string,
+            session: string,
+            changes: Partial<{ [key in keyof T]: T[key] }>
+        ) => {
+            return this.sendApiRequest(
+                "PUT",
+                "objects/update/" + id,
+                { params: changes, session: session },
+                "Updating object " + id
+            );
         },
         delete: (id: string, session: string) => {
-            return this.sendApiRequest("DELETE", "objects/delete/" + id, { session: session }, "Deleting " + id);
+            return this.sendApiRequest(
+                "DELETE",
+                "objects/delete/" + id,
+                { session: session },
+                "Deleting " + id
+            );
+        },
+        dupplicate: (id: string, session: string) => {
+            return this.sendApiRequest(
+                "POST",
+                "objects/dupplicate/" + id,
+                { session: session },
+                "Dupping object"
+            );
         },
         create: (object: AnyObject, session: string) => {
-            return this.sendApiRequest("POST", "objects/create/", { session: session, object: object }, "Creating object");
-        }
-    }
+            return this.sendApiRequest(
+                "POST",
+                "objects/create/",
+                { session: session, object: object },
+                "Creating object"
+            );
+        },
+    };
 
-    private sendApiRequest<T>(method: "GET" | "POST" | "PUT" | "DELETE" | "PATCH", endpoint: string, parameters: object = {}, message: string | undefined = undefined) {
-        const urlParameters = (parameters != undefined && Object.keys(parameters).length > 0) ? "?data=" + JSON.stringify(parameters) : "";
+    private sendApiRequest<T>(
+        method: "GET" | "POST" | "PUT" | "DELETE" | "PATCH",
+        endpoint: string,
+        parameters: object = {},
+        message: string | undefined = undefined
+    ) {
+        const urlParameters =
+            parameters != undefined && Object.keys(parameters).length > 0
+                ? "?data=" + JSON.stringify(parameters)
+                : "";
         // const headers = new HttpHeaders({ "Content-Type": "application/x-www-form-urlencoded" });
         // const headers = new HttpHeaders({ "Content-Type": "multipart/form-data" });
 
@@ -137,17 +275,19 @@ export class APIService {
             case "PATCH":
                 return this.http.patch<T>(baseUrl + endpoint, parameters);
             case "DELETE":
-                return this.http.delete<T>(baseUrl + endpoint, { body: parameters });
+                return this.http.delete<T>(baseUrl + endpoint, {
+                    body: parameters,
+                });
         }
-
-
     }
 
     //a function to hash a string with sha256 and return the hash in hex
     private async hash(string: string) {
         const sourceBytes = new TextEncoder().encode(string);
         const disgest = await crypto.subtle.digest("SHA-256", sourceBytes);
-        const hash = Array.from(new Uint8Array(disgest)).map(b => b.toString(16).padStart(2, "0")).join("");
+        const hash = Array.from(new Uint8Array(disgest))
+            .map((b) => b.toString(16).padStart(2, "0"))
+            .join("");
         return hash;
     }
 
@@ -156,14 +296,14 @@ export class APIService {
         const session = this.authis.getCookie("session");
         if (session.length == 0) return;
         this.auth.get(session).subscribe({
-            next: res => {
+            next: (res) => {
                 this.com.AuthTokenUpdate.next(session);
                 this.com.AuthAccountUpdate.next(res);
             },
             error: () => {
                 console.warn("Unknown token, removing");
                 this.com.AuthAccountUpdate.next(null);
-            }
+            },
         });
     }
 }

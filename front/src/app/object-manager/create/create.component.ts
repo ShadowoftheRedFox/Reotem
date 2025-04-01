@@ -15,7 +15,7 @@ import { MatTimepickerModule } from '@angular/material/timepicker';
 import { DateAdapter, provideNativeDateAdapter } from '@angular/material/core';
 
 @Component({
-    selector: 'app-create',
+    selector: "app-create",
     imports: [
         MatIconModule,
         MatButtonModule,
@@ -44,7 +44,9 @@ export class CreateComponent {
     readonly wifis = WifiType;
 
     //#region Forms
-    customValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+    customValidator: ValidatorFn = (
+        control: AbstractControl
+    ): ValidationErrors | null => {
         const e = { subgroupInvalid: true };
         const ctrl = control as FormGroup;
 
@@ -159,9 +161,11 @@ export class CreateComponent {
     ErreurListener() {
         this.formGroup.valueChanges.subscribe(() => {
             if (this.formGroup.value.objectClass == "Erreur" && !isDevMode()) {
-                this.formGroup.controls.objectClass.setErrors({ only_dev: true });
+                this.formGroup.controls.objectClass.setErrors({
+                    only_dev: true,
+                });
             }
-        })
+        });
     }
     //#endregion
 
@@ -181,6 +185,8 @@ export class CreateComponent {
         } else if (ctrl.hasError("only_dev")) {
             return "Uniquement pour les tests";
         }
+        console.log(ctrl.errors);
+        // console.log(this.formGroup.errors);
         return "";
     }
 
@@ -270,7 +276,7 @@ export class CreateComponent {
             connection: this.formGroup.value.connection as Connection,
             state: this.formGroup.value.state as ObjectState,
             objectClass: this.formGroup.value.objectClass as ObjectClass,
-        }
+        };
 
         switch (this.formGroup.value.objectClass as ObjectClass) {
             case 'BaseObject':
@@ -329,13 +335,14 @@ export class CreateComponent {
 
         this.api.objects.create(object, this.auth.clientToken).subscribe({
             next: () => {
-                this.router.navigate(['/object']);
+                this.router.navigate(["/object"]);
             },
             error: () => {
                 this.popup.openSnackBar({
-                    message: "Échec de l'interaction"
+                    message: "Échec de l'interaction",
                 });
-            }
-        })
+            },
+        });
     }
+
 }

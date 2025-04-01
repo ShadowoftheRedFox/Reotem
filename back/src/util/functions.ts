@@ -10,9 +10,12 @@ const excludes = ["collection", "_doc", "db", "id", "__v", "schema"];
 const Reotem = {
   addUser: async (user: object) => {
     const objectId = new Types.ObjectId();
-    const merged = Object.assign(user, {_id: objectId, id: objectId.toString()});
+    const merged = Object.assign(user, { _id: objectId, id: objectId.toString() });
     const newUser = new models.User(merged);
-    await newUser.save().then((u) => console.log(`New user -> ${u.email}`));
+    await newUser.save().then((u) => {
+      console.log(`New user -> ${u.email}`);
+      return u;
+    });
   },
   getUser: async (id: string) => {
     const data = await models.User.findOne({ id: id });
@@ -52,7 +55,10 @@ const Reotem = {
   addSession: async (session: object) => {
     const merged = Object.assign(session);
     const newSession = new models.Session(merged);
-    await newSession.save().then((u) => console.log(`New session for user -> ${u.id}`));
+    await newSession.save().then((u) => {
+      console.log(`New session for user -> ${u.id}`);
+      return u;
+    });
   },
   getSession: async (token: string) => {
     const data = await models.Session.findOne({ token: token });
@@ -83,7 +89,10 @@ const Reotem = {
   addVerification: async (verification: object) => {
     const merged = Object.assign(verification);
     const newVerification = new models.Verification(merged);
-    await newVerification.save().then((u) => console.log(`New verification for user -> ${u.id}`));
+    await newVerification.save().then((u) => {
+      console.log(`New verification for user -> ${u.id}`);
+      return u;
+    });
   },
   getVerification: async (token: string) => {
     const data = await models.Verification.findOne({ token: token });
@@ -109,7 +118,10 @@ const Reotem = {
   addNotifications: async (notifications: object) => {
     const merged = Object.assign(notifications);
     const newNotification = new models.Notification(merged);
-    await newNotification.save().then((u) => console.log(`New notification table for user -> ${u.id}`));
+    await newNotification.save().then((u) => {
+      console.log(`New notification table for user -> ${u.id}`);
+      return u;
+    });
   },
   getNotification: async (userId: string, query: NotificationQuery) => {
     const data = await models.Notification.findOne({ id: userId, notifications: { $elemMatch: query } });
@@ -122,8 +134,8 @@ const Reotem = {
     return;
   },
   addNotification: async (userId: string, notif: Partial<NotifSchema>) => {
-     const objectId = new Types.ObjectId();
-     const merged = Object.assign(notif, { _id: objectId, id: objectId.toString() });
+    const objectId = new Types.ObjectId();
+    const merged = Object.assign(notif, { _id: objectId, id: objectId.toString() });
     await models.Notification.updateOne({ id: userId }, { $push: { notifications: merged } });
     console.log(`New notifications for user -> ${userId} -> ${notif.id}`);
   },
@@ -155,9 +167,12 @@ const Reotem = {
 
   addObject: async (object: ObjectSchema, objectData: AnyObject) => {
     const objectId = new Types.ObjectId();
-    const merged = { ...object, ...objectData };
-    const newObject = await new models.Object(merged, { _id: objectId, id: objectId.toString() });
-    await newObject.save().then((o) => console.log(`New object -> ${o.id}, Object Data : ${JSON.stringify(o.objectData)}`));
+    const merged = { ...object, ...objectData, ...{ _id: objectId, id: objectId.toString() } };
+    const newObject = await new models.Object(merged);
+    await newObject.save().then((o) => {
+      console.log(`New ${o.objectClass} -> ${o.id}}`);
+      return o;
+    });
   },
   // filter example {key1: value, key2: value...}
   getAllObjects: async () => {
@@ -181,7 +196,7 @@ const Reotem = {
   },
   deleteObject: async (id: string) => {
     const data = await models.Object.findOne({ id: id });
-    console.log(`Deleting session for user -> ${data?.id}`);
+    console.log(`Deleting object -> ${data?.id}`);
     if (data) return data.deleteOne();
     return;
   },
