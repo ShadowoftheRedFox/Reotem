@@ -98,7 +98,7 @@ export class APIService {
             //the user send the hash of the challenge and the new email
             return this.sendApiRequest("PUT", "user/" + id + "/email", { session: session, newEmail: newEmail, hash: hash_challenge }, "Updating user");
         },
-        updatePassword: async (id: string, session: string, password: string) => {
+        updatePassword: async (id: string, session: string, oldpassword: string, newpassword: string) => {
             let res: LoginChallenge;
             try {
                 res = await lastValueFrom(this.sendApiRequest<LoginChallenge>("PUT", "user/" + id + "/password", { session: session }, "Challenge auth"));
@@ -107,9 +107,9 @@ export class APIService {
                 return throwError(() => e);
             }
 
-            const hash_password = await bcrypt.hash(password, res.salt);
+            const hash_password = await bcrypt.hash(oldpassword, res.salt);
             const hash_challenge = await this.hash(res.challenge + hash_password);
-            return this.sendApiRequest("PUT", "user/" + id + "/password", { session: session, password: password, hash: hash_challenge }, "Updating user");
+            return this.sendApiRequest("PUT", "user/" + id + "/password", { session: session, password: newpassword, hash: hash_challenge }, "Updating user");
         },
     }
 

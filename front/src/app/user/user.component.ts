@@ -118,7 +118,16 @@ export class UserComponent {
             if (typeof res != 'string' || res.length < 8) {
                 return this.passwordGroup.controls.newpassword.setErrors({ short: true });
             }
-        })
+        });
+
+        // set by default to invalid since you need to change your email
+        this.emailGroup.controls.email.setErrors({ same: true });
+        this.emailGroup.controls.email.valueChanges.subscribe((email) => {
+            if (email == null || this.user == null) return;
+            if (email == this.user.email) {
+                this.emailGroup.controls.email.setErrors({ same: true });
+            }
+        });
     }
 
     changeImage(event: Event) {
@@ -156,7 +165,7 @@ export class UserComponent {
             });
         };
     }
-    // TODO send to api, and like when connecting, use a challenge
+
     changeUsername() {
         if (this.usernameGroup.invalid) return;
 
@@ -179,21 +188,69 @@ export class UserComponent {
                     message: "Échec de l'interaction"
                 });
             }
-        })
+        });
     }
-    changeEmail() {
+
+    async changeEmail() {
         if (this.emailGroup.invalid) return;
-        if (this.emailGroup.value.email == this.user?.email) {
-            this.emailGroup.controls.email.setErrors({ same: true });
-        }
-        // TODO update le validated à false
+
+        (await this.api.user.updateEmail(this.auth.client?.id as string, this.auth.clientToken, this.emailGroup.value.email as string, this.emailGroup.value.password as string)).subscribe({
+            next: () => {
+                if (this.user) {
+                    this.user.firstname = this.usernameGroup.value.firstname as string;
+                    this.user.lastname = this.usernameGroup.value.lastname as string;
+                }
+                this.com.AuthAccountUpdate.next(this.user);
+                this.popup.openSnackBar({
+                    message: "Nom/Prénom changé(s)"
+                });
+            },
+            error: () => {
+                this.popup.openSnackBar({
+                    message: "Échec de l'interaction"
+                });
+            }
+        });
     }
+
     changeSexe() {
         if (this.sexeGroup.invalid) return;
+
+        this.api.user.update(this.auth.client?.id as string, this.auth.clientToken, {
+            sexe: this.sexeGroup.value.sexe as UserSexe
+        }).subscribe({
+            next: () => {
+                if (this.user) {
+                    this.user.sexe = this.sexeGroup.value.sexe as UserSexe;
+                }
+                this.com.AuthAccountUpdate.next(this.user);
+                this.popup.openSnackBar({
+                    message: "Genre changé"
+                });
+            },
+            error: () => {
+                this.popup.openSnackBar({
+                    message: "Échec de l'interaction"
+                });
+            }
+        });
     }
-    // TODO send password to back, and create formcontrol
-    changePaswword() {
+
+    async changePaswword() {
         if (this.passwordGroup.invalid) return;
+
+        (await this.api.user.updatePassword(this.auth.client?.id as string, this.auth.clientToken, this.passwordGroup.value.oldpassword as string, this.passwordGroup.value.newpassword as string)).subscribe({
+            next: () => {
+                this.popup.openSnackBar({
+                    message: "Mot de passe changé"
+                });
+            },
+            error: () => {
+                this.popup.openSnackBar({
+                    message: "Échec de l'interaction"
+                });
+            }
+        });
     }
 
     genericError(ctrl: FormControl) {
