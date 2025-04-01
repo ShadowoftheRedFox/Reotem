@@ -51,7 +51,7 @@ npm run start
 
 - [x] page de connexion
 - [x] page inscription
-- [ ] page du profil
+- [x] page du profil
 - [ ] Système de points et niveaux en backend a stocker et frontend a afficher7
 - [ ] module du tableau de bord (pour chaque utilisateur):
   - [x] s'inscrire
@@ -63,14 +63,14 @@ npm run start
   - [ ] gerer le nombre d'accès et le nombre d'actions des utilisateurs
   - [ ] rechercher, consulter, ajouter ou effacer les objets et services connectés
 - [ ] module gestion (pour les membres d'un certains niveaux):
-  - [ ] ajouter un nouvel objet connecté
+  - [x] ajouter un nouvel objet connecté
   - [ ] demander à un admin la suppression d'un objet
-  - [ ] modifier les attributs d'un objet (nom, description, statut, paramètres...)
-  - [ ] actier/désactiver/mettre à jour un objet
-  - [ ] associer des objects à des pièces/zones
-  - [ ] configurer les paramètres d'utilisation de l'objet dans la zone (températeur de déclenchement pour un thermostat, horaire d'allumage pour une lampe etc)
+  - [x] modifier les attributs d'un objet (nom, description, statut, paramètres...)
+  - [x] actier/désactiver/mettre à jour un objet
+  - [x] associer des objects à des pièces/zones
+  - [x] configurer les paramètres d'utilisation de l'objet dans la zone (températeur de déclenchement pour un thermostat, horaire d'allumage pour une lampe etc)
   - [ ] consulter/gérer les rapports d'utilisation (log, moyenne d'utilisation, consommation energétique moyenne etc)
-  - [ ] identifier les objets cassés (nécéssitant une maintenance), inneficaces (selon les paramètres de l'objet)
+  - [x] identifier les objets cassés (nécéssitant une maintenance), inneficaces (selon les paramètres de l'objet)
 - [ ] module administrateur (pour les administrateur uniquement):
   - [ ] ajouter/modifier/supprimer des utilisateurs
   - [ ] ajouter/révoquer des permissions à des utilisateurs
@@ -81,6 +81,6 @@ npm run start
   - [ ] vérifier l'intégrité des données de la platforme (pas de compte perdus, objets sans connexion a rien etc)
   - [ ] rapports avancés sur l'urilisation de la plateforme avec téléchargement des rapports (CSV, PDF etc...)
   - [ ] statistique du la consommation totale, taux de connexion et services les plus utilisés
-- [ ] compression des images de profiles
-- [ ] utiliser des headers de cache et optimiser les requetes API
-- [ ] nécéssité des balises "aria", texte alternatif pour les logos, images et vidéos
+- [x] compression des images de profiles
+- [x] utiliser des headers de cache et optimiser les requetes API
+- [x] nécéssité des balises "aria", texte alternatif pour les logos, images et vidéos

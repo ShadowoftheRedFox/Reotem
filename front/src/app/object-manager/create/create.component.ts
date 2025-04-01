@@ -1,4 +1,4 @@
-import { Component, isDevMode } from '@angular/core';
+import { Component, inject, isDevMode } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -11,6 +11,8 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { Router, RouterLink } from '@angular/router';
 import { AuthentificationService } from '../../../services/authentification.service';
 import { PopupService } from '../../../services/popup.service';
+import { MatTimepickerModule } from '@angular/material/timepicker';
+import { DateAdapter, provideNativeDateAdapter } from '@angular/material/core';
 
 @Component({
     selector: 'app-create',
@@ -23,12 +25,15 @@ import { PopupService } from '../../../services/popup.service';
         MatSelectModule,
         ReactiveFormsModule,
         MatCheckboxModule,
-        RouterLink
+        RouterLink,
+        MatTimepickerModule
     ],
+    providers: [provideNativeDateAdapter()],
     templateUrl: './create.component.html',
     styleUrl: './create.component.scss'
 })
 export class CreateComponent {
+    private readonly _adapter = inject<DateAdapter<unknown, unknown>>(DateAdapter);
 
     readonly connextions = Connection;
     readonly states = ObjectState;
@@ -41,27 +46,29 @@ export class CreateComponent {
     //#region Forms
     customValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
         const e = { subgroupInvalid: true };
+        const ctrl = control as FormGroup;
 
-        switch (control.value.objectClass as ObjectClass) {
+        switch (ctrl.value.objectClass as ObjectClass) {
             case 'BaseObject':
-                return control.valid ? null : e;
+                return ctrl.errors == null ? null : e;
             case 'LightObject':
-                return control.valid && control.value.LightObjectGroup.valid ? null : e;
+                return this.LightObjectGroup.valid ? null : (this.LightObjectGroup.errors != null ? this.LightObjectGroup.errors : e);
             case 'ThermostatObject':
-                return control.valid && control.value.ThermostatObjectGroup.valid ? null : e;
+                return this.ThermostatObjectGroup.valid ? null : (this.ThermostatObjectGroup.errors != null ? this.ThermostatObjectGroup.errors : e);
             case 'SpeakerObject':
-                return control.valid && control.value.SpeakerObjectGroup.valid ? null : e;
+                return this.SpeakerObjectGroup.valid ? null : (this.SpeakerObjectGroup.errors != null ? this.SpeakerObjectGroup.errors : e);
             case 'VideoProjectorObject':
-                return control.valid && control.value.VideoProjectorObjectGroup.valid ? null : e;
+                return this.VideoProjectorObjectGroup.valid ? null : (this.VideoProjectorObjectGroup.errors != null ? this.VideoProjectorObjectGroup.errors : e);
             case 'ComputerObject':
-                return control.valid && control.value.ComputerObjectGroup.valid ? null : e;
+                return this.ComputerObjectGroup.valid ? null : (this.ComputerObjectGroup.errors != null ? this.ComputerObjectGroup.errors : e);
             case 'WindowStoreObject':
-                return control.valid && control.value.WindowStoreObjectGroup.valid ? null : e;
+                return this.WindowStoreObjectGroup.valid ? null : (this.WindowStoreObjectGroup.errors != null ? this.WindowStoreObjectGroup.errors : e);
             case 'DoorObject':
-                return control.valid && control.value.DoorObjectGroup.valid ? null : e;
+                return this.DoorObjectGroup.valid ? null : (this.DoorObjectGroup.errors != null ? this.DoorObjectGroup.errors : e);
             case 'WiFiObject':
-                return control.valid && control.value.WiFiObjectGroup.valid ? null : e;
+                return this.WiFiObjectGroup.valid ? null : (this.WiFiObjectGroup.errors != null ? this.WiFiObjectGroup.errors : e);
             default:
+                console.warn('default fallthrough')
                 return e;
         }
     };
@@ -70,70 +77,61 @@ export class CreateComponent {
         name: new FormControl<string>("", [Validators.required]),
         room: new FormControl<string>("", [Validators.required]),
         building: new FormControl<string>("", []),
-        connection: new FormControl<Connection>("Autre", []),
-        state: new FormControl<ObjectState>("Normal", []),
+        connection: new FormControl<Connection>("Autre", [Validators.required]),
+        state: new FormControl<ObjectState>("Normal", [Validators.required]),
         objectClass: new FormControl<ObjectClass>("BaseObject", [Validators.required]),
-
-        LightObjectGroup: new FormGroup({
-            mode: new FormControl<Mode>("Manuel", [Validators.required]),
-            consomationThreshold: new FormControl<number>(10, [Validators.required, Validators.min(0)]),
-            battery: new FormControl(false),
-            turnedOn: new FormControl(true),
-        }),
-
-        ThermostatObjectGroup: new FormGroup({
-            mode: new FormControl<Mode>("Automatique", [Validators.required]),
-            consomationThreshold: new FormControl<number>(10, [Validators.required, Validators.min(0), Validators.max(100)]),
-            battery: new FormControl(false),
-            turnedOn: new FormControl(true),
-            targetTemp: new FormControl(19, [Validators.required]),
-        }),
-
-        SpeakerObjectGroup: new FormGroup({
-            consomationThreshold: new FormControl<number>(10, [Validators.required, Validators.min(0)]),
-            battery: new FormControl(false),
-            turnedOn: new FormControl(true),
-        }),
-
-        VideoProjectorObjectGroup: new FormGroup({
-            consomationThreshold: new FormControl<number>(10, [Validators.required, Validators.min(0)]),
-            turnedOn: new FormControl(true),
-        }),
-
-        ComputerObjectGroup: new FormGroup({
-            mode: new FormControl<Mode>("Manuel", [Validators.required]),
-            consomationThreshold: new FormControl<number>(10, [Validators.required, Validators.min(0)]),
-            battery: new FormControl(false),
-            turnedOn: new FormControl(true),
-        }),
-
-        WindowStoreObjectGroup: new FormGroup({
-            mode: new FormControl<Mode>("Manuel", [Validators.required]),
-            closeTime: new FormControl<Date>(new Date(), [Validators.required]),
-            openTime: new FormControl<Date>(new Date(), [Validators.required]),
-        }),
-
-        DoorObjectGroup: new FormGroup({
-            closeTime: new FormControl<Date>(new Date(), [Validators.required]),
-            openTime: new FormControl<Date>(new Date(), [Validators.required]),
-            locked: new FormControl(false),
-            closed: new FormControl(true),
-        }),
-
-        WiFiObjectGroup: new FormGroup({
-            type: new FormControl<WifiType>("Routeur", [Validators.required]),
-            turnedOn: new FormControl(true),
-        }),
     }, [this.customValidator]);
 
-    LightObjectGroup = this.formGroup.controls.LightObjectGroup;
-    ThermostatObjectGroup = this.formGroup.controls.ThermostatObjectGroup;
-    SpeakerObjectGroup = this.formGroup.controls.SpeakerObjectGroup;
-    VideoProjectorObjectGroup = this.formGroup.controls.VideoProjectorObjectGroup;
-    ComputerObjectGroup = this.formGroup.controls.ComputerObjectGroup;
-    WindowStoreObjectGroup = this.formGroup.controls.WindowStoreObjectGroup;
-    DoorObjectGroup = this.formGroup.controls.DoorObjectGroup;
-    WiFiObjectGroup = this.formGroup.controls.WiFiObjectGroup;
+    LightObjectGroup = new FormGroup({
+        mode: new FormControl<Mode>("Manuel", [Validators.required]),
+        consomationThreshold: new FormControl<number>(10, [Validators.required, Validators.min(0)]),
+        battery: new FormControl(false, []),
+        turnedOn: new FormControl(true, []),
+    });
+
+    ThermostatObjectGroup = new FormGroup({
+        mode: new FormControl<Mode>("Automatique", [Validators.required]),
+        consomationThreshold: new FormControl<number>(10, [Validators.required, Validators.min(0), Validators.max(100)]),
+        battery: new FormControl(false, []),
+        turnedOn: new FormControl(true, []),
+        targetTemp: new FormControl(19, [Validators.required]),
+    });
+
+    SpeakerObjectGroup = new FormGroup({
+        consomationThreshold: new FormControl<number>(10, [Validators.required, Validators.min(0)]),
+        battery: new FormControl(false, []),
+        turnedOn: new FormControl(true, []),
+    });
+
+    VideoProjectorObjectGroup = new FormGroup({
+        consomationThreshold: new FormControl<number>(10, [Validators.required, Validators.min(0)]),
+        turnedOn: new FormControl(true, []),
+    });
+
+    ComputerObjectGroup = new FormGroup({
+        consomationThreshold: new FormControl<number>(10, [Validators.required, Validators.min(0)]),
+        battery: new FormControl(false, []),
+        turnedOn: new FormControl(true, []),
+    });
+
+    WindowStoreObjectGroup = new FormGroup({
+        mode: new FormControl<Mode>("Manuel", [Validators.required]),
+        closeTime: new FormControl<Date | null>(null, [Validators.required]),
+        openTime: new FormControl<Date | null>(null, [Validators.required]),
+    });
+
+    DoorObjectGroup = new FormGroup({
+        closeTime: new FormControl<Date | null>(null, [Validators.required]),
+        openTime: new FormControl<Date | null>(null, [Validators.required]),
+        locked: new FormControl(false, []),
+        closed: new FormControl(true, []),
+    });
+
+    WiFiObjectGroup = new FormGroup({
+        type: new FormControl<WifiType>("Routeur", [Validators.required]),
+        turnedOn: new FormControl(true, []),
+    });
+
     //#endregion
 
     constructor(
@@ -143,6 +141,18 @@ export class CreateComponent {
         private popup: PopupService
     ) {
         this.ErreurListener();
+        // for french date format on time pickers
+        this._adapter.setLocale('FR-fr');
+
+        // update main one when sub ones changes
+        this.LightObjectGroup.valueChanges.subscribe(() => { this.formGroup.controls.name.setValue(this.formGroup.value.name || '') });
+        this.ThermostatObjectGroup.valueChanges.subscribe(() => { this.formGroup.controls.name.setValue(this.formGroup.value.name || '') });
+        this.SpeakerObjectGroup.valueChanges.subscribe(() => { this.formGroup.controls.name.setValue(this.formGroup.value.name || '') });
+        this.VideoProjectorObjectGroup.valueChanges.subscribe(() => { this.formGroup.controls.name.setValue(this.formGroup.value.name || '') });
+        this.ComputerObjectGroup.valueChanges.subscribe(() => { this.formGroup.controls.name.setValue(this.formGroup.value.name || '') });
+        this.WindowStoreObjectGroup.valueChanges.subscribe(() => { this.formGroup.controls.name.setValue(this.formGroup.value.name || '') });
+        this.DoorObjectGroup.valueChanges.subscribe(() => { this.formGroup.controls.name.setValue(this.formGroup.value.name || '') });
+        this.WiFiObjectGroup.valueChanges.subscribe(() => { this.formGroup.controls.name.setValue(this.formGroup.value.name || '') });
     }
 
     //#region Listeners
@@ -171,8 +181,6 @@ export class CreateComponent {
         } else if (ctrl.hasError("only_dev")) {
             return "Uniquement pour les tests";
         }
-        console.log(ctrl.errors)
-        // console.log(this.formGroup.errors);
         return "";
     }
 
@@ -232,7 +240,9 @@ export class CreateComponent {
 
     timeErrorMessage(ctrl: FormControl) {
         if (ctrl.hasError("required")) {
-            return "Horaire maximale requise";
+            return "Horaire requis";
+        } else if (ctrl.hasError('matTimepickerParse')) {
+            return "Date invalide"
         }
         return "";
     }
@@ -266,54 +276,54 @@ export class CreateComponent {
             case 'BaseObject':
                 break
             case 'LightObject':
-                (object as Record<string, unknown>)["turnedOn"] = this.formGroup.value.LightObjectGroup?.turnedOn as boolean;
+                (object as Record<string, unknown>)["turnedOn"] = this.LightObjectGroup.value.turnedOn as boolean;
                 (object as Record<string, unknown>)["electricityUsage"] = Math.floor(Math.random() * 100);
-                (object as Record<string, unknown>)["consomationThreshold"] = this.formGroup.value.LightObjectGroup?.consomationThreshold as number;
-                (object as Record<string, unknown>)["battery"] = (this.formGroup.value.LightObjectGroup?.battery ? Math.floor(Math.random() * 100) : undefined);
-                (object as Record<string, unknown>)["mode"] = this.formGroup.value.LightObjectGroup?.mode as Mode;
+                (object as Record<string, unknown>)["consomationThreshold"] = this.LightObjectGroup.value.consomationThreshold as number;
+                (object as Record<string, unknown>)["battery"] = (this.LightObjectGroup.value.battery ? Math.floor(Math.random() * 100) : undefined);
+                (object as Record<string, unknown>)["mode"] = this.LightObjectGroup.value.mode as Mode;
                 break;
             case 'ThermostatObject':
-                (object as Record<string, unknown>)["turnedOn"] = this.formGroup.value.ThermostatObjectGroup?.turnedOn as boolean;
+                (object as Record<string, unknown>)["turnedOn"] = this.ThermostatObjectGroup.value.turnedOn as boolean;
                 (object as Record<string, unknown>)["electricityUsage"] = Math.floor(Math.random() * 100);
-                (object as Record<string, unknown>)["consomationThreshold"] = this.formGroup.value.ThermostatObjectGroup?.consomationThreshold as number;
-                (object as Record<string, unknown>)["battery"] = (this.formGroup.value.ThermostatObjectGroup?.battery ? Math.floor(Math.random() * 100) : undefined);
-                (object as Record<string, unknown>)["mode"] = this.formGroup.value.ThermostatObjectGroup?.mode as Mode;
-                (object as Record<string, unknown>)["targetTemp"] = this.formGroup.value.ThermostatObjectGroup?.targetTemp as number;
+                (object as Record<string, unknown>)["consomationThreshold"] = this.ThermostatObjectGroup.value.consomationThreshold as number;
+                (object as Record<string, unknown>)["battery"] = (this.ThermostatObjectGroup.value.battery ? Math.floor(Math.random() * 100) : undefined);
+                (object as Record<string, unknown>)["mode"] = this.ThermostatObjectGroup.value.mode as Mode;
+                (object as Record<string, unknown>)["targetTemp"] = this.ThermostatObjectGroup.value.targetTemp as number;
                 (object as Record<string, unknown>)["currentTemp"] = 20 + Math.floor(Math.random() * 10);
                 break;
             case 'SpeakerObject':
-                (object as Record<string, unknown>)["turnedOn"] = this.formGroup.value.SpeakerObjectGroup?.turnedOn as boolean;
+                (object as Record<string, unknown>)["turnedOn"] = this.SpeakerObjectGroup.value.turnedOn as boolean;
                 (object as Record<string, unknown>)["electricityUsage"] = Math.floor(Math.random() * 100);
-                (object as Record<string, unknown>)["consomationThreshold"] = this.formGroup.value.SpeakerObjectGroup?.consomationThreshold as number;
-                (object as Record<string, unknown>)["battery"] = (this.formGroup.value.SpeakerObjectGroup?.battery ? Math.floor(Math.random() * 100) : undefined);
+                (object as Record<string, unknown>)["consomationThreshold"] = this.SpeakerObjectGroup.value.consomationThreshold as number;
+                (object as Record<string, unknown>)["battery"] = (this.SpeakerObjectGroup.value.battery ? Math.floor(Math.random() * 100) : undefined);
                 break;
             case 'VideoProjectorObject':
-                (object as Record<string, unknown>)["turnedOn"] = this.formGroup.value.VideoProjectorObjectGroup?.turnedOn as boolean;
+                (object as Record<string, unknown>)["turnedOn"] = this.VideoProjectorObjectGroup.value.turnedOn as boolean;
                 (object as Record<string, unknown>)["electricityUsage"] = Math.floor(Math.random() * 100);
-                (object as Record<string, unknown>)["consomationThreshold"] = this.formGroup.value.VideoProjectorObjectGroup?.consomationThreshold as number;
+                (object as Record<string, unknown>)["consomationThreshold"] = this.VideoProjectorObjectGroup.value.consomationThreshold as number;
                 break;
             case 'ComputerObject':
-                (object as Record<string, unknown>)["turnedOn"] = this.formGroup.value.ComputerObjectGroup?.turnedOn as boolean;
+                (object as Record<string, unknown>)["turnedOn"] = this.ComputerObjectGroup.value.turnedOn as boolean;
                 (object as Record<string, unknown>)["electricityUsage"] = Math.floor(Math.random() * 100);
-                (object as Record<string, unknown>)["consomationThreshold"] = this.formGroup.value.ComputerObjectGroup?.consomationThreshold as number;
-                (object as Record<string, unknown>)["battery"] = (this.formGroup.value.ComputerObjectGroup?.battery ? Math.floor(Math.random() * 100) : undefined);
+                (object as Record<string, unknown>)["consomationThreshold"] = this.ComputerObjectGroup.value.consomationThreshold as number;
+                (object as Record<string, unknown>)["battery"] = (this.ComputerObjectGroup.value.battery ? Math.floor(Math.random() * 100) : undefined);
                 break;
             case 'WindowStoreObject':
                 (object as Record<string, unknown>)["openState"] = Math.floor(Math.random() * 100);
-                (object as Record<string, unknown>)["closeTime"] = (this.formGroup.value.WindowStoreObjectGroup?.closeTime as Date).toISOString();
-                (object as Record<string, unknown>)["openTime"] = (this.formGroup.value.WindowStoreObjectGroup?.openTime as Date).toISOString();
-                (object as Record<string, unknown>)["mode"] = this.formGroup.value.WindowStoreObjectGroup?.mode as Mode;
+                (object as Record<string, unknown>)["closeTime"] = (this.WindowStoreObjectGroup.value.closeTime as Date).toISOString();
+                (object as Record<string, unknown>)["openTime"] = (this.WindowStoreObjectGroup.value.openTime as Date).toISOString();
+                (object as Record<string, unknown>)["mode"] = this.WindowStoreObjectGroup.value.mode as Mode;
                 break;
             case 'DoorObject':
-                (object as Record<string, unknown>)["closeTime"] = (this.formGroup.value.DoorObjectGroup?.closeTime as Date).toISOString();
-                (object as Record<string, unknown>)["openTime"] = (this.formGroup.value.DoorObjectGroup?.openTime as Date).toISOString();
-                (object as Record<string, unknown>)["locked"] = this.formGroup.value.DoorObjectGroup?.locked as boolean;
-                (object as Record<string, unknown>)["closed"] = this.formGroup.value.DoorObjectGroup?.closed as boolean;
+                (object as Record<string, unknown>)["closeTime"] = (this.DoorObjectGroup.value.closeTime as Date).toISOString();
+                (object as Record<string, unknown>)["openTime"] = (this.DoorObjectGroup.value.openTime as Date).toISOString();
+                (object as Record<string, unknown>)["locked"] = this.DoorObjectGroup.value.locked as boolean;
+                (object as Record<string, unknown>)["closed"] = this.DoorObjectGroup.value.closed as boolean;
                 break;
             case 'WiFiObject':
-                (object as Record<string, unknown>)["turnedOn"] = this.formGroup.value.WiFiObjectGroup?.turnedOn as boolean;
+                (object as Record<string, unknown>)["turnedOn"] = this.WiFiObjectGroup.value.turnedOn as boolean;
                 (object as Record<string, unknown>)["electricityUsage"] = Math.floor(Math.random() * 100);
-                (object as Record<string, unknown>)["type"] = this.formGroup.value.WiFiObjectGroup?.type as WifiType;
+                (object as Record<string, unknown>)["type"] = this.WiFiObjectGroup.value.type as WifiType;
                 break;
         }
 

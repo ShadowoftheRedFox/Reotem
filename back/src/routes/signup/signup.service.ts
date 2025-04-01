@@ -8,7 +8,6 @@ import Reotem from "../../util/functions";
 import { User, UserRole, UserSexe } from "../../../../front/src/models/api.model";
 
 const checkUserUniqueness = async (email: string) => {
-  // TODO Reotem.checkUserUnique -> boolean
   if (await Reotem.checkUserUnique(email)) throw new HttpException(422, { email: "has already been taken" });
 };
 
@@ -67,7 +66,7 @@ export const createUser = async (input: { [key: string]: string | number }) => {
   const hashedPassword = await bcrypt.hash(password, bcrypt.genSaltSync(10));
 
   const birthDate = new Date(`${new Date(Date.now()).getFullYear() - age}-01-01T00:00:00.000Z`).toISOString();
-  
+
   let user: Partial<User> = {
     firstname: firstname,
     lastname: lastname,
@@ -118,7 +117,6 @@ export const validateUser = async (token: string, session: string) => {
 
   const validation = await Reotem.getVerification(token);
 
-  // TODO Reotem.validate(token) -> boolean
   const user = (await Reotem.getUser(validation?.id)) as UserSchema;
   if (user === undefined) throw new HttpException(404);
 
@@ -133,7 +131,6 @@ export const validateUser = async (token: string, session: string) => {
 export const checkTokenExists = async (token: string) => {
   if (!token) throw new HttpException(404);
 
-  // TODO Reotem.tokenExists(token) -> boolean
   const verification = await Reotem.getVerification(token);
   if (verification === undefined) throw new HttpException(404);
   return true;

@@ -1,5 +1,14 @@
+@if (obj === null) {
+@if (notFound() === true) {
+<app-error></app-error>
+} @else {
+<div class="h-full w-full flex justify-center items-center">
+    <p class="text-center">Chargement...</p>
+</div>
+}
+}@else {
 <div class="m-4">
-    <form [formGroup]="formGroup" (ngSubmit)="addObject()" class="flex flex-col">
+    <form [formGroup]="formGroup" (ngSubmit)="updateObject()" class="flex flex-col">
         <mat-form-field>
             <mat-label>Nom</mat-label>
             <input matInput formControlName="name" type="text" />
@@ -9,14 +18,11 @@
         </mat-form-field>
         <mat-form-field>
             <mat-label>Type de composant</mat-label>
-            <mat-select formControlName="objectClass">
+            <mat-select [disabled]="true" [tabIndex]="classes.indexOf(obj.objectClass)">
                 @for (c of classes; track $index) {
-                <mat-option [value]="c">{{c}}</mat-option>
+                <mat-option [value]="c" [disabled]="true">{{c}}</mat-option>
                 }
             </mat-select>
-            @if (formGroup.controls.objectClass.invalid) {
-            <mat-error>{{objectClassErrorMessage()}}</mat-error>
-            }
         </mat-form-field>
         <mat-form-field>
             <mat-label>Salle</mat-label>
@@ -54,12 +60,12 @@
             <mat-error>{{stateErrorMessage()}}</mat-error>
             }
         </mat-form-field>
-        @if (formGroup.value.objectClass === "BaseObject") {
+        @if (obj.objectClass === "BaseObject") {
         <button mat-raised-button type="submit" [disabled]="formGroup.invalid">Valider</button>
         }
     </form>
-    @if (formGroup.value.objectClass === "LightObject") {
-    <form [formGroup]="LightObjectGroup" (ngSubmit)="addObject()" class="flex flex-col">
+    @if (obj.objectClass === "LightObject") {
+    <form [formGroup]="LightObjectGroup" (ngSubmit)="updateObject()" class="flex flex-col">
         <mat-form-field>
             <mat-label>Mode</mat-label>
             <mat-select formControlName="mode">
@@ -79,16 +85,16 @@
             }
         </mat-form-field>
         <div>
-            <mat-checkbox formControlName="battery">A une batterie</mat-checkbox>
+            <mat-checkbox [disabled]="true" [checked]="typeof obj.battery === 'number'">A une batterie</mat-checkbox>
         </div>
         <div>
-            <mat-checkbox formControlName="turnedOn">Allumé</mat-checkbox>
+            <mat-checkbox [disabled]="true" [checked]="LightObjectGroup.controls.turnedOn">Allumé</mat-checkbox>
         </div>
-        <button mat-raised-button type="submit"
-            [disabled]="formGroup.invalid || LightObjectGroup.invalid">Valider</button>
+        <button mat-raised-button type="submit" [disabled]="formGroup.invalid || LightObjectGroup.invalid"
+            class="boom">Valider</button>
     </form>
-    } @else if (formGroup.value.objectClass === "ThermostatObject") {
-    <form [formGroup]="ThermostatObjectGroup" (ngSubmit)="addObject()" class="flex flex-col">
+    } @else if (obj.objectClass === "ThermostatObject") {
+    <form [formGroup]="ThermostatObjectGroup" (ngSubmit)="updateObject()" class="flex flex-col">
         <mat-form-field>
             <mat-label>Mode</mat-label>
             <mat-select formControlName="mode">
@@ -108,10 +114,11 @@
             }
         </mat-form-field>
         <div>
-            <mat-checkbox formControlName="battery">A une batterie</mat-checkbox>
+            <mat-checkbox [disabled]="true" [checked]="typeof obj.battery === 'number'">A une
+                batterie</mat-checkbox>
         </div>
         <div>
-            <mat-checkbox formControlName="turnedOn">Allumé</mat-checkbox>
+            <mat-checkbox [disabled]="true" [checked]="ThermostatObjectGroup.controls.turnedOn">Allumé</mat-checkbox>
         </div>
         <mat-form-field>
             <mat-label>Température cible</mat-label>
@@ -120,11 +127,11 @@
             <mat-error>{{targetTempErrorMessage()}}</mat-error>
             }
         </mat-form-field>
-        <button mat-raised-button type="submit"
-            [disabled]="formGroup.invalid || ThermostatObjectGroup.invalid">Valider</button>
+        <button mat-raised-button type="submit" [disabled]="formGroup.invalid || ThermostatObjectGroup.invalid"
+            class="boom">Valider</button>
     </form>
-    } @else if (formGroup.value.objectClass === "SpeakerObject") {
-    <form [formGroup]="SpeakerObjectGroup" (ngSubmit)="addObject()" class="flex flex-col">
+    } @else if (obj.objectClass === "SpeakerObject") {
+    <form [formGroup]="SpeakerObjectGroup" (ngSubmit)="updateObject()" class="flex flex-col">
         <mat-form-field>
             <mat-label>Limite de consommation</mat-label>
             <input matInput formControlName="consomationThreshold" type="number" />
@@ -133,16 +140,17 @@
             }
         </mat-form-field>
         <div>
-            <mat-checkbox formControlName="battery">A une batterie</mat-checkbox>
+            <mat-checkbox [disabled]="true" [checked]="typeof obj.battery === 'number'">A une
+                batterie</mat-checkbox>
         </div>
         <div>
-            <mat-checkbox formControlName="turnedOn">Allumé</mat-checkbox>
+            <mat-checkbox [disabled]="true" [checked]="SpeakerObjectGroup.controls.turnedOn">Allumé</mat-checkbox>
         </div>
-        <button mat-raised-button type="submit"
-            [disabled]="formGroup.invalid || SpeakerObjectGroup.invalid">Valider</button>
+        <button mat-raised-button type="submit" [disabled]="formGroup.invalid || SpeakerObjectGroup.invalid"
+            class="boom">Valider</button>
     </form>
-    } @else if (formGroup.value.objectClass === "VideoProjectorObject") {
-    <form [formGroup]="VideoProjectorObjectGroup" (ngSubmit)="addObject()" class="flex flex-col">
+    } @else if (obj.objectClass === "VideoProjectorObject") {
+    <form [formGroup]="VideoProjectorObjectGroup" (ngSubmit)="updateObject()" class="flex flex-col">
         <mat-form-field>
             <mat-label>Limite de consommation</mat-label>
             <input matInput formControlName="consomationThreshold" type="number" />
@@ -151,13 +159,14 @@
             }
         </mat-form-field>
         <div>
-            <mat-checkbox formControlName="turnedOn">Allumé</mat-checkbox>
+            <mat-checkbox [disabled]="true"
+                [checked]="VideoProjectorObjectGroup.controls.turnedOn">Allumé</mat-checkbox>
         </div>
-        <button mat-raised-button type="submit"
-            [disabled]="formGroup.invalid || VideoProjectorObjectGroup.invalid">Valider</button>
+        <button mat-raised-button type="submit" [disabled]="formGroup.invalid || VideoProjectorObjectGroup.invalid"
+            class="boom">Valider</button>
     </form>
-    } @else if (formGroup.value.objectClass === "ComputerObject") {
-    <form [formGroup]="ComputerObjectGroup" (ngSubmit)="addObject()" class="flex flex-col">
+    } @else if (obj.objectClass === "ComputerObject") {
+    <form [formGroup]="ComputerObjectGroup" (ngSubmit)="updateObject()" class="flex flex-col">
         <mat-form-field>
             <mat-label>Limite de consommation</mat-label>
             <input matInput formControlName="consomationThreshold" type="number" />
@@ -166,16 +175,17 @@
             }
         </mat-form-field>
         <div>
-            <mat-checkbox formControlName="battery">A une batterie</mat-checkbox>
+            <mat-checkbox [disabled]="true" [checked]="typeof obj.battery === 'number'">A une
+                batterie</mat-checkbox>
         </div>
         <div>
-            <mat-checkbox formControlName="turnedOn">Allumé</mat-checkbox>
+            <mat-checkbox [disabled]="true" [checked]="ComputerObjectGroup.controls.turnedOn">Allumé</mat-checkbox>
         </div>
-        <button mat-raised-button type="submit"
-            [disabled]="formGroup.invalid || ComputerObjectGroup.invalid">Valider</button>
+        <button mat-raised-button type="submit" [disabled]="formGroup.invalid || ComputerObjectGroup.invalid"
+            class="boom">Valider</button>
     </form>
-    } @else if (formGroup.value.objectClass === "WindowStoreObject") {
-    <form [formGroup]="WindowStoreObjectGroup" (ngSubmit)="addObject()" class="flex flex-col">
+    } @else if (obj.objectClass === "WindowStoreObject") {
+    <form [formGroup]="WindowStoreObjectGroup" (ngSubmit)="updateObject()" class="flex flex-col">
         <mat-form-field>
             <mat-label>Mode</mat-label>
             <mat-select formControlName="mode">
@@ -189,67 +199,73 @@
         </mat-form-field>
         <mat-form-field>
             <mat-label>Heure d'ouverture</mat-label>
-            <input matInput type="time" formControlName="openTime" />
+            <input matInput [matTimepicker]="pickerOpenWindowStore" formControlName="openTime" />
+            <mat-timepicker-toggle matIconSuffix [for]="pickerOpenWindowStore" />
+            <mat-timepicker #pickerOpenWindowStore interval="30min"></mat-timepicker>
             @if (WindowStoreObjectGroup.controls.openTime.invalid) {
-            <mat-error>{{modeErrorMessage(WindowStoreObjectGroup.controls.openTime)}}</mat-error>
+            <mat-error>{{timeErrorMessage(WindowStoreObjectGroup.controls.openTime)}}</mat-error>
             }
         </mat-form-field>
         <mat-form-field>
             <mat-label>Heure de fermeture</mat-label>
-            <input matInput type="time" formControlName="closeTime" />
+            <input matInput [matTimepicker]="pickerCloseWindowStore" formControlName="closeTime" />
+            <mat-timepicker-toggle matIconSuffix [for]="pickerCloseWindowStore" />
+            <mat-timepicker #pickerCloseWindowStore interval="30min"></mat-timepicker>
             @if (WindowStoreObjectGroup.controls.closeTime.invalid) {
-            <mat-error>{{modeErrorMessage(WindowStoreObjectGroup.controls.closeTime)}}</mat-error>
+            <mat-error>{{timeErrorMessage(WindowStoreObjectGroup.controls.closeTime)}}</mat-error>
             }
         </mat-form-field>
-        <button mat-raised-button type="submit"
-            [disabled]="formGroup.invalid || WindowStoreObjectGroup.invalid">Valider</button>
+        <button mat-raised-button type="submit" [disabled]="formGroup.invalid || WindowStoreObjectGroup.invalid"
+            class="boom">Valider</button>
     </form>
-    } @else if (formGroup.value.objectClass === "DoorObject") {
-    <form [formGroup]="DoorObjectGroup" (ngSubmit)="addObject()" class="flex flex-col">
+    } @else if (obj.objectClass === "DoorObject") {
+    <form [formGroup]="DoorObjectGroup" (ngSubmit)="updateObject()" class="flex flex-col">
         <mat-form-field>
             <mat-label>Heure d'ouverture</mat-label>
-            <input matInput type="time" formControlName="openTime" />
+            <input matInput [matTimepicker]="pickerOpenDoor" formControlName="openTime" />
+            <mat-timepicker-toggle matIconSuffix [for]="pickerOpenDoor" />
+            <mat-timepicker #pickerOpenDoor interval="30min"></mat-timepicker>
             @if (DoorObjectGroup.controls.openTime.invalid) {
-            <mat-error>{{modeErrorMessage(DoorObjectGroup.controls.openTime)}}</mat-error>
+            <mat-error>{{timeErrorMessage(DoorObjectGroup.controls.openTime)}}</mat-error>
             }
         </mat-form-field>
         <mat-form-field>
             <mat-label>Heure de fermeture</mat-label>
-            <input matInput type="time" formControlName="closeTime" />
+            <input matInput [matTimepicker]="pickerCloseDoor" formControlName="closeTime" />
+            <mat-timepicker-toggle matIconSuffix [for]="pickerCloseDoor" />
+            <mat-timepicker #pickerCloseDoor interval="30min"></mat-timepicker>
             @if (DoorObjectGroup.controls.closeTime.invalid) {
-            <mat-error>{{modeErrorMessage(DoorObjectGroup.controls.closeTime)}}</mat-error>
+            <mat-error>{{timeErrorMessage(DoorObjectGroup.controls.closeTime)}}</mat-error>
             }
         </mat-form-field>
         <div>
-            <mat-checkbox formControlName="locked">Vérouillée</mat-checkbox>
+            <mat-checkbox [disabled]="true" [checked]="DoorObjectGroup.controls.locked">Vérouillée</mat-checkbox>
         </div>
         <div>
-            <mat-checkbox formControlName="closed">Fermée</mat-checkbox>
+            <mat-checkbox [disabled]="true" [checked]="DoorObjectGroup.controls.closed">Fermée</mat-checkbox>
         </div>
-        <button mat-raised-button type="submit"
-            [disabled]="formGroup.invalid || DoorObjectGroup.invalid">Valider</button>
+        <button mat-raised-button type="submit" [disabled]="formGroup.invalid || DoorObjectGroup.invalid"
+            class="boom">Valider</button>
     </form>
-    } @else if (formGroup.value.objectClass === "WiFiObject") {
-    <form [formGroup]="WiFiObjectGroup" (ngSubmit)="addObject()" class="flex flex-col">
+    } @else if (obj.objectClass === "WiFiObject") {
+    <form [formGroup]="WiFiObjectGroup" (ngSubmit)="updateObject()" class="flex flex-col">
         <mat-form-field>
             <mat-label>Type d'objet</mat-label>
-            <mat-select formControlName="type">
+            <mat-select [disabled]="true" [tabIndex]="obj.type">
                 @for (c of wifis; track $index) {
-                <mat-option [value]="c">{{c}}</mat-option>
+                <mat-option [value]="c" [disabled]="true">{{c}}</mat-option>
                 }
             </mat-select>
-            @if (WiFiObjectGroup.controls.type.invalid) {
-            <mat-error>{{typeErrorMessage()}}</mat-error>
-            }
         </mat-form-field>
         <div>
-            <mat-checkbox formControlName="turnedOn">Allumé</mat-checkbox>
+            <mat-checkbox [disabled]="true" [checked]="WiFiObjectGroup.controls.turnedOn">Allumé</mat-checkbox>
         </div>
-        <button mat-raised-button type="submit"
-            [disabled]="formGroup.invalid || WiFiObjectGroup.invalid">Valider</button>
+        <button mat-raised-button type="submit" [disabled]="formGroup.invalid || WiFiObjectGroup.invalid"
+            class="boom">Valider</button>
     </form>
-    } @else if (formGroup.value.objectClass === "Erreur") {
+    } @else if (obj.objectClass === "Erreur") {
     <p>Cette classe est uniquement pour le développement.</p>
     }
     <button mat-flat-button routerLink="/object" class="w-full mt-1">Retour</button>
 </div>
+}

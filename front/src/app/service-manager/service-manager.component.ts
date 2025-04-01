@@ -158,7 +158,6 @@ export class ServiceManagerComponent {
         const labels: string[] = [];
 
         this.objList.forEach(obj => {
-            console.log(obj);
             if (obj.electricityUsage != undefined &&
                 obj.room.includes(this.filteredRoom.value || '') &&
                 (obj.building || '').includes(this.filteredBuilding.value || '')) {

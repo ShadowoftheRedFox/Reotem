@@ -16,7 +16,6 @@ export const checkUserRole = async (role: UserRole, session: string) => {
     throw new HttpException(400, { role: "unknown" });
   }
 
-  // TODO Reotem.getSession(session:string) -> user.id | undefined
   const userId = (await Reotem.getSession(session))?.id.toString();
 
   if (userId === undefined || userId === "") {
@@ -43,7 +42,7 @@ export const getUser = async (id: string, session: string = "") => {
   //TODO TO DELETE IF ALL USERS HAVE ISO DATE FORMAT (Users Remaining: Ploof and Admin [if admin has age])
   if (!isNaN(parseInt(user.age)) && parseInt(user.age) < 120) {
     user.age = `${new Date(Date.now()).getFullYear() - parseInt(user.age)}-01-01T00:00:01.972Z`;
-    await Reotem.updateUser(user.id, user); 
+    await Reotem.updateUser(user.id, user);
   }
 
   return parseUser(user, user.id === userSession?.id);
