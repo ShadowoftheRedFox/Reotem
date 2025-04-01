@@ -14,6 +14,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSelectModule } from '@angular/material/select';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { PopupService } from '../../services/popup.service';
 
 @Component({
     selector: 'app-user',
@@ -48,11 +49,9 @@ export class UserComponent {
     usernameGroup = new FormGroup({
         firstname: new FormControl('', [Validators.required]),
         lastname: new FormControl('', [Validators.required]),
-        password: new FormControl('', [Validators.required, Validators.minLength(8)]),
     });
     sexeGroup = new FormGroup({
         sexe: new FormControl<UserSexe>('Autre', [Validators.required]),
-        password: new FormControl('', [Validators.required, Validators.minLength(8)]),
     });
     emailGroup = new FormGroup({
         email: new FormControl('', [Validators.required, Validators.email]),
@@ -67,7 +66,8 @@ export class UserComponent {
         private route: ActivatedRoute,
         private auth: AuthentificationService,
         private api: APIService,
-        private com: CommunicationService
+        private com: CommunicationService,
+        private popup: PopupService,
     ) {
         // get the id params
         route.params.subscribe(res => {
@@ -77,7 +77,7 @@ export class UserComponent {
             api.user.get(this.requestedUser, auth.clientToken).subscribe({
                 next: (res) => {
                     this.user = res;
-                    this.imgSource = this.BaseUrl + this.user.id + '.jpg';
+                    this.imgSource = this.BaseUrl + this.user.id + '.webp';
 
                     switch (this.user.lvl) {
                         case 'Débutant':
@@ -93,9 +93,9 @@ export class UserComponent {
 
                     if (this.privateMode) {
                         this.user.age = `${new Date(Date.now()).getFullYear() - new Date(this.user?.age).getFullYear()}`;
-                        this.sexeGroup.setValue({ sexe: this.user.sexe, password: '' });
+                        this.sexeGroup.setValue({ sexe: this.user.sexe });
                         this.emailGroup.setValue({ email: this.user.email, password: '' });
-                        this.usernameGroup.setValue({ firstname: this.user.firstname, lastname: this.user.lastname, password: '' });
+                        this.usernameGroup.setValue({ firstname: this.user.firstname, lastname: this.user.lastname });
                     }
                 },
                 error: () => {
@@ -129,22 +129,64 @@ export class UserComponent {
         const reader = new FileReader();
         reader.readAsDataURL(file);
         reader.onload = () => {
-            // TODO send to back
-            console.log(reader.result);
             if (typeof reader.result == 'string') {
-                this.imgSource = reader.result;
+                this.api.user.changeImg(
+                    this.auth.client?.id as string,
+                    reader.result.split(',')[1],
+                    this.auth.clientToken
+                ).subscribe({
+                    next: () => {
+                        this.imgSource = reader.result as string;
+                        this.com.UpdateUserImage.next(this.imgSource);
+                        this.popup.openSnackBar({
+                            message: "Image changée"
+                        });
+                    },
+                    error: () => {
+                        this.popup.openSnackBar({
+                            message: "Échec de l'interaction"
+                        });
+                    }
+                });
             }
         };
-        reader.onerror = (err) => {
-            console.warn('Error while reading image: ', err);
+        reader.onerror = () => {
+            this.popup.openSnackBar({
+                message: "Imge invalide"
+            });
         };
     }
     // TODO send to api, and like when connecting, use a challenge
     changeUsername() {
         if (this.usernameGroup.invalid) return;
+
+        this.api.user.update(this.auth.client?.id as string, this.auth.clientToken, {
+            firstname: this.usernameGroup.value.firstname as string,
+            lastname: this.usernameGroup.value.lastname as string,
+        }).subscribe({
+            next: () => {
+                if (this.user) {
+                    this.user.firstname = this.usernameGroup.value.firstname as string;
+                    this.user.lastname = this.usernameGroup.value.lastname as string;
+                }
+                this.com.AuthAccountUpdate.next(this.user);
+                this.popup.openSnackBar({
+                    message: "Nom/Prénom changé(s)"
+                });
+            },
+            error: () => {
+                this.popup.openSnackBar({
+                    message: "Échec de l'interaction"
+                });
+            }
+        })
     }
     changeEmail() {
         if (this.emailGroup.invalid) return;
+        if (this.emailGroup.value.email == this.user?.email) {
+            this.emailGroup.controls.email.setErrors({ same: true });
+        }
+        // TODO update le validated à false
     }
     changeSexe() {
         if (this.sexeGroup.invalid) return;
@@ -163,6 +205,8 @@ export class UserComponent {
             return ctrl.getError('minlength').requiredLength + " caractères requis";
         } else if (ctrl.hasError('invalid')) {
             return 'Mot de passe invalide';
+        } else if (ctrl.hasError('same')) {
+            return 'Nouvelle adresse email identique à l\'ancienne';
         }
         return '';
     }

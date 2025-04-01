@@ -79,7 +79,38 @@ export class APIService {
         },
         changeImg: (id: string, base64: string, session: string) => {
             return this.sendApiRequest<{ name: string }>("PUT", "user/" + id + "/image/", { base64: base64, session: session }, `Changing user ${id} image`);
-        }
+        },
+        update: (id: string, session: string, user: Partial<User>) => {
+            return this.sendApiRequest("PUT", "user/" + id, { id: id, session: session, user: user }, "Updating user");
+        },
+        updateEmail: async (id: string, session: string, newEmail: string, password: string) => {
+            let res: LoginChallenge;
+            try {
+                res = await lastValueFrom(this.sendApiRequest<LoginChallenge>("PUT", "user/" + id + "/email", { session: session }, "Challenge auth"));
+            } catch (e) {
+                console.error(e)
+                return throwError(() => e);
+            }
+
+            const hash_password = await bcrypt.hash(password, res.salt);
+            const hash_challenge = await this.hash(res.challenge + hash_password);
+
+            //the user send the hash of the challenge and the new email
+            return this.sendApiRequest("PUT", "user/" + id + "/email", { session: session, newEmail: newEmail, hash: hash_challenge }, "Updating user");
+        },
+        updatePassword: async (id: string, session: string, password: string) => {
+            let res: LoginChallenge;
+            try {
+                res = await lastValueFrom(this.sendApiRequest<LoginChallenge>("PUT", "user/" + id + "/password", { session: session }, "Challenge auth"));
+            } catch (e) {
+                console.error(e)
+                return throwError(() => e);
+            }
+
+            const hash_password = await bcrypt.hash(password, res.salt);
+            const hash_challenge = await this.hash(res.challenge + hash_password);
+            return this.sendApiRequest("PUT", "user/" + id + "/password", { session: session, password: password, hash: hash_challenge }, "Updating user");
+        },
     }
 
     readonly notifications = {

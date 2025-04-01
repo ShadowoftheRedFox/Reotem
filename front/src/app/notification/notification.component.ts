@@ -64,7 +64,7 @@ export interface Task {
 export class NotificationComponent implements AfterViewInit {
     notifications: Notification[] = [];
     sortedNotifications: Notification[] = [];
-    displayedColumns: Columns[] = ['selection', 'id', 'title', 'message', 'menu'];
+    displayedColumns: Columns[] = ['selection', /* 'id', */ 'title', 'message', 'menu'];
 
     dataSource = new MatTableDataSource<Notification>(this.sortedNotifications);
 

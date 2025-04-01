@@ -23,7 +23,7 @@
             "role": "CEO",
             "sexe": "Homme",
             "validated": "VWR1lSjd4boAXcFzSqdV01Mfz3rBFVk091EY084RpgsxC36xSYgMfKEfhKQCYqkb",
-            "photo": "cacapipi_Caca_Pipi-profile_picture.jpg",
+            "photo": "cacapipi_Caca_Pipi-profile_picture.webp",
             "lvl": "Expert",
             "exp": 30
         },
@@ -79,21 +79,21 @@
         ]
     },
     "objects": {
-            "9": {
-                "objectClass": "LightObject",
-                "name": "Ampoule1",
-                "room": "Entrée",
-                "building": "Principal",
-                "mode": "Automatique",
-                "lastInteraction": "2025-03-26T08:20:11.086Z",
-                "connection": "Wi-Fi",
-                "state": "Erreur",
-                "id": 9,
-                "neededLevel": "Débutant",
-                "electricityUsage": 0,
-                "consomationThreshold": 12,
-                "turnedOn": false
-            },
+        "9": {
+            "objectClass": "LightObject",
+            "name": "Ampoule1",
+            "room": "Entrée",
+            "building": "Principal",
+            "mode": "Automatique",
+            "lastInteraction": "2025-03-26T08:20:11.086Z",
+            "connection": "Wi-Fi",
+            "state": "Erreur",
+            "id": 9,
+            "neededLevel": "Débutant",
+            "electricityUsage": 0,
+            "consomationThreshold": 12,
+            "turnedOn": false
+        },
         "13": {
             "objectClass": "SpeakerObject",
             "name": "Speaker",

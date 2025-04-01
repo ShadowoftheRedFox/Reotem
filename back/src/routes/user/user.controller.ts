@@ -1,5 +1,7 @@
 import { Router } from "express";
-import { checkUserRole, getUser, postImage } from "./user.service";
+import {
+    checkUserRole, getUser, postImage, updateUser, updateUserEmail, updateUserPassword
+} from "./user.service";
 import NotifRouter from "./notifications/notifications.controller";
 
 export const UserRouter = Router();
@@ -21,6 +23,40 @@ UserRouter.post('/:id', async (req, res, next) => {
     try {
         console.log(`Getting user ${req.params.id}...`);
         const user = await getUser(req.params.id, req.body.session);
+        res.status(200).json(user);
+    } catch (error) {
+        next(error);
+    }
+});
+
+UserRouter.put('/:id', async (req, res, next) => {
+    try {
+        console.log(`Updating user ${req.params.id}...`);
+        const user = await updateUser(req.params.id, req.body.session, req.body.user);
+        if (user) {
+            res.status(200).json({});
+        } else {
+            res.status(422).json()
+        }
+    } catch (error) {
+        next(error);
+    }
+});
+
+UserRouter.put('/:id/password', async (req, res, next) => {
+    try {
+        console.log(`Updating user password ${req.params.id}...`);
+        const user = await updateUserPassword(req.params.id, req.body.session, req.body.hash, req.body.password);
+        res.status(200).json(user);
+    } catch (error) {
+        next(error);
+    }
+});
+
+UserRouter.put('/:id/email', async (req, res, next) => {
+    try {
+        console.log(`Updating user email ${req.params.id}...`);
+        const user = await updateUserEmail(req.params.id, req.body.session, req.body.hash, req.body.newEmail);
         res.status(200).json(user);
     } catch (error) {
         next(error);

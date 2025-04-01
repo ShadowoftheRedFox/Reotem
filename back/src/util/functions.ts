@@ -10,7 +10,7 @@ const excludes = ["collection", "_doc", "db", "id", "__v", "schema"];
 const Reotem = {
   addUser: async (user: object) => {
     const objectId = new Types.ObjectId();
-    const merged = Object.assign(user, {_id: objectId, id: objectId.toString()});
+    const merged = Object.assign(user, { _id: objectId, id: objectId.toString() });
     const newUser = new models.User(merged);
     await newUser.save().then((u) => console.log(`New user -> ${u.email}`));
   },
@@ -29,8 +29,8 @@ const Reotem = {
     if (data) return data;
     return;
   },
-  updateUser: async (query: string, updated: Partial<UserSchema>) => {
-    const data = await Reotem.getUser(query);
+  updateUser: async (id: string, updated: Partial<UserSchema>) => {
+    const data = await Reotem.getUser(id);
     if (typeof data !== "object") return;
     for (const key in data) {
       if (key.startsWith("$") || typeof (data as never)[key] === typeof Function || excludes.includes(key) || (updated as never)[key] === undefined) continue;
@@ -80,7 +80,7 @@ const Reotem = {
     return;
   },
 
-  addVerification: async (verification: object) => {
+  addVerification: async (verification: { id?: string, token?: string }) => {
     const merged = Object.assign(verification);
     const newVerification = new models.Verification(merged);
     await newVerification.save().then((u) => console.log(`New verification for user -> ${u.id}`));
@@ -122,8 +122,8 @@ const Reotem = {
     return;
   },
   addNotification: async (userId: string, notif: Partial<NotifSchema>) => {
-     const objectId = new Types.ObjectId();
-     const merged = Object.assign(notif, { _id: objectId, id: objectId.toString() });
+    const objectId = new Types.ObjectId();
+    const merged = Object.assign(notif, { _id: objectId, id: objectId.toString() });
     await models.Notification.updateOne({ id: userId }, { $push: { notifications: merged } });
     console.log(`New notifications for user -> ${userId} -> ${notif.id}`);
   },

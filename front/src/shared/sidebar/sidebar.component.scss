@@ -305,3 +305,12 @@ mat-progress-bar {
     width: 20dvw;
     border-radius: 10px;
 }
+
+img {
+    z-index: 2;
+    display: block !important;
+
+    .notFound {
+        display: none !important;
+    }
+}

@@ -85,11 +85,11 @@ export const createUser = async (input: { [key: string]: string | number }) => {
 
   await Reotem.addUser(user);
   await Reotem.addSession({ id: user.id, token: sessionid });
-  await Reotem.addVerification({ id: user.id, token: user.validated });
+  await Reotem.addVerification({ id: user.id, token: user.validated as string });
 
   const username = user.firstname + " " + user.lastname;
   // send the mail with the link to validate
-  sendMail(user.email as string, "Vérification de votre adresse mail", `À l'attention de ${username}`, template.validate(username, user.validated as string), username);
+  sendMail(user.email as string, "Vérification de votre adresse email", `À l'attention de ${username}`, template.validate(username, user.validated as string), username);
 
   user = parseUser(user as never);
 
