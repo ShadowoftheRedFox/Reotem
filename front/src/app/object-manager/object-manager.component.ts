@@ -189,7 +189,8 @@ export class ObjectManagerComponent {
     }
     //#endregion
 
-    domoSelected(index: number) {
+    domoSelected(id: string) {
+        const index = this.objectList.map(object => object.id).indexOf(id);
         this.selectedObjects.set(
             index,
             !(this.selectedObjects.get(index) || false)

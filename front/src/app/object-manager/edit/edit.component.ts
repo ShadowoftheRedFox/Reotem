@@ -390,7 +390,7 @@ export class EditComponent {
                 break;
         }
 
-        this.api.objects.update(object._id, this.auth.clientToken, this.obj as never).subscribe({
+        this.api.objects.update(object.id, this.auth.clientToken, this.obj as never).subscribe({
             next: () => {
                 this.router.navigate(['/object']);
             },

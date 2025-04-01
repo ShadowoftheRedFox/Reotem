@@ -57,7 +57,7 @@
                 <div [class]="bar_class">
                     @for (obj of objectList; track $index) {
                     <app-domo [obj]="obj" [hidden]="!applyNamedFilter(obj)" [selectionEnabled]="true"
-                        [selectIndex]="$index" (selectCallback)="domoSelected(obj._id)"></app-domo>
+                        [selectIndex]="$index" (selectCallback)="domoSelected(obj.id)"></app-domo>
                     }
                 </div>
             </div>
@@ -76,7 +76,7 @@
                 <div [class]="bar_class">
                     @for (obj of filteredObjectList; track $index) {
                     <app-domo [obj]="obj" [selectionEnabled]="true" [selectIndex]="$index"
-                        (selectCallback)="domoSelected(obj._id)"></app-domo>
+                        (selectCallback)="domoSelected(obj.id)"></app-domo>
                     }
                 </div>
                 } @else {
