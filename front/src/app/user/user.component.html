@@ -18,7 +18,6 @@
             </div>
             <input #imageInput id="imageInput" name="imageInput" type="file" hidden
                 accept="image/png, image/jpeg, image/jpg" (change)="changeImage($event)" />
-            <!-- TODO when on click, ask for file and upload to back -->
         </div>
         } @else {
         <img [src]="imgSource" alt="Image de profile" />

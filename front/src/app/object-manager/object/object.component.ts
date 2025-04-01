@@ -76,6 +76,4 @@ export class ObjectComponent {
             });
         });
     }
-
-    // TODO create a good ui
 }
