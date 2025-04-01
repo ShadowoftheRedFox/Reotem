@@ -14,8 +14,8 @@
 </a>
 
 <mat-form-field>
-    <mat-label>Pick a time</mat-label>
-    <input matInput [matTimepicker]="picker">
-    <mat-timepicker-toggle matIconSuffix [for]="picker" />
-    <mat-timepicker #picker />
+    <mat-label>Nombre d'objets à générer</mat-label>
+    <input matInput [formControl]="fakeControl" />
 </mat-form-field>
+<button mat-flat-button (click)="generateFakeData()" [disabled]="fakeControl.invalid">Générer</button>
+<p>{{data}}</p>
