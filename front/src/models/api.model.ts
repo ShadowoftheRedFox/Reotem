@@ -95,3 +95,7 @@ export interface ObjectQuery extends APIQuery {
     sort?: "asc" | "desc";
     type?: ObjectClass;
 }
+
+export interface AdminQuery extends APIQuery {
+    sort?: "asc" | "desc";
+}

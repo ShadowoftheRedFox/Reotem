@@ -6,6 +6,7 @@ import { lastValueFrom, throwError } from 'rxjs';
 import { AuthentificationService } from './authentification.service';
 import { CommunicationService } from './communication.service';
 import { AnyObject } from '../models/domo.model';
+import { AdminQuery} from '../models/api.model';
 
 @Injectable({
     providedIn: 'root'
@@ -146,6 +147,12 @@ export class APIService {
         },
         create: (object: AnyObject, session: string) => {
             return this.sendApiRequest("POST", "objects/create/", { session: session, object: object }, "Creating object");
+        }
+    }
+
+    readonly admin = {
+        getAllUser: (session: string, query: AdminQuery) => {
+            return this.sendApiRequest<{users: User[], number: number}>("POST", "/admin/all", { session: session, query: query }, "[ADMIN] Getting all users");
         }
     }
 

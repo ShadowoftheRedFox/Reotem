@@ -1,0 +1,11 @@
+.h-full-paginator {
+    height: calc(100% - 56px);
+}
+
+::ng-deep.sidenav-container.sidenav-is-mobile .h-full-paginator {
+    height: calc(100% - 85px);
+}
+
+.mat-mdc-header-cell {
+    padding: 0 8px;
+}

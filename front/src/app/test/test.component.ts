@@ -8,6 +8,8 @@ import { RouterLink } from '@angular/router';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AnyObject, Connection, Mode, ObjectClass, ObjectState, WifiType } from '../../models/domo.model';
 import { UserLevel, UserRole } from '../../models/api.model';
+import { APIService } from '../../services/api.service';
+import { AuthentificationService } from '../../services/authentification.service';
 
 @Component({
     selector: 'app-test',
@@ -24,6 +26,11 @@ import { UserLevel, UserRole } from '../../models/api.model';
     styleUrl: './test.component.scss'
 })
 export class TestComponent {
+    constructor(
+        private api: APIService,
+        private auth: AuthentificationService
+    ) { }
+
     fakeControl = new FormControl(0, [Validators.required, Validators.min(1), Validators.max(100)]);
 
     generateToken(n = 24) {
@@ -129,6 +136,10 @@ export class TestComponent {
 
             tab.push(object);
         }
+
+        // tab.forEach(o => {
+        //     this.api.objects.create(o, this.auth.clientToken).subscribe();
+        // })
 
         this.data = JSON.stringify(tab);
     }

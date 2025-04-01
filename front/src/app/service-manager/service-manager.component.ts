@@ -161,10 +161,10 @@ export class ServiceManagerComponent {
             if (obj.electricityUsage != undefined &&
                 obj.room.includes(this.filteredRoom.value || '') &&
                 (obj.building || '').includes(this.filteredBuilding.value || '')) {
-                this.electricityData.global += obj.electricityUsage;
+                this.electricityData.global += obj.electricityUsage ||100;
                 this.electricityData.threshold += obj.consomationThreshold || 0;
 
-                series.push(obj.electricityUsage);
+                series.push(obj.electricityUsage ||100);
                 labels.push(obj.name);
             }
             if (obj.battery) {
