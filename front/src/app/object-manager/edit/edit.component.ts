@@ -48,6 +48,8 @@ export class EditComponent {
     obj: AnyObject | null = null;
     notFound = signal(false);
 
+    // TODO disable.enable some things depending on the user level and color them with teh sad color in the faq
+
     //#region Forms
     customValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
         if (this.obj === null) return { no_obj: true };

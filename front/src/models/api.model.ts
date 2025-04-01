@@ -98,4 +98,5 @@ export interface ObjectQuery extends APIQuery {
 
 export interface AdminQuery extends APIQuery {
     sort?: "asc" | "desc";
+    validated?: false;
 }

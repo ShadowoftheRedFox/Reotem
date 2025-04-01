@@ -1,42 +1,37 @@
-<h1>Page Administrateur</h1>
-
-<div class="mat-elevation-z8 h-full flex flex-col justify-between">
-    <input matInput (keyup)="applyFilter($event)" placeholder="Rechercher un utilisateur">
-
-    <table mat-table class="w-full" [dataSource]="dataSource" matSort (matSortChange)="sortData($event)">
-
-        <ng-container matColumnDef="id">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="id"> Id </th>
-            <td mat-cell *matCellDef="let user">{{user.id}}</td>
-        </ng-container>
-
-        <ng-container matColumnDef="firstname">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="firstname">Prénom</th>
-            <td mat-cell *matCellDef="let user">{{ user.firstname }}</td>
-        </ng-container>
-
-        <ng-container matColumnDef="lastname">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="lastname">Nom</th>
-            <td mat-cell *matCellDef="let user">{{ user.lastname }}</td>
-        </ng-container>
-
-        <ng-container matColumnDef="email">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="email">Email</th>
-            <td mat-cell *matCellDef="let user">{{ user.email }}</td>
-        </ng-container>
-
-        <ng-container matColumnDef="lastLogin">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="lastLogin">Dernière Connexion</th>
-            <td mat-cell *matCellDef="let user">{{ user.lastLogin ? formatDate(user.lastLogin) : 'Aucune connexion' }}</td>
-        </ng-container>
-
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let myRowData; columns: displayedColumns"></tr>
-
-    </table>
-
-    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons
-        aria-label="Sélection d'une page d'utilisateur">
-    </mat-paginator>
-
-</div>
+<mat-tab-group class="h-full">
+    <mat-tab>
+        <ng-template mat-tab-label>
+            <mat-icon class="symbols">group</mat-icon>
+            Utilisateurs
+        </ng-template>
+        <app-user-list class="h-full" (selectedUser)="selectUser($event)"></app-user-list>
+    </mat-tab>
+    <mat-tab [disabled]="selectedUser===null">
+        <ng-template mat-tab-label>
+            <mat-icon class="symbols">person_edit</mat-icon>
+            Modification
+        </ng-template>
+        <app-user-edit class="h-full" [selectedUser]="selectedUser"></app-user-edit>
+    </mat-tab>
+    <mat-tab>
+        <ng-template mat-tab-label>
+            <mat-icon class="symbols" [matBadge]="validationBadgeAmount" aria-hidden="false">how_to_reg</mat-icon>
+            Validation
+        </ng-template>
+        <app-validating class="h-full" (amount)="validationBadge($event)"></app-validating>
+    </mat-tab>
+    <mat-tab>
+        <ng-template mat-tab-label>
+            <mat-icon class="symbols" [matBadge]="deletionBadgeAmount" aria-hidden="false">auto_delete</mat-icon>
+            Effacement
+        </ng-template>
+        <app-deletion-request class="h-full" (amount)="deletionBadge($event)"></app-deletion-request>
+    </mat-tab>
+    <mat-tab>
+        <ng-template mat-tab-label>
+            <mat-icon class="symbols">archive</mat-icon>
+            Logs
+        </ng-template>
+        <app-website-logs class="h-full"></app-website-logs>
+    </mat-tab>
+</mat-tab-group>

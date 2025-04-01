@@ -20,8 +20,7 @@
                 </button>
                 <mat-menu #themeMenu>
                     @for (item of theme.themeList; track $index) {
-                    <button mat-menu-item [style.display]="item.value===theme.themeChoosen?'none':'block'"
-                        (click)="theme.setTheme(item.value)">{{item.label}}</button>
+                    <button mat-menu-item (click)="theme.setTheme(item.value)">{{item.label}}</button>
                     }
                 </mat-menu>
             </div>

@@ -103,6 +103,8 @@ export const updateUser = async (id: string, session: string, updatedUser: Parti
         throw new HttpException(401);
     }
 
+    // FIXME case where an admin edit his own profile
+
     if (!sessionUserIsAdmin) {
         // fields user can't update but admin can
         delete updatedUser.adminValidated;
