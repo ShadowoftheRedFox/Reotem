@@ -56,13 +56,13 @@ export const routes: Routes = [
         canActivate: [authGuard]
     },
     {
-        path: "object/edit",
+        path: "object/edit/:id",
         title: "Édition d'objet" + TITLE_POSTFIX,
         component: EditComponent,
         canActivate: [authGuard]
     },
     {
-        path: "object/:id",
+        path: "object/view/:id",
         title: "Objet" + TITLE_POSTFIX,
         component: ObjectComponent,
         canActivate: [authGuard]

@@ -54,7 +54,7 @@ export class ObjectManagerComponent {
     filteredRoom = new FormControl<string[]>([]);
     roomList: string[] = [];
 
-    selectedObjects = new Map<number, boolean>();
+    selectedObjects = new Map<string, boolean>();
     anySlected = signal(false);
     onlyOne = signal(false);
 
@@ -63,14 +63,18 @@ export class ObjectManagerComponent {
             name: "Ajouter",
             icon: "add",
             callback: () => {
-                this.router.navigate(['object', 'create']);
+                this.router.navigate(['/object', 'create']);
             }
         },
         {
             name: "Modifier",
             icon: "edit",
             callback: () => {
-                this.router.navigate(['object', 'edit'])
+                let id = '';
+                this.selectedObjects.forEach((v, k) => {
+                    if (v) id = k;
+                });
+                this.router.navigate(['/object', 'edit', id]);
             },
             disabled: this.onlyOne
         },
@@ -175,7 +179,7 @@ export class ObjectManagerComponent {
     }
     //#endregion
 
-    domoSelected(index: number) {
+    domoSelected(index: string) {
         this.selectedObjects.set(index, !(this.selectedObjects.get(index) || false));
         let temp = false;
         let count = 0;

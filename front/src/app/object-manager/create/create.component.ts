@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, isDevMode } from '@angular/core';
+import { Component, inject, isDevMode } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -29,7 +29,6 @@ import { DateAdapter, provideNativeDateAdapter } from '@angular/material/core';
         MatTimepickerModule
     ],
     providers: [provideNativeDateAdapter()],
-    changeDetection: ChangeDetectionStrategy.OnPush,
     templateUrl: './create.component.html',
     styleUrl: './create.component.scss'
 })
@@ -110,7 +109,6 @@ export class CreateComponent {
     });
 
     ComputerObjectGroup = new FormGroup({
-        mode: new FormControl<Mode>("Manuel", [Validators.required]),
         consomationThreshold: new FormControl<number>(10, [Validators.required, Validators.min(0)]),
         battery: new FormControl(false, []),
         turnedOn: new FormControl(true, []),

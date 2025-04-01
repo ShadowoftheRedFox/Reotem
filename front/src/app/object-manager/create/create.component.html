@@ -253,7 +253,8 @@
         <div>
             <mat-checkbox formControlName="turnedOn">Allumé</mat-checkbox>
         </div>
-        <button mat-raised-button type="submit" [disabled]="formGroup.invalid">Valider</button>
+        <button mat-raised-button type="submit"
+            [disabled]="formGroup.invalid || WiFiObjectGroup.invalid">Valider</button>
     </form>
     } @else if (formGroup.value.objectClass === "Erreur") {
     <p>Cette classe est uniquement pour le développement.</p>
