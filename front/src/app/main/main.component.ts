@@ -4,7 +4,7 @@ import { AnyObject } from '../../models/domo.model';
 import { DomoComponent } from '../../shared/domo/domo.component';
 import { CookieTime } from '../../models/cookie.model';
 import { RouterLink } from '@angular/router';
-import { CdkDropList, CdkDrag, CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { CdkDropList, CdkDrag, CdkDragDrop, moveItemInArray, CdkDragHandle } from '@angular/cdk/drag-drop';
 import { MatIconModule } from '@angular/material/icon';
 import { AuthentificationService } from '../../services/authentification.service';
 import { CommunicationService } from '../../services/communication.service';
@@ -25,6 +25,7 @@ const OrderItems = 4;
         DomoComponent,
         RouterLink,
         CdkDrag,
+        CdkDragHandle,
         CdkDropList,
         MatIconModule,
         MatButtonModule,
