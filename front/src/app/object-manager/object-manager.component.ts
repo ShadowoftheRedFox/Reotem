@@ -212,14 +212,13 @@ export class ObjectManagerComponent {
 
     deleteObjects(indexes: number[]) {
         console.log("Deleting objects ", indexes);
-        // TODO api call
         indexes.forEach((index) => {
             this.api.objects
                 .delete(this.objectList[index].id, this.auth.clientToken)
                 .subscribe({
                     next: () => {
                         if (indexes.length === 1) this.popup.openSnackBar({
-                            message: `L'objet "${this.objectList[index].name}" a bien été supprimé`,
+                            message: `L'objet "${this.objectList[index].name}" a bien été marqué pour la suppression.`,
                             action: "Ok",
                         });
                         this.selectedObjects.delete(index)
@@ -237,7 +236,7 @@ export class ObjectManagerComponent {
                 });
         });
         if (indexes.length > 1) this.popup.openSnackBar({
-            message: `Les objets sélectionnés ont bien été supprimés.`,
+            message: `Les objets sélectionnés ont bien été marqués pour la suppression.`,
             action: "Ok",
         });
     }

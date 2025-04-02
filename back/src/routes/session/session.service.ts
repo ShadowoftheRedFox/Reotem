@@ -71,7 +71,7 @@ export const createSession = async (email: string, hash?: string) => {
 
             await Reotem.deleteSession(user.id);
             await Reotem.addSession({ id: user.id, token: sessionid });
-            await Reotem.updateUser(user.id, { challenge: undefined, lastLogin: `${new Date(Date.now()).toISOString}` })
+            await Reotem.updateUser(user.id, { challenge: undefined, lastLogin: `${new Date(Date.now()).toISOString()}` })
 
             return { sessionid: sessionid };
         }
