@@ -1,1 +1,83 @@
-<p>{{display}}</p>
+@if (obj===null) {
+@if (requestedObject==="loading") {
+<p>Chargement...</p>
+} @else {
+<app-error></app-error>
+}
+} @else {
+<div class="flex flex-col justify-center items-stretch">
+    <div class="main-header flex flex-row items-center justify-center gap-2">
+        @if(obj.objectClass === "BaseObject") {
+        <mat-icon classs="symbols">deployed_code</mat-icon>
+        } @else {
+        <div [class]="obj.objectClass+' header'"></div>
+        }
+        <p class="text-xl">{{obj.name}}</p>
+    </div>
+    <div class="public flex flex-col gap-1 items-start">
+        <p>ID: {{obj.id}}</p>
+        <p>Nom: {{obj.name}}</p>
+        <p>Salle: {{obj.room}}</p>
+        @if (obj.building!==undefined){
+        <p>Bâtiment: {{obj.building}}</p>
+        }
+        <p>Rôle nécéssaire: {{obj.neededRole}}</p>
+        <p>Niveau nécéssaire: {{obj.neededLevel}}</p>
+        <p>Dernière interaction: {{formatDateTime(obj.lastInteraction)}}</p>
+        <p>Type de connexion: {{obj.connection}}</p>
+        <p>État: {{obj.state}}</p>
+        <p>Classe: {{obj.objectClass}}</p>
+        @if (obj.objectClass==="LightObject") {
+        <p>Consommation d'électricité: {{obj.electricityUsage}}Wh</p>
+        <p>Limite de consommation: {{obj.consomationThreshold}}W</p>
+        <p>Batterie: {{obj.battery}}%</p>
+        <p>Allumé: {{obj.turnedOn?"Oui":"Non"}}</p>
+        <p>Mode: {{obj.mode}}</p>
+        } @else if (obj.objectClass==="ThermostatObject") {
+        <p>Consommation d'électricité: {{obj.electricityUsage}}Wh</p>
+        <p>Limite de consommation: {{obj.consomationThreshold}}W</p>
+        <p>Batterie: {{obj.battery}}%</p>
+        <p>Allumé: {{obj.turnedOn?"Oui":"Non"}}</p>
+        <p>Température visé: {{obj.targetTemp}}</p>
+        <p>Température actuelle: {{obj.currentTemp}}</p>
+        <p>Mode: {{obj.mode}}</p>
+        } @else if (obj.objectClass==="SpeakerObject") {
+        <p>Consommation d'électricité: {{obj.electricityUsage}}Wh</p>
+        <p>Limite de consommation: {{obj.consomationThreshold}}W</p>
+        <p>Allumé: {{obj.turnedOn?"Oui":"Non"}}</p>
+        <p>Batterie: {{obj.battery}}%</p>
+        } @else if (obj.objectClass==="VideoProjectorObject") {
+        <p>Consommation d'électricité: {{obj.electricityUsage}}Wh</p>
+        <p>Limite de consommation: {{obj.consomationThreshold}}W</p>
+        <p>Allumé: {{obj.turnedOn?"Oui":"Non"}}</p>
+        } @else if (obj.objectClass==="ComputerObject") {
+        <p>Consommation d'électricité: {{obj.electricityUsage}}Wh</p>
+        <p>Limite de consommation: {{obj.consomationThreshold}}W</p>
+        <p>Allumé: {{obj.turnedOn?"Oui":"Non"}}</p>
+        <p>Batterie: {{obj.battery}}%</p>
+        } @else if (obj.objectClass==="WindowStoreObject") {
+        <p>Mode: {{obj.mode}}</p>
+        <p>État d'ouverture: {{obj.openState}}%</p>
+        <p>Heure d'ouverture: {{formatTime(obj.openTime+'')}}</p>
+        <p>Heure de fermeture: {{formatTime(obj.closeTime+'')}}</p>
+        } @else if (obj.objectClass==="DoorObject") {
+        <p>Vérouillé: {{obj.locked?'Oui':'Non'}}</p>
+        <p>Fermé: {{obj.closed?'Oui':'Non'}}</p>
+        <p>Heure d'ouverture: {{formatTime(obj.openTime+'')}}</p>
+        <p>Heure de fermeture: {{formatTime(obj.closeTime+'')}}</p>
+        } @else if (obj.objectClass==="WiFiObject") {
+        <p>Consommation d'électricité: {{obj.electricityUsage}}</p>
+        <p>Type: {{obj.type}}</p>
+        <p>Allumé: {{obj.turnedOn?"Oui":"Non"}}</p>
+        }
+        <div class="flex flex-row gap-4">
+            <a [routerLink]="'/object/edit/'+obj.id">
+                <button mat-flat-button>Modifier</button>
+            </a>
+            <a [routerLink]="'/object/'">
+                <button mat-flat-button>Retour</button>
+            </a>
+        </div>
+    </div>
+</div>
+}

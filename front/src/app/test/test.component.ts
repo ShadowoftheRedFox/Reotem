@@ -6,7 +6,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { RouterLink } from '@angular/router';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
-import { AnyObject, Connection, Mode, ObjectClass, ObjectState, WifiType } from '../../models/domo.model';
+import { Connection, Mode, ObjectClass, ObjectState, WifiType } from '../../models/domo.model';
 import { UserLevel, UserRole } from '../../models/api.model';
 import { APIService } from '../../services/api.service';
 import { AuthentificationService } from '../../services/authentification.service';
@@ -136,9 +136,9 @@ export class TestComponent {
             tab.push(object);
         }
 
-        tab.forEach(o => {
-            this.api.objects.create(o as AnyObject, this.auth.clientToken).subscribe();
-        });
+        // tab.forEach(o => {
+        //     this.api.objects.create(o as AnyObject, this.auth.clientToken).subscribe();
+        // });
 
         this.data = JSON.stringify(tab);
     }
