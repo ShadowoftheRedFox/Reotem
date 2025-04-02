@@ -72,7 +72,7 @@ export class ObjectManagerComponent {
             name: "Modifier",
             icon: "edit",
             callback: () => {
-                this.router.navigate(["object", "edit"]);
+                this.router.navigate(["object", "edit", this.objectList[Array.from(this.selectedObjects.keys())[0]].id]);
             },
             disabled: this.onlyOne,
         },
