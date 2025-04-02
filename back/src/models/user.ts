@@ -13,11 +13,11 @@ const userSchemaDefinition = {
   age: { type: String, required: true },
   role: { type: String, required: true },
   sexe: { type: String, required: true },
-  exp: { type: Number, default: 0 },
-  lvl: { type: String, default: "Débutant" },
+  exp: { type: Number, default: 0, required: true },
+  lvl: { type: String, default: "Débutant", required: true },
   challenge: String, // can be undefined when is not challenged
   validated: String, // is a secret token, is defined when user has not validated his email yet
-  adminValidated: { type: Boolean, default: null },
+  adminValidated: { type: Boolean, default: false, required: true },
   lastLogin: String,
 };
 
