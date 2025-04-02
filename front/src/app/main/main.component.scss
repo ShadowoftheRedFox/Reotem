@@ -10,6 +10,9 @@
     border-bottom-width: var(--mdc-outlined-card-outline-width, 1px);
     border-color: var(--mdc-outlined-card-outline-color, var(--mat-sys-outline-variant));
 
+    background-color: var(--mat-sidenav-content-background-color, var(--mat-sys-background));
+    border-radius: 20px;
+
     .bar-class {
         padding-bottom: 4px;
     }

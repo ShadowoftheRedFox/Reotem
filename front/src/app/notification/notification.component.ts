@@ -64,7 +64,7 @@ export interface Task {
 export class NotificationComponent implements AfterViewInit {
     notifications: Notification[] = [];
     sortedNotifications: Notification[] = [];
-    displayedColumns: Columns[] = ['selection', 'id', 'title', 'message', 'menu'];
+    readonly displayedColumns: Columns[] = ['selection', /* 'id', */ 'title', 'message', 'menu'];
 
     dataSource = new MatTableDataSource<Notification>(this.sortedNotifications);
 
@@ -125,7 +125,7 @@ export class NotificationComponent implements AfterViewInit {
                 return false;
             }
             return task.subtasks.some(t => t.checked) && !task.subtasks.every(t => t.checked);
-        })
+        });
     }
 
     sortNotif(sort: Sort) {
@@ -150,7 +150,7 @@ export class NotificationComponent implements AfterViewInit {
                 default:
                     return 0;
             }
-        })
+        });
     }
 
     private compare(a: number | string, b: number | string, isAsc: boolean) {

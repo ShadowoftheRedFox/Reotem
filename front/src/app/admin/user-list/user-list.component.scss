@@ -1,0 +1,40 @@
+* {
+    text-wrap: auto;
+    text-wrap-style: pretty;
+    text-wrap-mode: wrap;
+    overflow-wrap: anywhere;
+}
+
+.h-full-paginator {
+    height: calc(100% - 56px);
+}
+
+::ng-deep .sidenav-is-mobile .h-full-paginator {
+    height: calc(100% - 85px);
+}
+
+.mat-mdc-header-cell {
+    padding: 0 8px;
+}
+
+::ng-deep .sidenav-is-mobile .mat-mdc-header-cell {
+    padding: 0;
+}
+
+::ng-deep .sidenav-is-mobile td {
+    padding: 0;
+}
+
+table>* {
+    max-width: 100dvw;
+    overflow-y: auto;
+}
+
+td {
+    overflow-y: auto;
+    padding: 0 8px;
+}
+
+::ng-deep .mdc-data-table__content {
+    height: auto;
+}

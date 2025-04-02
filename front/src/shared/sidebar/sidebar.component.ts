@@ -81,6 +81,8 @@ export class SidebarComponent implements OnDestroy {
             this.user = u;
 
             if (this.user) {
+                this.imgSource = this.BaseUrl + this.user?.id + '.webp';
+
                 switch (this.user.lvl) {
                     case "Débutant":
                         this.userLevelCompletion = Math.floor((this.user.exp / LevelBeginner) * 100);
@@ -95,13 +97,19 @@ export class SidebarComponent implements OnDestroy {
                         this.userLevelCompletion = Math.floor(((Math.random() * LevelExpert) / LevelExpert) * 100);
                 }
             }
-        })
+        });
+
+        com.UpdateUserImage.subscribe(res => {
+            this.imgSource = res;
+        });
     }
 
     user: User | null = null;
     isAdmin = false;
     readonly SiteName = SiteName;
     readonly BaseUrl = environment.api_url;
+
+    imgSource = '';
 
     userLevelCompletion = 0;
 

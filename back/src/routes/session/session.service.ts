@@ -22,12 +22,12 @@ export const getSession = async (token: string) => {
     return { ...user };
 };
 
-export const createSession = async (mail: string, hash?: string) => {
-    if (!mail) {
+export const createSession = async (email: string, hash?: string) => {
+    if (!email) {
         throw new HttpException(422, { mail: "can't be blank" });
     }
 
-    const user = (await Reotem.getUserByMail(mail)) as UserSchema;
+    const user = (await Reotem.getUserByMail(email)) as UserSchema;
 
     if (user == undefined && !hash) {
         // instead of doing that, pretend it's ok and send a wrong tokens
@@ -43,7 +43,7 @@ export const createSession = async (mail: string, hash?: string) => {
 
         const salt = '$' + password[1] + '$' + password[2] + '$' + password[3].slice(0, 22);
 
-        console.log("fake challenge fallthrough");
+        console.log("Fake challenge fallthrough");
 
         return { challenge: challenge, salt: salt };
     }
@@ -57,14 +57,11 @@ export const createSession = async (mail: string, hash?: string) => {
 
         await Reotem.updateUser(user.id, { challenge: challenge })
 
-        console.log("true challenger")
-
         return { challenge: challenge, salt: salt };
     }
 
-    console.log(user, hash);
     if (hash && user && user.challenge) {
-        console.log("verifying challenge anwser")
+        console.log("Verifying challenge anwser")
 
         const hash_server = crypto.createHash("sha256").update(user.challenge + user.password).digest("hex");
 

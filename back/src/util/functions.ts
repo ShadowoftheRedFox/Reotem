@@ -32,8 +32,8 @@ const Reotem = {
     if (data) return data;
     return;
   },
-  updateUser: async (query: string, updated: Partial<UserSchema>) => {
-    const data = await Reotem.getUser(query);
+  updateUser: async (id: string, updated: Partial<UserSchema>) => {
+    const data = await Reotem.getUser(id);
     if (typeof data !== "object") return;
     for (const key in data) {
       if (key.startsWith("$") || typeof (data as never)[key] === typeof Function || excludes.includes(key) || (updated as never)[key] === undefined) continue;
@@ -86,7 +86,7 @@ const Reotem = {
     return;
   },
 
-  addVerification: async (verification: object) => {
+  addVerification: async (verification: { id?: string, token?: string }) => {
     const merged = Object.assign(verification);
     const newVerification = new models.Verification(merged);
     await newVerification.save().then((u) => {

@@ -35,6 +35,9 @@ export class CommunicationService {
     DomoObjectsAmount = 0;
     DomoSubsetObjectsAmount = 0;
 
+    // event when image changes
+    UpdateUserImage = new Subject<string>();
+
     constructor() {
         // listen to the update to remember them (prevent multiple api request)
         this.DomoAllObjectsUpdate.subscribe(res => {

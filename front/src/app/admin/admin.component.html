@@ -1,1 +1,37 @@
-<p>admin works!</p>
+<mat-tab-group class="h-full">
+    <mat-tab>
+        <ng-template mat-tab-label>
+            <mat-icon class="symbols">group</mat-icon>
+            Utilisateurs
+        </ng-template>
+        <app-user-list class="h-full" (selectedUser)="selectUser($event)"></app-user-list>
+    </mat-tab>
+    <mat-tab [disabled]="selectedUser===null">
+        <ng-template mat-tab-label>
+            <mat-icon class="symbols">person_edit</mat-icon>
+            Modification
+        </ng-template>
+        <app-user-edit class="h-full" [selectedUser]="selectedUser"></app-user-edit>
+    </mat-tab>
+    <mat-tab>
+        <ng-template mat-tab-label>
+            <mat-icon class="symbols" [matBadge]="validationBadgeAmount" aria-hidden="false">how_to_reg</mat-icon>
+            Validation
+        </ng-template>
+        <app-validating class="h-full" (amount)="validationBadge($event)"></app-validating>
+    </mat-tab>
+    <mat-tab>
+        <ng-template mat-tab-label>
+            <mat-icon class="symbols" [matBadge]="deletionBadgeAmount" aria-hidden="false">auto_delete</mat-icon>
+            Effacement
+        </ng-template>
+        <app-deletion-request class="h-full" (amount)="deletionBadge($event)"></app-deletion-request>
+    </mat-tab>
+    <mat-tab>
+        <ng-template mat-tab-label>
+            <mat-icon class="symbols">archive</mat-icon>
+            Logs
+        </ng-template>
+        <app-website-logs class="h-full"></app-website-logs>
+    </mat-tab>
+</mat-tab-group>

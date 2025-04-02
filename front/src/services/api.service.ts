@@ -6,6 +6,7 @@ import { lastValueFrom, throwError } from 'rxjs';
 import { AuthentificationService } from './authentification.service';
 import { CommunicationService } from './communication.service';
 import { AnyObject } from '../models/domo.model';
+import { AdminQuery } from '../models/api.model';
 
 @Injectable({
     providedIn: "root",
@@ -141,14 +142,40 @@ export class APIService {
             );
         },
         changeImg: (id: string, base64: string, session: string) => {
-            return this.sendApiRequest<{ name: string }>(
-                "PUT",
-                "user/" + id + "/image/",
-                { base64: base64, session: session },
-                `Changing user ${id} image`
-            );
+            return this.sendApiRequest<{ name: string }>("PUT", "user/" + id + "/image/", { base64: base64, session: session }, `Changing user ${id} image`);
         },
-    };
+        update: (id: string, session: string, user: Partial<User>) => {
+            return this.sendApiRequest("PUT", "user/" + id, { id: id, session: session, user: user }, "Updating user");
+        },
+        updateEmail: async (id: string, session: string, newEmail: string, password: string) => {
+            let res: LoginChallenge;
+            try {
+                res = await lastValueFrom(this.sendApiRequest<LoginChallenge>("PUT", "user/" + id + "/email", { session: session }, "Challenge auth"));
+            } catch (e) {
+                console.error(e)
+                return throwError(() => e);
+            }
+
+            const hash_password = await bcrypt.hash(password, res.salt);
+            const hash_challenge = await this.hash(res.challenge + hash_password);
+
+            //the user send the hash of the challenge and the new email
+            return this.sendApiRequest("PUT", "user/" + id + "/email", { session: session, newEmail: newEmail, hash: hash_challenge }, "Updating user");
+        },
+        updatePassword: async (id: string, session: string, oldpassword: string, newpassword: string) => {
+            let res: LoginChallenge;
+            try {
+                res = await lastValueFrom(this.sendApiRequest<LoginChallenge>("PUT", "user/" + id + "/password", { session: session }, "Challenge auth"));
+            } catch (e) {
+                console.error(e)
+                return throwError(() => e);
+            }
+
+            const hash_password = await bcrypt.hash(oldpassword, res.salt);
+            const hash_challenge = await this.hash(res.challenge + hash_password);
+            return this.sendApiRequest("PUT", "user/" + id + "/password", { session: session, password: newpassword, hash: hash_challenge }, "Updating user");
+        },
+    }
 
     readonly notifications = {
         getNum: (id: string, session: string) => {
@@ -239,14 +266,18 @@ export class APIService {
             );
         },
         create: (object: AnyObject, session: string) => {
-            return this.sendApiRequest(
-                "POST",
-                "objects/create/",
-                { session: session, object: object },
-                "Creating object"
-            );
+            return this.sendApiRequest("POST", "objects/create/", { session: session, object: object }, "Creating object");
+        }
+    }
+
+    readonly admin = {
+        getAllUser: (session: string, query: AdminQuery) => {
+            return this.sendApiRequest<{ users: User[], number: number }>("POST", "admin/all", { session: session, query: query }, "[ADMIN] Getting all users");
         },
-    };
+        validateUser: (session: string, userId: string) => {
+            return this.sendApiRequest("POST", "admin/" + userId, { session: session }, "[ADMIN] Validating user " + userId);
+        }
+    }
 
     private sendApiRequest<T>(
         method: "GET" | "POST" | "PUT" | "DELETE" | "PATCH",

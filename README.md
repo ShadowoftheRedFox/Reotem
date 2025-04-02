@@ -57,11 +57,11 @@ npm run start
   - [x] s'inscrire
   - [x] valider son inscription (par mail ou autre)
   - [x] envoie de mail au(x) membre(s)
-  - [ ] modifier le profil d'un membre
+  - [x] modifier le profil d'un membre
   - [ ] log des connexions
   - [ ] changer le niveau d'un membre
   - [ ] gerer le nombre d'accès et le nombre d'actions des utilisateurs
-  - [ ] rechercher, consulter, ajouter ou effacer les objets et services connectés
+  - [x] rechercher, consulter, ajouter ou effacer les objets et services connectés
 - [ ] module gestion (pour les membres d'un certains niveaux):
   - [x] ajouter un nouvel objet connecté
   - [ ] demander à un admin la suppression d'un objet

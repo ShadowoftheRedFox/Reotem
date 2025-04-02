@@ -63,19 +63,6 @@
                                 <mat-error>{{genericError(usernameGroup.controls.lastname)}}</mat-error>
                                 }
                             </mat-form-field>
-                            <mat-form-field>
-                                <mat-label>Mot de passe</mat-label>
-                                <input matInput formControlName="password"
-                                    [type]="usernamePasswordHidden() ? 'password' : 'text'">
-                                <button type="button" mat-icon-button matSuffix (click)="hideUsernamePassword($event)"
-                                    [attr.aria-label]="'Cacher le mot de passe'"
-                                    [attr.aria-pressed]="usernamePasswordHidden()">
-                                    <mat-icon>{{usernamePasswordHidden() ? 'visibility_off' : 'visibility'}}</mat-icon>
-                                </button>
-                                @if (usernameGroup.controls.password.invalid) {
-                                <mat-error>{{genericError(usernameGroup.controls.password)}}</mat-error>
-                                }
-                            </mat-form-field>
                             <button mat-flat-button type="submit" [disabled]="usernameGroup.invalid">
                                 Changer de nom/prénom</button>
                         </form>
@@ -97,19 +84,6 @@
                                 </mat-select>
                                 @if (sexeGroup.controls.sexe.invalid) {
                                 <mat-error>{{genericError(sexeGroup.controls.sexe)}}</mat-error>
-                                }
-                            </mat-form-field>
-                            <mat-form-field>
-                                <mat-label>Mot de passe</mat-label>
-                                <input matInput formControlName="password"
-                                    [type]="sexePasswordHidden() ? 'password' : 'text'">
-                                <button type="button" mat-icon-button matSuffix (click)="hideSexePassword($event)"
-                                    [attr.aria-label]="'Cacher le mot de passe'"
-                                    [attr.aria-pressed]="sexePasswordHidden()">
-                                    <mat-icon>{{sexePasswordHidden() ? 'visibility_off' : 'visibility'}}</mat-icon>
-                                </button>
-                                @if (sexeGroup.controls.password.invalid) {
-                                <mat-error>{{genericError(sexeGroup.controls.password)}}</mat-error>
                                 }
                             </mat-form-field>
                             <button mat-flat-button type="submit" [disabled]="sexeGroup.invalid">
