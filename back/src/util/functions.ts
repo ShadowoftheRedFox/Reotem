@@ -293,9 +293,9 @@ const Reotem = {
 
   dataDump: async (id: string) => {
     const user = await Reotem.getUser(id)
-    if (user?.role !== "Administrator") return 401
+    if (user?.role !== "Administrator") return 403
     const db = mongoose.connection.db
-    if (!db) return
+    if (!db) return 500
     const collections = await db.listCollections().toArray();
     const result: Record<string, mongoose.mongo.WithId<mongoose.mongo.BSON.Document>[]> = {};
     for (const collection of collections) {
@@ -305,7 +305,7 @@ const Reotem = {
     fs.appendFile('./dump/backup.json', `${JSON.stringify(result, undefined, 4)}`, function (err) {
       if (err) return 500;
     });
-    return 200
+    return 201
   }
 };
 

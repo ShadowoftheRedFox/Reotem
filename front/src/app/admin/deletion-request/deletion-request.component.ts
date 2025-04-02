@@ -1,17 +1,27 @@
-import { AfterViewInit, Component, Injectable, output, ViewChild } from '@angular/core';
-import { APIService } from '../../../services/api.service';
-import { AuthentificationService } from '../../../services/authentification.service';
-import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { MatSort, MatSortModule, Sort } from '@angular/material/sort';
-import { MatMenuModule } from '@angular/material/menu';
-import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
-import { MatPaginator, MatPaginatorIntl, MatPaginatorModule } from '@angular/material/paginator';
-import { Subject } from 'rxjs';
-import { AnyObject } from '../../../models/domo.model';
-import { CommunicationService } from '../../../services/communication.service';
-import { PopupService } from '../../../services/popup.service';
-import { MatCheckboxModule } from '@angular/material/checkbox';
+import {
+    AfterViewInit,
+    Component,
+    Injectable,
+    output,
+    ViewChild,
+} from "@angular/core";
+import { APIService } from "../../../services/api.service";
+import { AuthentificationService } from "../../../services/authentification.service";
+import { MatTableDataSource, MatTableModule } from "@angular/material/table";
+import { MatSort, MatSortModule, Sort } from "@angular/material/sort";
+import { MatMenuModule } from "@angular/material/menu";
+import { MatIconModule } from "@angular/material/icon";
+import { MatButtonModule } from "@angular/material/button";
+import {
+    MatPaginator,
+    MatPaginatorIntl,
+    MatPaginatorModule,
+} from "@angular/material/paginator";
+import { Subject } from "rxjs";
+import { AnyObject } from "../../../models/domo.model";
+import { CommunicationService } from "../../../services/communication.service";
+import { PopupService } from "../../../services/popup.service";
+import { MatCheckboxModule } from "@angular/material/checkbox";
 
 type Columns = "selection" | "objectId" | "name" | "userId";
 
@@ -27,8 +37,8 @@ export class CustomPaginatorIntl implements MatPaginatorIntl {
 
     // You can set labels to an arbitrary string too, or dynamically compute
     // it through other third-party internationalization libraries.
-    nextPageLabel = 'Page suivante';
-    previousPageLabel = 'Page précédente';
+    nextPageLabel = "Page suivante";
+    previousPageLabel = "Page précédente";
 
     getRangeLabel(page: number, pageSize: number, length: number): string {
         if (length === 0) {
@@ -39,7 +49,7 @@ export class CustomPaginatorIntl implements MatPaginatorIntl {
     }
 }
 @Component({
-    selector: 'app-deletion-request',
+    selector: "app-deletion-request",
     imports: [
         MatTableModule,
         MatSortModule,
@@ -48,13 +58,18 @@ export class CustomPaginatorIntl implements MatPaginatorIntl {
         MatButtonModule,
         MatCheckboxModule,
         MatPaginatorModule,
-        MatButtonModule,],
-    templateUrl: './deletion-request.component.html',
-    styleUrl: './deletion-request.component.scss',
+        MatButtonModule,
+    ],
+    templateUrl: "./deletion-request.component.html",
+    styleUrl: "./deletion-request.component.scss",
     providers: [{ provide: MatPaginatorIntl, useClass: CustomPaginatorIntl }],
 })
 export class DeletionRequestComponent implements AfterViewInit {
-    displayedColumns: Columns[] = ["selection",/* "objectId", */ "name", "userId"];
+    displayedColumns: Columns[] = [
+        "selection",
+        /* "objectId", */ "name",
+        "userId",
+    ];
     objects: AnyObject[] = [];
     sortedObjects: AnyObject[] = [];
 
@@ -87,11 +102,12 @@ export class DeletionRequestComponent implements AfterViewInit {
                 this.objects = data.objects;
                 this.updatObjectsContent();
             },
-            error: () => {
+            error: (err) => {
+                console.log(err);
                 this.popup.openSnackBar({
-                    message: "Échec du chargement"
+                    message: "Échec du chargement: " + err,
                 });
-            }
+            },
         });
     }
 
@@ -108,7 +124,7 @@ export class DeletionRequestComponent implements AfterViewInit {
 
     sortData(sort: Sort) {
         const data = this.objects.slice();
-        if (!sort.active || sort.direction === '') {
+        if (!sort.active || sort.direction === "") {
             this.sortedObjects = data;
             return;
         }
@@ -122,11 +138,15 @@ export class DeletionRequestComponent implements AfterViewInit {
                 case "objectId":
                     return this.compare(a.id, b.id, isAsc);
                 case "userId":
-                    return this.compare(a.toDelete?.id as string, b.toDelete?.id as string, isAsc);
+                    return this.compare(
+                        a.toDelete?.id as string,
+                        b.toDelete?.id as string,
+                        isAsc
+                    );
                 default:
                     return 0;
             }
-        })
+        });
     }
 
     private compare(a: number | string, b: number | string, isAsc: boolean) {
@@ -138,14 +158,14 @@ export class DeletionRequestComponent implements AfterViewInit {
             next: () => {
                 this.getObjectsList();
                 this.popup.openSnackBar({
-                    message: "Objet supprimé"
+                    message: "Objet supprimé",
                 });
             },
             error: () => {
                 this.popup.openSnackBar({
-                    message: "Échec de l'interaction"
+                    message: "Échec de l'interaction",
                 });
-            }
+            },
         });
     }
 }

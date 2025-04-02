@@ -83,6 +83,10 @@ export const createUser = async (input: { [key: string]: string | number }) => {
 
   const sessionid = generateToken(24);
 
+  (await Reotem.getUsers())?.map(async user => {
+    if (user.role === "Administrator") await Reotem.addNotification(user.id, {title: "Un nouvel utilisateur s'est inscrit.", message: `L'utilisateur ${user.lastname} ${user.firstname} s'est inscrit avec cette adresse email : ${user.email}.`, read: false})
+  })
+
   await Reotem.addUser(user);
   await Reotem.addSession({ id: user.id, token: sessionid });
   await Reotem.addVerification({ id: user.id, token: user.validated as string });

@@ -2,7 +2,7 @@
     <h2 mat-dialog-title>{{data.title}}</h2>
     <mat-dialog-content class="mat-typography relative">
         @if (data.text) {
-        <p [innerHTML]="data.text"></p>
+        <p [innerHTML]="data.text" [style]="data.text_style"></p>
         }
         @if (data.component) {
         <ng-container *ngComponentOutlet="data.component; inputs: data.data;" />

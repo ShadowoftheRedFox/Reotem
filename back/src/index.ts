@@ -70,5 +70,5 @@ app.use(function (req, res) {
 
 app.listen(port, async () => {
   logger(`\n|----------------| SERVER START AT ${new Date().toDateString().toUpperCase()} |----------------|`)
-  logger(`Server running on http://localhost:${port}/`);
+  logger(`[EXPRESS] Server running on http://localhost:${port}/`);
 });

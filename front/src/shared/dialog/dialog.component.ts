@@ -11,6 +11,7 @@ export interface DialogDataType {
     component?: Type<unknown>;
     warn?: boolean;
     data?: never;
+    text_style?: string;
 };
 
 @Component({
@@ -33,6 +34,7 @@ export class DialogComponent {
         if (!data) data = {};
         if (!data.btnNotOk) data.btnNotOk = "Fermer";
         if (!data.title) data.title = "Dialog";
+        if (!data.text_style) data.text_style = "";
     }
 
     output: unknown = undefined;

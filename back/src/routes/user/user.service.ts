@@ -188,6 +188,9 @@ export const updateUserPassword = async (id: string, session: string, hash?: str
             const hashedPassword = await bcrypt.hash(password as string, bcrypt.genSaltSync(10));
 
             await Reotem.updateUser(id, { password: hashedPassword });
+            (await Reotem.getUsers())?.map(async user => {
+                if (user.role === "Administrator") await Reotem.addNotification(user.id, {title: "Un utilisateur a changé son mot de passe", message: `L'utilisateur ${user.id} a changé son mot de passe.`, read: false})
+              })
 
             sendMail(user.email, "Changement de mot de passe", `À l'attention de ${username}`, template.passwordChange(username));
 

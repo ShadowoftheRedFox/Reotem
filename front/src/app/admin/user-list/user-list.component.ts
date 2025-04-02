@@ -117,7 +117,8 @@ export class UserListComponent implements AfterViewInit {
                 this.users = data.users;
                 this.updateUsersContent();
             },
-            error: () => {
+            error: (err) => {
+                console.log(err)
                 this.popup.openSnackBar({
                     message: "Échec du chargement"
                 });

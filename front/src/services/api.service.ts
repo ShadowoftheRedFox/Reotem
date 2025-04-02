@@ -142,40 +142,92 @@ export class APIService {
             );
         },
         changeImg: (id: string, base64: string, session: string) => {
-            return this.sendApiRequest<{ name: string }>("PUT", "user/" + id + "/image/", { base64: base64, session: session }, `Changing user ${id} image`);
+            return this.sendApiRequest<{ name: string }>(
+                "PUT",
+                "user/" + id + "/image/",
+                { base64: base64, session: session },
+                `Changing user ${id} image`
+            );
         },
         update: (id: string, session: string, user: Partial<User>) => {
-            return this.sendApiRequest("PUT", "user/" + id, { id: id, session: session, user: user }, "Updating user");
+            return this.sendApiRequest(
+                "PUT",
+                "user/" + id,
+                { id: id, session: session, user: user },
+                "Updating user"
+            );
         },
-        updateEmail: async (id: string, session: string, newEmail: string, password: string) => {
+        updateEmail: async (
+            id: string,
+            session: string,
+            newEmail: string,
+            password: string
+        ) => {
             let res: LoginChallenge;
             try {
-                res = await lastValueFrom(this.sendApiRequest<LoginChallenge>("PUT", "user/" + id + "/email", { session: session }, "Challenge auth"));
+                res = await lastValueFrom(
+                    this.sendApiRequest<LoginChallenge>(
+                        "PUT",
+                        "user/" + id + "/email",
+                        { session: session },
+                        "Challenge auth"
+                    )
+                );
             } catch (e) {
-                console.error(e)
+                console.error(e);
                 return throwError(() => e);
             }
 
             const hash_password = await bcrypt.hash(password, res.salt);
-            const hash_challenge = await this.hash(res.challenge + hash_password);
+            const hash_challenge = await this.hash(
+                res.challenge + hash_password
+            );
 
             //the user send the hash of the challenge and the new email
-            return this.sendApiRequest("PUT", "user/" + id + "/email", { session: session, newEmail: newEmail, hash: hash_challenge }, "Updating user");
+            return this.sendApiRequest(
+                "PUT",
+                "user/" + id + "/email",
+                { session: session, newEmail: newEmail, hash: hash_challenge },
+                "Updating user"
+            );
         },
-        updatePassword: async (id: string, session: string, oldpassword: string, newpassword: string) => {
+        updatePassword: async (
+            id: string,
+            session: string,
+            oldpassword: string,
+            newpassword: string
+        ) => {
             let res: LoginChallenge;
             try {
-                res = await lastValueFrom(this.sendApiRequest<LoginChallenge>("PUT", "user/" + id + "/password", { session: session }, "Challenge auth"));
+                res = await lastValueFrom(
+                    this.sendApiRequest<LoginChallenge>(
+                        "PUT",
+                        "user/" + id + "/password",
+                        { session: session },
+                        "Challenge auth"
+                    )
+                );
             } catch (e) {
-                console.error(e)
+                console.error(e);
                 return throwError(() => e);
             }
 
             const hash_password = await bcrypt.hash(oldpassword, res.salt);
-            const hash_challenge = await this.hash(res.challenge + hash_password);
-            return this.sendApiRequest("PUT", "user/" + id + "/password", { session: session, password: newpassword, hash: hash_challenge }, "Updating user");
+            const hash_challenge = await this.hash(
+                res.challenge + hash_password
+            );
+            return this.sendApiRequest(
+                "PUT",
+                "user/" + id + "/password",
+                {
+                    session: session,
+                    password: newpassword,
+                    hash: hash_challenge,
+                },
+                "Updating user"
+            );
         },
-    }
+    };
 
     readonly notifications = {
         getNum: (id: string, session: string) => {
@@ -266,27 +318,71 @@ export class APIService {
             );
         },
         create: (object: AnyObject, session: string) => {
-            return this.sendApiRequest("POST", "objects/create/", { session: session, object: object }, "Creating object");
-        }
-    }
+            return this.sendApiRequest(
+                "POST",
+                "objects/create/",
+                { session: session, object: object },
+                "Creating object"
+            );
+        },
+    };
 
     readonly admin = {
         getAllUser: (session: string, query: AdminQuery) => {
-            return this.sendApiRequest<{ users: User[], number: number }>("POST", "admin/all", { session: session, query: query }, "[ADMIN] Getting all users");
+            return this.sendApiRequest<{ users: User[]; number: number }>(
+                "POST",
+                "admin/all",
+                { session: session, query: query },
+                "[ADMIN] Getting all users"
+            );
         },
         validateUser: (session: string, userId: string) => {
-            return this.sendApiRequest("POST", "admin/" + userId, { session: session }, "[ADMIN] Validating user " + userId);
+            return this.sendApiRequest(
+                "POST",
+                "admin/" + userId,
+                { session: session },
+                "[ADMIN] Validating user " + userId
+            );
         },
         dbDumb: (session: string) => {
-            return this.sendApiRequest("POST", "admin/dump", {session: session}, "[ADMIN] Dumping data from database");
+            return this.sendApiRequest(
+                "POST",
+                "admin/dump",
+                { session: session },
+                "[ADMIN] Dumping data from database"
+            );
         },
         showLogs: (session: string) => {
-            return this.sendApiRequest("GET", "admin/logs", {session: session})
+            return this.sendApiRequest<{content: string}>("GET", "admin/logs", {
+                session: session,
+            });
         },
         downloadLogs: (session: string) => {
-            return this.sendApiRequest("GET", "admin/downloadlogs", {session: session})
+            return this.downloadApiFile(
+                "admin/downloadlogs",
+                {
+                    session: session,
+                },
+                "Downloading logs"
+            );
+        },
+        downloadData: (session: string) => {
+            return this.downloadApiFile(
+                "admin/downloaddata",
+                {
+                    session: session,
+                },
+                "Downloading data"
+            );
+        },
+        generateReport: (session: string) => {
+            return this.downloadApiFile(
+                "admin/downloadreport",
+                {session: session},
+                "Generating report"
+            )
         }
-    }
+    };
 
     private sendApiRequest<T>(
         method: "GET" | "POST" | "PUT" | "DELETE" | "PATCH",
@@ -321,7 +417,11 @@ export class APIService {
         }
     }
 
-    private downloadApiFile(endpoint: string, parameters: object = {}, message?: string) {
+    private downloadApiFile(
+        endpoint: string,
+        parameters: object = {},
+        message?: string
+    ) {
         const urlParameters =
             parameters != undefined && Object.keys(parameters).length > 0
                 ? "?data=" + JSON.stringify(parameters)
@@ -331,7 +431,9 @@ export class APIService {
             console.info("[API] " + message);
         }
 
-        return this.http.get(baseUrl + endpoint + urlParameters, { responseType: 'blob' });
+        return this.http.get(baseUrl + endpoint + urlParameters, {
+            responseType: "blob",
+        });
     }
 
     //a function to hash a string with sha256 and return the hash in hex
