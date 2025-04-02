@@ -10,7 +10,7 @@ export default ObjectsRouter;
 
 ObjectsRouter.get("/", async (req, res, next) => {
   try {
-    console.log(`getting all object ${req.query.data || {}}`);
+    console.log(`[OBJECTS] getting all object ${req.query.data || {}}`);
     const result = await getAll(JSON.parse(req.query.data as string || "{}") as ObjectQuery);
 
     res.status(200).json(result);
@@ -21,7 +21,7 @@ ObjectsRouter.get("/", async (req, res, next) => {
 
 ObjectsRouter.get("/:id", async (req, res, next) => {
   try {
-    logger(`getting object ${req.params.id}`);
+    logger(`[OBJECTS] getting object ${req.params.id}`);
     const result = await getOne(req.params.id);
 
     res.status(200).json(result);
@@ -32,7 +32,7 @@ ObjectsRouter.get("/:id", async (req, res, next) => {
 
 ObjectsRouter.post("/create/", async (req, res, next) => {
   try {
-    logger(`creating object ${req.body.object.name}`);
+    logger(`[OBJECTS] creating object ${req.body.object.name}`);
     const newObject = await createObject(req.body.object);
     logger(JSON.stringify(newObject));
     res.status(201).json(newObject);
@@ -43,7 +43,7 @@ ObjectsRouter.post("/create/", async (req, res, next) => {
 
 ObjectsRouter.put("/update/:id", async (req, res, next) => {
   try {
-    logger(`updating object ${req.body.params}`);
+    logger(`[OBJECTS] updating object ${req.body.params}`);
     const oldObject = await getOne(req.params.id)
     const userId = (await Reotem.getSession(req.body.session))?.id
     await Reotem.updateObject(oldObject.id, req.body.params, userId)
@@ -55,7 +55,7 @@ ObjectsRouter.put("/update/:id", async (req, res, next) => {
 
 ObjectsRouter.delete("/delete/:id", async (req, res, next) => {
   try {
-    logger(`deleting object ${req.params.id}`);
+    logger(`[OBJECTS] deleting object ${req.params.id}`);
     logger(req.body);
     const object = await Reotem.getObject(req.params.id);
     if (!object) {
@@ -84,7 +84,7 @@ ObjectsRouter.delete("/delete/:id", async (req, res, next) => {
 
 ObjectsRouter.post("/dupplicate/:id", async (req, res, next) => {
   try {
-    logger(`dupping object ${req.params.id}`);
+    logger(`[OBJECTS] dupping object ${req.params.id}`);
     const objectToDupp = await getOne(req.params.id)
     const namesOccur: string[] = [];
     (await getAll())?.objects?.map(object => { if (object.name === objectToDupp.name) namesOccur.push(object.id) })

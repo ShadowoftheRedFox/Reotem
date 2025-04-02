@@ -68,7 +68,7 @@ export class WebsiteLogsComponent {
             const a = document.createElement("a");
             const objectUrl = URL.createObjectURL(blob);
             a.href = objectUrl;
-            a.download = "report.txt";
+            a.download = "report.md";
             a.click();
             URL.revokeObjectURL(objectUrl);
         })

@@ -7,7 +7,7 @@ export default SignupRouter;
 
 SignupRouter.post('/', async (req, res, next) => {
     try {
-        logger("creating user...");
+        logger("[VALIDATING] creating user...");
         const user = await createUser({ ...req.body });
         res.status(201).json(user);
     } catch (error) {
@@ -17,7 +17,7 @@ SignupRouter.post('/', async (req, res, next) => {
 
 SignupRouter.post("/token", async (req, res, next) => {
     try {
-        logger("Checking token exists");
+        logger("[VALIDATING] Checking token exists");
         const exists = await checkTokenExists(req.body.token);
         res.status(200).json(exists);
     } catch (error) {
@@ -27,7 +27,7 @@ SignupRouter.post("/token", async (req, res, next) => {
 
 SignupRouter.post("/validating", async (req, res, next) => {
     try {
-        logger("Validating token");
+        logger("[VALIDATING] Validating token");
         const exists = await validateUser(req.body.token, req.body.session);
         res.status(200).json(exists);
     } catch (error) {

@@ -64,7 +64,7 @@ export const createDump = async (session: string) => {
     throw new HttpException(403);
   }
 
-  fs.mkdirSync("dump/");
+  if (!fs.existsSync("dump/")) fs.mkdirSync("dump/");
 
   const code = await Reotem.dataDump(admin.id);
   return code;
@@ -79,7 +79,7 @@ export const getDump = async (query: { data?: string }) => {
   try {
     session = JSON.parse(query.data).session;
   } catch (err) {
-    if (err) logger("failed to poarse query");
+    if (err) logger("failed to parse query");
     throw new HttpException(422);
   }
 

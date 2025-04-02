@@ -7,7 +7,7 @@ export default SessionRouter;
 
 SessionRouter.get('/signin/:id', async (req, res, next) => {
     try {
-        logger(`getting sessions ${req.params.id}`);
+        logger(`[SESSIONS] getting sessions ${req.params.id}`);
         const session = await getSession(req.params.id);
 
         if (session != undefined) {
@@ -22,7 +22,7 @@ SessionRouter.get('/signin/:id', async (req, res, next) => {
 
 SessionRouter.post('/signin', async (req, res, next) => {
     try {
-        logger(`creating sessions ${JSON.stringify(req.body)}`); // expect id and an optional hash
+        logger(`[SESSIONS] creating sessions ${JSON.stringify(req.body)}`); // expect id and an optional hash
         const session = await createSession(req.body.mail, req.body.hash);
         res.status(201).json({ ...session });
     } catch (error) {
@@ -32,6 +32,7 @@ SessionRouter.post('/signin', async (req, res, next) => {
 
 SessionRouter.delete('/disconnect/:id', async (req, res, next) => {
     try {
+        logger(`[SESSIONS] disconnecting ${req.params.id}`);
         if (await deleteSession(req.params.id, req.body.session)) {
             res.status(200).json();
         } else {
