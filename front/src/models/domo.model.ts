@@ -72,7 +72,7 @@ export type AnyObject =
     >;
 
 export interface BaseObject {
-    _id: string;
+    id: string;
     name: string;
     room: string;
     building?: string;

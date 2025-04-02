@@ -338,7 +338,7 @@ export class EditComponent {
         if (this.formGroup.invalid) return;
 
         const object: AnyObject = {
-            _id: "error",
+            id: "error",
             name: this.formGroup.value.name as string,
             room: this.formGroup.value.room as string,
             building: this.formGroup.value.building as string | undefined,
@@ -392,7 +392,7 @@ export class EditComponent {
                 break;
         }
 
-        this.api.objects.update(object._id, this.auth.clientToken, this.obj as never).subscribe({
+        this.api.objects.update(object.id, this.auth.clientToken, this.obj as never).subscribe({
             next: () => {
                 this.router.navigate(['/object']);
             },

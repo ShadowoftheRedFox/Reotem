@@ -12,5 +12,5 @@ const api = Router()
     .use("/user/", UserRouter)
     .use("/objects/", ObjectsRouter);
 
-const routes = Router().use('/', api);
+const routes = Router().use("/", api);
 export default routes;

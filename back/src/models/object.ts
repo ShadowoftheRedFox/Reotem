@@ -80,22 +80,35 @@ type WiFiObjectSchema = InferRawDocType<typeof wifiObjectSchema>;
 
 export type AnyObject = LightObjectSchema | ThermostatObjectSchema | SpeakerObjectSchema | VideoProjectorObjectSchema | ComputerObjectSchema | WindowStoreObjectSchema | DoorObjectSchema | WiFiObjectSchema;
 
-const objectData: AnyObject = {};
 const objectSchemaDefinition = {
-  
-  
-    id: { type: String, required: true },
-    name: String,
-    room: String,
-    building: String,
-    neededRole: { type: String, enum: UserRole },
-    neededLevel: { type: String, enum: UserLevel },
-    lastInteraction: String,
-    connection: { type: String, enum: ["Wi-Fi", "Cablé", "Bluetooth", "Déconnecté", "Autre"] },
-    state: { type: String, enum: ["Normal", "Erreur", "Maintenance"] },
-    objectClass: { type: String, enum: ObjectClass },
-    objectData: objectData
-  };
+  id: { type: String, required: true },
+  name: String,
+  room: String,
+  building: String,
+  neededRole: { type: String, enum: UserRole },
+  neededLevel: { type: String, enum: UserLevel },
+  lastInteraction: String,
+  connection: { type: String, enum: ["Wi-Fi", "Cablé", "Bluetooth", "Déconnecté", "Autre"] },
+  state: { type: String, enum: ["Normal", "Erreur", "Maintenance"] },
+  objectClass: { type: String, enum: ObjectClass },
+  electricityUsage: Number,
+  consomationThreshold: Number,
+  battery: Number,
+  turnedOn: Boolean,
+  openState: Number,
+  targetTemp: Number,
+  currentTemp: Number,
+  locked: Boolean,
+  closed: Boolean,
+  openTime: String,
+  closeTime: String,
+  type: { type: String, enum: ["Routeur", "Répéteur", "Switch"] },
+  mode: { type: String, enum: ["Automatique", "Manuel"] },
+  toDelete: {type: Object, default: {
+    id: "",
+    delete: false,
+  }},
+};
 
 export const objectSchema = new Schema(objectSchemaDefinition);
 

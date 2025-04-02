@@ -1,17 +1,18 @@
-import { Component, signal, WritableSignal } from '@angular/core';
-import { CommunicationService } from '../../services/communication.service';
-import { APIService } from '../../services/api.service';
-import { AuthentificationService } from '../../services/authentification.service';
-import { DomoComponent } from '../../shared/domo/domo.component';
-import { Router, RouterLink } from '@angular/router';
-import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
-import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
-import { AnyObject } from '../../models/domo.model';
-import { MatCheckboxModule } from '@angular/material/checkbox';
+import { Component, signal, WritableSignal } from "@angular/core";
+import { CommunicationService } from "../../services/communication.service";
+import { APIService } from "../../services/api.service";
+import { AuthentificationService } from "../../services/authentification.service";
+import { DomoComponent } from "../../shared/domo/domo.component";
+import { Router, RouterLink } from "@angular/router";
+import { MatIconModule } from "@angular/material/icon";
+import { MatButtonModule } from "@angular/material/button";
+import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatInputModule } from "@angular/material/input";
+import { MatSelectModule } from "@angular/material/select";
+import { AnyObject } from "../../models/domo.model";
+import { MatCheckboxModule } from "@angular/material/checkbox";
+import { PopupService } from "../../services/popup.service";
 
 interface Action {
     name: string;
@@ -23,7 +24,7 @@ interface Action {
 }
 
 @Component({
-    selector: 'app-object-manager',
+    selector: "app-object-manager",
     imports: [
         DomoComponent,
         RouterLink,
@@ -34,13 +35,14 @@ interface Action {
         MatInputModule,
         MatSelectModule,
         ReactiveFormsModule,
-        MatCheckboxModule
+        MatCheckboxModule,
     ],
-    templateUrl: './object-manager.component.html',
-    styleUrl: './object-manager.component.scss'
+    templateUrl: "./object-manager.component.html",
+    styleUrl: "./object-manager.component.scss",
 })
 export class ObjectManagerComponent {
-    readonly bar_class = 'w-full flex flex-row flex-wrap justify-start gap-4 items-stretch px-4';
+    readonly bar_class =
+        "w-full flex flex-row flex-wrap justify-start gap-4 items-stretch px-4";
     objectList: AnyObject[] = [];
 
     filteredObjectList: AnyObject[] = [];
@@ -54,8 +56,8 @@ export class ObjectManagerComponent {
     filteredRoom = new FormControl<string[]>([]);
     roomList: string[] = [];
 
-    selectedObjects = new Map<string, boolean>();
-    anySlected = signal(false);
+    selectedObjects = new Map<number, boolean>();
+    anySelected = signal(false);
     onlyOne = signal(false);
 
     readonly actionsList: Action[] = [
@@ -63,40 +65,36 @@ export class ObjectManagerComponent {
             name: "Ajouter",
             icon: "add",
             callback: () => {
-                this.router.navigate(['/object', 'create']);
-            }
+                this.router.navigate(["object", "create"]);
+            },
         },
         {
             name: "Modifier",
             icon: "edit",
             callback: () => {
-                let id = '';
-                this.selectedObjects.forEach((v, k) => {
-                    if (v) id = k;
-                });
-                this.router.navigate(['/object', 'edit', id]);
+                this.router.navigate(["object", "edit"]);
             },
-            disabled: this.onlyOne
+            disabled: this.onlyOne,
         },
         {
             name: "Effacer",
             icon: "delete",
             callback: () => {
-                console.log(this);
-                this.deleteObjects(1)
+                this.deleteObjects(Array.from(this.selectedObjects.keys()));
             },
-            disabled: this.anySlected
+            disabled: this.anySelected,
         },
         {
             name: "Dupliquer",
             icon: "content_copy",
-            callback: () => this.duplicateObjects(),
-            disabled: this.anySlected
+            callback: () =>
+                this.duplicateObjects(Array.from(this.selectedObjects.keys())),
+            disabled: this.anySelected,
         },
         {
             name: "Rafraîchir",
             icon: "refresh",
-            callback: () => this.refresh()
+            callback: () => this.refresh(),
         },
     ];
 
@@ -104,10 +102,11 @@ export class ObjectManagerComponent {
         private com: CommunicationService,
         private api: APIService,
         private auth: AuthentificationService,
-        private router: Router
+        private router: Router,
+        private popup: PopupService
     ) {
         // listen to event change
-        com.DomoAllObjectsUpdate.subscribe(update => {
+        com.DomoAllObjectsUpdate.subscribe((update) => {
             this.updateObjects(update);
         });
 
@@ -129,20 +128,31 @@ export class ObjectManagerComponent {
 
     //#region Filters
     inFilteredRoom(room: string) {
-        if (this.filteredRoom.value == null || this.filteredRoom.value.length == 0) return true;
+        if (
+            this.filteredRoom.value == null ||
+            this.filteredRoom.value.length == 0
+        )
+            return true;
         return this.filteredRoom.value.includes(room);
     }
 
     inFilteredBuilding(building?: string) {
-        if (this.filteredBuilding.value == null || this.filteredBuilding.value.length == 0) return true;
+        if (
+            this.filteredBuilding.value == null ||
+            this.filteredBuilding.value.length == 0
+        )
+            return true;
         if (building === undefined) return false;
         return this.filteredBuilding.value.includes(building);
     }
 
     applyFilter() {
         this.filteredObjectList = [];
-        this.objectList.forEach(o => {
-            if (this.inFilteredRoom(o.room) && this.inFilteredBuilding(o.building)) {
+        this.objectList.forEach((o) => {
+            if (
+                this.inFilteredRoom(o.room) &&
+                this.inFilteredBuilding(o.building)
+            ) {
                 this.filteredObjectList.push(o);
             }
         });
@@ -163,7 +173,10 @@ export class ObjectManagerComponent {
         const filter = this.namedFilter.toLowerCase();
 
         let res = false;
-        if (obj.building != undefined && obj.building.toLowerCase().includes(filter)) {
+        if (
+            obj.building != undefined &&
+            obj.building.toLowerCase().includes(filter)
+        ) {
             res = true;
         }
         if (
@@ -179,8 +192,12 @@ export class ObjectManagerComponent {
     }
     //#endregion
 
-    domoSelected(index: string) {
-        this.selectedObjects.set(index, !(this.selectedObjects.get(index) || false));
+    domoSelected(id: string) {
+        const index = this.objectList.map((object) => object.id).indexOf(id);
+        this.selectedObjects.set(
+            index,
+            !(this.selectedObjects.get(index) || false)
+        );
         let temp = false;
         let count = 0;
         this.selectedObjects.forEach((v) => {
@@ -189,22 +206,71 @@ export class ObjectManagerComponent {
                 count++;
             }
         });
-        this.anySlected.set(temp);
+        this.anySelected.set(temp);
         this.onlyOne.set(count === 1);
     }
 
-    deleteObjects(index: number) {
-        console.log("Deleting object ", index);
+    deleteObjects(indexes: number[]) {
+        console.log("Deleting objects ", indexes);
         // TODO api call
+        indexes.forEach((index) => {
+            this.api.objects
+                .delete(this.objectList[index].id, this.auth.clientToken)
+                .subscribe({
+                    next: () => {
+                        if (indexes.length === 1) this.popup.openSnackBar({
+                            message: `L'objet "${this.objectList[index].name}" a bien été supprimé`,
+                            action: "Ok",
+                        });
+                        this.selectedObjects.delete(index)
+                        this.anySelected.set(false)
+                        this.onlyOne.set(false)
+                        this.refresh();
+                    },
+                    error: (err) => {
+                        this.popup.openSnackBar({
+                            message: "Echec de l'interaction",
+                            action: "Ok",
+                        });
+                        console.log(err);
+                    },
+                });
+        });
+        if (indexes.length > 1) this.popup.openSnackBar({
+            message: `Les objets sélectionnés ont bien été supprimés.`,
+            action: "Ok",
+        });
     }
 
-    duplicateObjects() {
-        console.log("Not implemented yet");
-        // TODO create new objects based on those ones, api call
+    duplicateObjects(indexes: number[]) {
+        console.log("Dupping objects ", indexes);
+        indexes.forEach((index) => {
+            this.api.objects
+                .dupplicate(this.objectList[index].id, this.auth.clientToken)
+                .subscribe({
+                    next: () => {
+                        if (indexes.length === 1) this.popup.openSnackBar({
+                            message: `L'objet "${this.objectList[index].name}" a bien été duppliqué`,
+                            action: "Ok",
+                        });
+                        this.selectedObjects.delete(index)
+                        this.anySelected.set(false)
+                        this.onlyOne.set(false)
+                        this.refresh();
+                    },
+                    error: (err) => {
+                        console.log(err);
+                    },
+                });
+        });
+        if (indexes.length > 1) this.popup.openSnackBar({
+            message: `Les objets sélectionnés ont bien été duppliqués.`,
+            action: "Ok",
+        });
     }
 
     refresh() {
-        this.api.objects.all({}).subscribe(res => {
+        this.api.objects.all({}).subscribe((res) => {
             this.com.DomoObjectsAmount = res.total;
             this.com.DomoAllObjectsUpdate.next(res.objects);
         });
@@ -218,8 +284,11 @@ export class ObjectManagerComponent {
         this.filteredRoom.reset([]);
         this.namedFilter = "";
 
-        this.objectList.forEach(o => {
-            if (o.building != undefined && !this.buildingList.includes(o.building)) {
+        this.objectList.forEach((o) => {
+            if (
+                o.building != undefined &&
+                !this.buildingList.includes(o.building)
+            ) {
                 this.buildingList.push(o.building);
             }
             if (!this.roomList.includes(o.room)) {
