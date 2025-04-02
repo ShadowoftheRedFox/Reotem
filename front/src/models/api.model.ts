@@ -94,6 +94,7 @@ export interface ObjectQuery extends APIQuery {
     id?: number;
     sort?: "asc" | "desc";
     type?: ObjectClass;
+    toDelete?: boolean;
 }
 
 export interface AdminQuery extends APIQuery {
