@@ -67,7 +67,7 @@ ObjectsRouter.delete("/delete/:id", async (req, res, next) => {
       res.status(404).json();
       return;
     }
-    if (user.adminValidated || user.role === "Administrator") {
+    if (user.role === "Administrator") {
       await Reotem.deleteObject(object.id);
     } else {
       console.log(`sending deleting request`)
