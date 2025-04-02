@@ -14,8 +14,8 @@ export interface User {
     exp: number;
     sexe: UserSexe;
     // front should never receive the string
-    validated?: false | string;
-    adminValidated?: false;
+    validated?: boolean | string;
+    adminValidated?: boolean;
     // front should never receive the password
     password?: string;
     lastLogin: string;

@@ -112,6 +112,7 @@ export const updateUser = async (id: string, session: string, updatedUser: Parti
         delete updatedUser.lvl;
         delete updatedUser.role;
         delete updatedUser.validated;
+        delete updatedUser.adminValidated;
     }
     if (sessionUserIsAdmin && !userIsOwnAdmin) {
         // fields admin can't change but user can
@@ -125,7 +126,6 @@ export const updateUser = async (id: string, session: string, updatedUser: Parti
     // specific route required
     delete updatedUser.password;
     delete updatedUser.email;
-    delete updatedUser.adminValidated;
 
     await Reotem.updateUser(id, updatedUser as Partial<UserSchema>);
 

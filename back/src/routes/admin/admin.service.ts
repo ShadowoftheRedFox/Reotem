@@ -25,8 +25,10 @@ export const getAll = async (session: string, query: AdminQuery) => {
     reqUsers.forEach(u => users.push(adminParseUser(u)));
 
     if (query && query.validated != undefined) {
-        users = users.filter(u => u.adminValidated === query.validated);
+        users = users.filter(u => u.adminValidated === query.validated || u.adminValidated === undefined);
     }
+
+    console.log(users)
 
     return { users: users, number: users.length };
 }
@@ -48,6 +50,7 @@ export const adminValidate = async (session: string, id: string) => {
     }
 
     // FIXME do not change the adminValidated somehow
+    console.log(validatedUser);
     await Reotem.updateUser(id, { adminValidated: true });
     return;
 }
