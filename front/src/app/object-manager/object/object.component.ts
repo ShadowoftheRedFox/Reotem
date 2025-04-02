@@ -1,20 +1,29 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { AuthentificationService } from '../../../services/authentification.service';
 import { APIService } from '../../../services/api.service';
 import { AnyObject, ComputerObject, DoorObject, LightObject, SpeakerObject, ThermostatObject, VideoProjectorObject, WiFiObject, WindowStoreObject } from '../../../models/domo.model';
 import { environment } from '../../../environments/environment';
+import { ErrorComponent } from '../../error/error.component';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { toDateTime, toTime } from '../../../models/date.model';
 
 const TITLE_POSTFIX = " - " + environment.title;
 
 @Component({
     selector: 'app-object',
-    imports: [],
+    imports: [
+        ErrorComponent,
+        MatIconModule,
+        MatButtonModule,
+        RouterLink
+    ],
     templateUrl: './object.component.html',
     styleUrl: './object.component.scss'
 })
 export class ObjectComponent {
-    requestedObject = "error";
+    requestedObject = "loading";
 
     obj: AnyObject | null = null;
     lightObj!: LightObject;
@@ -35,11 +44,10 @@ export class ObjectComponent {
     ) {
         // get the id params
         route.params.subscribe(res => {
-            this.requestedObject = res["id"];
-
-            api.objects.get(this.requestedObject).subscribe({
+            api.objects.get(res["id"]).subscribe({
                 next: (res) => {
                     this.obj = res;
+                    this.requestedObject = this.obj.id;
                     this.display = JSON.stringify(this.obj);
                     window.document.title = res.name + TITLE_POSTFIX;
 
@@ -75,8 +83,17 @@ export class ObjectComponent {
                 },
                 error: () => {
                     this.obj = null;
+                    this.requestedObject = "error";
                 },
             });
         });
+    }
+
+    formatDateTime(date: string) {
+        return toDateTime(date);
+    }
+
+    formatTime(date: string) {
+        return toTime(date);
     }
 }
