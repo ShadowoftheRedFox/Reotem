@@ -67,7 +67,7 @@ export class TestComponent {
 
         for (let i = 0; i < (this.fakeControl.value || 0); i++) {
             const object: AnyObject = {
-                _id: this.generateToken(this.ri(16)),
+                id: this.generateToken(this.ri(16)),
                 name: this.generateToken(this.ri(16)),
                 room: this.generateToken(this.ri(16)),
                 building: this.rb(0.5) ? this.generateToken(this.ri(16)) : undefined,
@@ -137,9 +137,9 @@ export class TestComponent {
             tab.push(object);
         }
 
-        // tab.forEach(o => {
-        //     this.api.objects.create(o, this.auth.clientToken).subscribe();
-        // })
+        tab.forEach(o => {
+            this.api.objects.create(o, this.auth.clientToken).subscribe();
+        })
 
         this.data = JSON.stringify(tab);
     }

@@ -14,8 +14,8 @@ const Reotem = {
     const newUser = new models.User(merged);
     await newUser.save().then((u) => {
       console.log(`New user -> ${u.email}`);
-      return u;
     });
+    return newUser;
   },
   getUser: async (id: string) => {
     const data = await models.User.findOne({ id: id });
@@ -57,8 +57,8 @@ const Reotem = {
     const newSession = new models.Session(merged);
     await newSession.save().then((u) => {
       console.log(`New session for user -> ${u.id}`);
-      return u;
     });
+    return newSession;
   },
   getSession: async (token: string) => {
     const data = await models.Session.findOne({ token: token });
@@ -91,8 +91,8 @@ const Reotem = {
     const newVerification = new models.Verification(merged);
     await newVerification.save().then((u) => {
       console.log(`New verification for user -> ${u.id}`);
-      return u;
     });
+    return newVerification;
   },
   getVerification: async (token: string) => {
     const data = await models.Verification.findOne({ token: token });
@@ -120,8 +120,8 @@ const Reotem = {
     const newNotification = new models.Notification(merged);
     await newNotification.save().then((u) => {
       console.log(`New notification table for user -> ${u.id}`);
-      return u;
     });
+    return newNotification;
   },
   getNotification: async (userId: string, query: NotificationQuery) => {
     const data = await models.Notification.findOne({ id: userId, notifications: { $elemMatch: query } });
@@ -170,9 +170,9 @@ const Reotem = {
     const merged = { ...object, ...objectData, ...{ _id: objectId, id: objectId.toString() } };
     const newObject = await new models.Object(merged);
     await newObject.save().then((o) => {
-      console.log(`New ${o.objectClass} -> ${o.id}}`);
-      return o;
+      console.log(`New ${o.objectClass} -> ${o.id}`);
     });
+    return newObject;
   },
   // filter example {key1: value, key2: value...}
   getAllObjects: async () => {

@@ -12,6 +12,7 @@ import { MatInputModule } from "@angular/material/input";
 import { MatSelectModule } from "@angular/material/select";
 import { AnyObject } from "../../models/domo.model";
 import { MatCheckboxModule } from "@angular/material/checkbox";
+import { PopupService } from "../../services/popup.service";
 
 interface Action {
     name: string;
@@ -101,7 +102,8 @@ export class ObjectManagerComponent {
         private com: CommunicationService,
         private api: APIService,
         private auth: AuthentificationService,
-        private router: Router
+        private router: Router,
+        private popup: PopupService
     ) {
         // listen to event change
         com.DomoAllObjectsUpdate.subscribe((update) => {
@@ -191,7 +193,7 @@ export class ObjectManagerComponent {
     //#endregion
 
     domoSelected(id: string) {
-        const index = this.objectList.map(object => object.id).indexOf(id);
+        const index = this.objectList.map((object) => object.id).indexOf(id);
         this.selectedObjects.set(
             index,
             !(this.selectedObjects.get(index) || false)
@@ -210,40 +212,60 @@ export class ObjectManagerComponent {
 
     deleteObjects(indexes: number[]) {
         console.log("Deleting objects ", indexes);
-        console.log(this.objectList);
         // TODO api call
         indexes.forEach((index) => {
-            console.log(this.objectList[index]);
             this.api.objects
                 .delete(this.objectList[index].id, this.auth.clientToken)
                 .subscribe({
-                    next: (res) => {
-                        console.log(res)
+                    next: () => {
+                        if (indexes.length === 1) this.popup.openSnackBar({
+                            message: `L'objet "${this.objectList[index].name}" a bien été supprimé`,
+                            action: "Ok",
+                        });
+                        this.selectedObjects.delete(index)
+                        this.anySelected.set(false)
+                        this.onlyOne.set(false)
+                        this.refresh();
                     },
                     error: (err) => {
-                        console.log(err)
+                        this.popup.openSnackBar({
+                            message: "Echec de l'interaction",
+                            action: "Ok",
+                        });
+                        console.log(err);
                     },
-                });;
+                });
+        });
+        if (indexes.length > 1) this.popup.openSnackBar({
+            message: `Les objets sélectionnés ont bien été supprimés.`,
+            action: "Ok",
         });
     }
 
     duplicateObjects(indexes: number[]) {
-        // TODO create new objects based on those ones, api call
         console.log("Dupping objects ", indexes);
-        console.log(this.objectList);
-        // TODO api call
         indexes.forEach((index) => {
-            console.log(this.objectList[index]);
             this.api.objects
                 .dupplicate(this.objectList[index].id, this.auth.clientToken)
                 .subscribe({
-                    next: (res) => {
-                        console.log(res);
+                    next: () => {
+                        if (indexes.length === 1) this.popup.openSnackBar({
+                            message: `L'objet "${this.objectList[index].name}" a bien été duppliqué`,
+                            action: "Ok",
+                        });
+                        this.selectedObjects.delete(index)
+                        this.anySelected.set(false)
+                        this.onlyOne.set(false)
+                        this.refresh();
                     },
                     error: (err) => {
                         console.log(err);
                     },
                 });
+        });
+        if (indexes.length > 1) this.popup.openSnackBar({
+            message: `Les objets sélectionnés ont bien été duppliqués.`,
+            action: "Ok",
         });
     }
 

@@ -335,6 +335,9 @@ export class CreateComponent {
 
         this.api.objects.create(object, this.auth.clientToken).subscribe({
             next: () => {
+                this.popup.openSnackBar({
+                    message: "L'objet a bien été ajouté.",
+                });
                 this.router.navigate(["/object"]);
             },
             error: () => {

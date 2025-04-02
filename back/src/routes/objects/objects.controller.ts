@@ -1,7 +1,8 @@
 import { Router } from "express";
-import { createObject, getAll, getOne } from "./objects.service";
+import { createObject, getAll, getOne, dupplicateObject } from "./objects.service";
 import { ObjectQuery } from "../../../../front/src/models/api.model";
 import Reotem from "~/util/functions";
+import { ObjectSchema } from "~/models/object";
 
 const ObjectsRouter = Router();
 export default ObjectsRouter;
@@ -54,23 +55,24 @@ ObjectsRouter.delete("/delete/:id", async (req, res, next) => {
     console.log(req.body);
     const object = await Reotem.getObject(req.params.id);
     if (!object) {
-      res.status(404);
+      res.status(404).json();
       return;
     }
     const userId = (await Reotem.getSession(req.body.session))?.id;
     const user = await Reotem.getUser(userId);
     if (!user) {
-      res.status(404);
+      res.status(404).json();
       return;
     }
     if (user.adminValidated || user.role === "Administrator") {
       await Reotem.deleteObject(object.id);
     } else {
+      console.log(`sending deleting request`)
       object.toDelete = { id: user.id, delete: true };
       console.log(object.toDelete);
       await Reotem.updateObject(object.id, object);
     }
-    res.status(200);
+    res.status(200).json();
   } catch (error) {
     next(error);
   }
@@ -79,7 +81,13 @@ ObjectsRouter.delete("/delete/:id", async (req, res, next) => {
 ObjectsRouter.post("/dupplicate/:id", async (req, res, next) => {
   try {
     console.log(`dupping object ${req.params.id}`);
-    res.status(200);
+    const objectToDupp = await getOne(req.params.id)
+    const namesOccur: string[] = [];
+    (await getAll())?.objects?.map(object => { if (object.name === objectToDupp.name) namesOccur.push(object.id)})
+    if (objectToDupp.name)
+      objectToDupp.name = objectToDupp.name + (namesOccur.length !== 0 ? `-${namesOccur.length}` : "")
+    const duppedObject = await dupplicateObject(objectToDupp as ObjectSchema);
+    res.status(201).json(duppedObject);
   } catch (error) {
     next(error);
   }
