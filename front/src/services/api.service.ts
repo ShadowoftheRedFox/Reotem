@@ -283,7 +283,7 @@ export class APIService {
         method: "GET" | "POST" | "PUT" | "DELETE" | "PATCH",
         endpoint: string,
         parameters: object = {},
-        message: string | undefined = undefined
+        message?: string
     ) {
         const urlParameters =
             parameters != undefined && Object.keys(parameters).length > 0
@@ -310,6 +310,19 @@ export class APIService {
                     body: parameters,
                 });
         }
+    }
+
+    private downloadApiFile(endpoint: string, parameters: object = {}, message?: string) {
+        const urlParameters =
+            parameters != undefined && Object.keys(parameters).length > 0
+                ? "?data=" + JSON.stringify(parameters)
+                : "";
+
+        if (message !== undefined) {
+            console.info("[API] " + message);
+        }
+
+        return this.http.get(baseUrl + endpoint + urlParameters, { responseType: 'blob' });
     }
 
     //a function to hash a string with sha256 and return the hash in hex
