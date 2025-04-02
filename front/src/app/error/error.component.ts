@@ -13,7 +13,6 @@ import { RouterLink } from '@angular/router';
     styleUrl: './error.component.scss'
 })
 export class ErrorComponent implements AfterViewInit {
-    directory = window.location.pathname;
     count = 0;
     number = 0;
 
