@@ -17,6 +17,11 @@
             <mat-option [value]="room">{{room}}</mat-option>
             }
         </mat-select>
+        @if (filteredRoom.value && filteredRoom.value.length > 0) {
+        <button matSuffix mat-icon-button aria-label="Effacer" (click)="resetRoomFilter()">
+            <mat-icon>close</mat-icon>
+        </button>
+        }
     </mat-form-field>
     @if (buildingList.length > 0) {
     <mat-form-field>
@@ -26,6 +31,11 @@
             <mat-option [value]="building">{{building}}</mat-option>
             }
         </mat-select>
+        @if (filteredBuilding.value && filteredBuilding.value.length > 0) {
+        <button matSuffix mat-icon-button aria-label="Effacer" (click)="resetBuildingFilter()">
+            <mat-icon>close</mat-icon>
+        </button>
+        }
     </mat-form-field>
     }
 </div>
@@ -48,7 +58,7 @@
         </a>
         }
     </div>
-    <div class="flex items-stretch justify-around flex-row content-around flex-wrap gap-4">
+    <div class="flex items-stretch justify-around flex-row content-around flex-wrap gap-4 filter-container">
         @for (obj of objectList; track $index) {
         <app-domo [obj]="obj" [hidden]="!applyNamedFilter(obj)"></app-domo>
         }
@@ -106,8 +116,6 @@
                 @for (obj of problemsObject; track $index) {
                 @if ((inFilteredRoom(obj.room) && inFilteredBuilding(obj.building))) {
                 <app-domo [obj]="obj"></app-domo>
-                } @else {
-                <p>Objet à problème caché</p>
                 }
                 }
             </div>

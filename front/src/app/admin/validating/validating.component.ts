@@ -151,6 +151,10 @@ export class ValidatingComponent implements AfterViewInit {
         this.api.admin.validateUser(this.auth.clientToken, id).subscribe({
             next: () => {
                 this.getUsersList();
+                this.popup.openSnackBar({
+                    message: "Utilisateur validé!",
+                    action: "Ok"
+                });
             },
             error: () => {
                 this.popup.openSnackBar({

@@ -95,24 +95,26 @@ export const updateUser = async (id: string, session: string, updatedUser: Parti
         throw new HttpException(404);
     }
 
+    const currentSession = await Reotem.getSession(session);
+
     // if session user is an admin
     const sessionUserIsAdmin = (user.role as UserRole) === "Administrator";
+    const userIsOwnAdmin = currentSession?.id == user.id && sessionUserIsAdmin;
 
-    const currentSession = await Reotem.getSession(session);
+
     if (currentSession?.id != user.id && !sessionUserIsAdmin) {
         throw new HttpException(401);
     }
 
-    // FIXME case where an admin edit his own profile
-
-    if (!sessionUserIsAdmin) {
+    if (!sessionUserIsAdmin || userIsOwnAdmin) {
         // fields user can't update but admin can
         delete updatedUser.adminValidated;
         delete updatedUser.exp;
         delete updatedUser.lvl;
         delete updatedUser.role;
         delete updatedUser.validated;
-    } else {
+    }
+    if (sessionUserIsAdmin || userIsOwnAdmin) {
         // fields admin can't change but user can
         delete updatedUser.sexe;
         delete updatedUser.age;
@@ -120,6 +122,7 @@ export const updateUser = async (id: string, session: string, updatedUser: Parti
     // fields no one can update
     delete updatedUser.id;
     delete updatedUser.lastLogin;
+    delete updatedUser.validated;
     // specific route required
     delete updatedUser.password;
     delete updatedUser.email;

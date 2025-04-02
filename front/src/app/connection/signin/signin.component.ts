@@ -86,7 +86,6 @@ export class SigninComponent {
                     const session = res.sessionid;
                     this.com.AuthTokenUpdate.next(session);
                     this.api.auth.get(session).subscribe(res => {
-                        console.log(res)
                         this.com.AuthAccountUpdate.next(res);
                         this.router.navigate(["/"]);
                     });

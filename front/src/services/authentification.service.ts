@@ -25,6 +25,7 @@ export class AuthentificationService {
         // écoute les événements
         com.AuthAccountUpdate.subscribe(res => {
             this.connected = res != null;
+            com.UpdateUserImage.next("");
             if (res == null) {
                 this.client = null;
                 this.clientToken = "";

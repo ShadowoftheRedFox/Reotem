@@ -119,6 +119,13 @@ export class MainComponent {
         });
     }
 
+    resetRoomFilter() {
+        this.filteredRoom.setValue([]);
+    }
+    resetBuildingFilter() {
+        this.filteredBuilding.setValue([]);
+    }
+
     inFilteredRoom(room: string) {
         if (this.filteredRoom.value == null || this.filteredRoom.value.length == 0) return true;
         return this.filteredRoom.value.includes(room);

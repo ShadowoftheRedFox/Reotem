@@ -1,1 +1,68 @@
-<p>user-edit works!</p>
+<form [formGroup]="formGroup" (ngSubmit)="submitEdit()" class="flex flex-col items-stretch justify-center flex-nowrap">
+    @if (selectedUser && selectedUser.id) {
+    <div class="w-full">
+        <p class="w-full text-center!">Image de profil</p>
+        <img [src]="BaseUrl+selectedUser.id+'.webp'" alt="Image de profile de l'utilsateur">
+    </div>
+    }
+    <mat-form-field [cdkCopyToClipboard]="selectedUser?.id||'None'" [matTooltip]="copyToolTip">
+        <mat-label>ID</mat-label>
+        <input matInput [disabled]="true" [value]="selectedUser?.id||'None'">
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>Prénom</mat-label>
+        <input matInput formControlName="firstname">
+        @if (formGroup.controls.firstname.invalid) {
+        <mat-error>{{genericError(formGroup.controls.firstname)}}</mat-error>
+        }
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>Nom</mat-label>
+        <input matInput formControlName="lastname">
+        @if (formGroup.controls.lastname.invalid) {
+        <mat-error>{{genericError(formGroup.controls.lastname)}}</mat-error>
+        }
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>Email</mat-label>
+        <input matInput [disabled]="true" [value]="selectedUser?.email||'None'">
+        <mat-icon matSuffix>alternate_email</mat-icon>
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>Âge</mat-label>
+        <input matInput [disabled]="true" [value]="selectedUser?.age ? getAge(selectedUser?.age) : 'None'">
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>Rôle</mat-label>
+        <mat-select formControlName="role">
+            @for (item of userRole; track $index) {
+            <mat-option [value]="item">{{item}}</mat-option>
+            }
+        </mat-select>
+        @if (formGroup.controls.role.invalid) {
+        <mat-error>{{genericError(formGroup.controls.role)}}</mat-error>
+        }
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>Niveau</mat-label>
+        <mat-select formControlName="lvl">
+            @for (item of userLvl; track $index) {
+            <mat-option [value]="item">{{item}}</mat-option>
+            }
+        </mat-select>
+        @if (formGroup.controls.lvl.invalid) {
+        <mat-error>{{genericError(formGroup.controls.lvl)}}</mat-error>
+        }
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>Expérience</mat-label>
+        <input matInput formControlName="exp">
+        @if (formGroup.controls.exp.invalid) {
+        <mat-error>{{genericError(formGroup.controls.exp)}}</mat-error>
+        }
+    </mat-form-field>
+    <div>
+        <mat-checkbox formControlName="adminValidated">Validé par administrateur</mat-checkbox>
+    </div>
+    <button mat-flat-button type="submit" [disabled]="formGroup.invalid" (click)="submitEdit()">Modifier</button>
+</form>
