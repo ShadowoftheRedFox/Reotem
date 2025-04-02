@@ -54,19 +54,19 @@ npm run start
 - [x] page de connexion
 - [x] page inscription
 - [x] page du profil
-- [ ] Système de points et niveaux en backend a stocker et frontend a afficher7
+- [x] Système de points et niveaux en backend a stocker et frontend a afficher7
 - [ ] module du tableau de bord (pour chaque utilisateur):
   - [x] s'inscrire
   - [x] valider son inscription (par mail ou autre)
   - [x] envoie de mail au(x) membre(s)
   - [x] modifier le profil d'un membre
   - [ ] log des connexions
-  - [ ] changer le niveau d'un membre
+  - [x] changer le niveau d'un membre
   - [ ] gerer le nombre d'accès et le nombre d'actions des utilisateurs
   - [x] rechercher, consulter, ajouter ou effacer les objets et services connectés
 - [ ] module gestion (pour les membres d'un certains niveaux):
   - [x] ajouter un nouvel objet connecté
-  - [ ] demander à un admin la suppression d'un objet
+  - [x] demander à un admin la suppression d'un objet
   - [x] modifier les attributs d'un objet (nom, description, statut, paramètres...)
   - [x] actier/désactiver/mettre à jour un objet
   - [x] associer des objects à des pièces/zones
@@ -74,12 +74,13 @@ npm run start
   - [ ] consulter/gérer les rapports d'utilisation (log, moyenne d'utilisation, consommation energétique moyenne etc)
   - [x] identifier les objets cassés (nécéssitant une maintenance), inneficaces (selon les paramètres de l'objet)
 - [ ] module administrateur (pour les administrateur uniquement):
-  - [ ] ajouter/modifier/supprimer des utilisateurs
-  - [ ] ajouter/révoquer des permissions à des utilisateurs
-  - [ ] gérer points et niveaux des utilisateurs
+  - [ ] ajouter/supprimer des utilisateurs
+  - [x] modifier des utilisateurs
+  - [x] ajouter/révoquer des permissions à des utilisateurs
+  - [x] gérer points et niveaux des utilisateurs
   - [ ] log des connexion et d'actions de tout les utilisateurs
   - [ ] ajouter/supprimer des catégories d'objets, d'objets ou de services
-  - [ ] affectuer des sauvegardes de la BDD
+  - [x] affectuer des sauvegardes de la BDD
   - [ ] vérifier l'intégrité des données de la platforme (pas de compte perdus, objets sans connexion a rien etc)
   - [ ] rapports avancés sur l'urilisation de la plateforme avec téléchargement des rapports (CSV, PDF etc...)
   - [ ] statistique du la consommation totale, taux de connexion et services les plus utilisés
