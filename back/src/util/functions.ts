@@ -1,7 +1,12 @@
 import models from "../models/export_models";
 import { UserSchema } from "~/models/user";
 import { NotifSchema, NotificationSchema } from "~/models/notification";
-import { NotificationQuery } from "../../../front/src/models/api.model";
+import {
+  LevelAdvanced,
+  LevelBeginner,
+  LevelExpert,
+  NotificationQuery,
+} from "../../../front/src/models/api.model";
 import { AnyObject, ObjectSchema } from "~/models/object";
 import { Types } from "mongoose";
 
@@ -10,7 +15,10 @@ const excludes = ["collection", "_doc", "db", "id", "__v", "schema"];
 const Reotem = {
   addUser: async (user: object) => {
     const objectId = new Types.ObjectId();
-    const merged = Object.assign(user, { _id: objectId, id: objectId.toString() });
+    const merged = Object.assign(user, {
+      _id: objectId,
+      id: objectId.toString(),
+    });
     const newUser = new models.User(merged);
     await newUser.save().then((u) => {
       console.log(`New user -> ${u.email}`);
@@ -36,8 +44,15 @@ const Reotem = {
     const data = await Reotem.getUser(id);
     if (typeof data !== "object") return;
     for (const key in data) {
-      if (key.startsWith("$") || typeof (data as never)[key] === typeof Function || excludes.includes(key) || (updated as never)[key] === undefined) continue;
-      if ((data as never)[key] !== (updated as never)[key]) (data as never)[key] = (updated as never)[key];
+      if (
+        key.startsWith("$") ||
+        typeof (data as never)[key] === typeof Function ||
+        excludes.includes(key) ||
+        (updated as never)[key] === undefined
+      )
+        continue;
+      if ((data as never)[key] !== (updated as never)[key])
+        (data as never)[key] = (updated as never)[key];
     }
     return data.updateOne(updated);
   },
@@ -74,8 +89,15 @@ const Reotem = {
     const data = await Reotem.getUser(query);
     if (typeof data !== "object") return;
     for (const key in data) {
-      if (key.startsWith("$") || typeof (data as never)[key] === typeof Function || excludes.includes(key) || (updated as never)[key] === undefined) continue;
-      if ((data as never)[key] !== (updated as never)[key]) (data as never)[key] = (updated as never)[key];
+      if (
+        key.startsWith("$") ||
+        typeof (data as never)[key] === typeof Function ||
+        excludes.includes(key) ||
+        (updated as never)[key] === undefined
+      )
+        continue;
+      if ((data as never)[key] !== (updated as never)[key])
+        (data as never)[key] = (updated as never)[key];
     }
     return data.updateOne(updated);
   },
@@ -86,7 +108,7 @@ const Reotem = {
     return;
   },
 
-  addVerification: async (verification: { id?: string, token?: string }) => {
+  addVerification: async (verification: { id?: string; token?: string }) => {
     const merged = Object.assign(verification);
     const newVerification = new models.Verification(merged);
     await newVerification.save().then((u) => {
@@ -103,8 +125,15 @@ const Reotem = {
     const data = await Reotem.getUser(query);
     if (typeof data !== "object") return;
     for (const key in data) {
-      if (key.startsWith("$") || typeof (data as never)[key] === typeof Function || excludes.includes(key) || (updated as never)[key] === undefined) continue;
-      if ((data as never)[key] !== (updated as never)[key]) (data as never)[key] = (updated as never)[key];
+      if (
+        key.startsWith("$") ||
+        typeof (data as never)[key] === typeof Function ||
+        excludes.includes(key) ||
+        (updated as never)[key] === undefined
+      )
+        continue;
+      if ((data as never)[key] !== (updated as never)[key])
+        (data as never)[key] = (updated as never)[key];
     }
     return data.updateOne(updated);
   },
@@ -124,7 +153,10 @@ const Reotem = {
     return newNotification;
   },
   getNotification: async (userId: string, query: NotificationQuery) => {
-    const data = await models.Notification.findOne({ id: userId, notifications: { $elemMatch: query } });
+    const data = await models.Notification.findOne({
+      id: userId,
+      notifications: { $elemMatch: query },
+    });
     if (data) return data;
     return;
   },
@@ -135,31 +167,59 @@ const Reotem = {
   },
   addNotification: async (userId: string, notif: Partial<NotifSchema>) => {
     const objectId = new Types.ObjectId();
-    const merged = Object.assign(notif, { _id: objectId, id: objectId.toString() });
-    await models.Notification.updateOne({ id: userId }, { $push: { notifications: merged } });
+    const merged = Object.assign(notif, {
+      _id: objectId,
+      id: objectId.toString(),
+    });
+    await models.Notification.updateOne(
+      { id: userId },
+      { $push: { notifications: merged } }
+    );
     console.log(`New notifications for user -> ${userId} -> ${notif.id}`);
   },
   updateNotification: async (userId: string, updated: Partial<NotifSchema>) => {
-    const data = await Reotem.getNotification(userId, updated as NotificationQuery);
+    const data = await Reotem.getNotification(
+      userId,
+      updated as NotificationQuery
+    );
     if (typeof data !== "object") return;
     for (const key in data) {
-      if (key.startsWith("$") || typeof (data as never)[key] === typeof Function || excludes.includes(key) || (updated as never)[key] === undefined) continue;
-      if ((data as never)[key] !== (updated as never)[key]) (data as never)[key] = (updated as never)[key];
+      if (
+        key.startsWith("$") ||
+        typeof (data as never)[key] === typeof Function ||
+        excludes.includes(key) ||
+        (updated as never)[key] === undefined
+      )
+        continue;
+      if ((data as never)[key] !== (updated as never)[key])
+        (data as never)[key] = (updated as never)[key];
     }
     return data.updateOne(updated);
   },
-  updateNotifications: async (userId: string, updated: Partial<NotificationSchema>) => {
+  updateNotifications: async (
+    userId: string,
+    updated: Partial<NotificationSchema>
+  ) => {
     const data = await Reotem.getNotifications(userId);
     if (typeof data !== "object") return;
     for (const key in data) {
-      if (key.startsWith("$") || typeof (data as never)[key] === typeof Function || excludes.includes(key) || (updated as never)[key] === undefined) continue;
-      if ((data as never)[key] !== (updated as never)[key]) (data as never)[key] = (updated as never)[key];
+      if (
+        key.startsWith("$") ||
+        typeof (data as never)[key] === typeof Function ||
+        excludes.includes(key) ||
+        (updated as never)[key] === undefined
+      )
+        continue;
+      if ((data as never)[key] !== (updated as never)[key])
+        (data as never)[key] = (updated as never)[key];
     }
     return data.updateOne(updated);
   },
   deleteNotification: async (userId: string, notificationId: string) => {
     const data = await Reotem.getNotifications(userId);
-    const delPos = data?.notifications.map((notif) => notif.id).indexOf(notificationId);
+    const delPos = data?.notifications
+      .map((notif) => notif.id)
+      .indexOf(notificationId);
     data?.notifications.splice(delPos as number, 1);
     await Reotem.updateNotifications(data?.id, data as NotificationSchema);
     return;
@@ -167,14 +227,17 @@ const Reotem = {
 
   addObject: async (object: ObjectSchema, objectData: AnyObject) => {
     const objectId = new Types.ObjectId();
-    const merged = { ...object, ...objectData, ...{ _id: objectId, id: objectId.toString() } };
+    const merged = {
+      ...object,
+      ...objectData,
+      ...{ _id: objectId, id: objectId.toString() },
+    };
     const newObject = await new models.Object(merged);
     await newObject.save().then((o) => {
       console.log(`New ${o.objectClass} -> ${o.id}`);
     });
     return newObject;
   },
-  // filter example {key1: value, key2: value...}
   getAllObjects: async () => {
     const data = await models.Object.find();
     if (data) return data;
@@ -185,12 +248,38 @@ const Reotem = {
     if (data) return data;
     return;
   },
-  updateObject: async (objectId: string, updated: ObjectSchema) => {
+  updateObject: async (
+    objectId: string,
+    updated: ObjectSchema,
+    userId: string
+  ) => {
     const data = await Reotem.getObject(objectId);
+    const user = await Reotem.getUser(userId);
+    if (user) {
+      user.exp = user.exp + 10;
+      if (user.exp >= LevelBeginner && user.lvl === "Débutant") {
+        console.log("Level up Débutant -> Avancé");
+        user.lvl = "Avancé";
+        user.exp = user.exp - LevelBeginner;
+      }
+      if (user.exp >= LevelAdvanced && user.lvl === "Avancé") {
+        console.log("Level up Avancé -> Expert");
+        user.lvl = "Expert";
+        user.exp = user.exp - LevelAdvanced;
+      }
+    }
+    await Reotem.updateUser(userId, user as UserSchema);
     if (typeof data !== "object") return;
     for (const key in data) {
-      if (key.startsWith("$") || typeof (data as never)[key] === typeof Function || excludes.includes(key) || (updated as never)[key] === undefined) continue;
-      if ((data as never)[key] !== (updated as never)[key]) (data as never)[key] = (updated as never)[key];
+      if (
+        key.startsWith("$") ||
+        typeof (data as never)[key] === typeof Function ||
+        excludes.includes(key) ||
+        (updated as never)[key] === undefined
+      )
+        continue;
+      if ((data as never)[key] !== (updated as never)[key])
+        (data as never)[key] = (updated as never)[key];
     }
     return data.updateOne(updated);
   },

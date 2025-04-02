@@ -40,10 +40,13 @@ ObjectsRouter.post("/create/", async (req, res, next) => {
   }
 });
 
-ObjectsRouter.post("/update/", async (req, res, next) => {
+ObjectsRouter.put("/update/:id", async (req, res, next) => {
   try {
-    console.log(`updating object ${JSON.parse(req.body).name} as ${JSON.parse(req.body).objectClass}`);
-    res.status(200);
+    console.log(`updating object ${req.body.params}`);
+    const oldObject = await getOne(req.params.id)
+    const userId = (await Reotem.getSession(req.body.session))?.id
+    await Reotem.updateObject(oldObject.id, req.body.params, userId)
+    res.status(200).json();
   } catch (error) {
     next(error);
   }
@@ -70,7 +73,7 @@ ObjectsRouter.delete("/delete/:id", async (req, res, next) => {
       console.log(`sending deleting request`)
       object.toDelete = { id: user.id, delete: true };
       console.log(object.toDelete);
-      await Reotem.updateObject(object.id, object);
+      await Reotem.updateObject(object.id, object, user.id);
     }
     res.status(200).json();
   } catch (error) {
@@ -83,7 +86,7 @@ ObjectsRouter.post("/dupplicate/:id", async (req, res, next) => {
     console.log(`dupping object ${req.params.id}`);
     const objectToDupp = await getOne(req.params.id)
     const namesOccur: string[] = [];
-    (await getAll())?.objects?.map(object => { if (object.name === objectToDupp.name) namesOccur.push(object.id)})
+    (await getAll())?.objects?.map(object => { if (object.name === objectToDupp.name) namesOccur.push(object.id) })
     if (objectToDupp.name)
       objectToDupp.name = objectToDupp.name + (namesOccur.length !== 0 ? `-${namesOccur.length}` : "")
     const duppedObject = await dupplicateObject(objectToDupp as ObjectSchema);

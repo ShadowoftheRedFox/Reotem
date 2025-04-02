@@ -338,7 +338,7 @@ export class EditComponent {
         if (this.formGroup.invalid) return;
 
         const object: AnyObject = {
-            id: "error",
+            id: this.obj?.id as string,
             name: this.formGroup.value.name as string,
             room: this.formGroup.value.room as string,
             building: this.formGroup.value.building as string | undefined,
@@ -392,8 +392,12 @@ export class EditComponent {
                 break;
         }
 
-        this.api.objects.update(object.id, this.auth.clientToken, this.obj as never).subscribe({
+        this.api.objects.update(object.id, this.auth.clientToken, object).subscribe({
             next: () => {
+                this.popup.openSnackBar({
+                    message: `L'objet "${this.obj?.name}" a été modifié avec succès.`,
+                    action: "Ok"
+                });
                 this.router.navigate(['/object']);
             },
             error: () => {
