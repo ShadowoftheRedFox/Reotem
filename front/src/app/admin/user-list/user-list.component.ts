@@ -13,6 +13,9 @@ import { toDateTime } from '../../../models/date.model';
 import { CommunicationService } from '../../../services/communication.service';
 import { PopupService } from '../../../services/popup.service';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 
 type Columns = "selection" | "id" | "firstname" | "lastname" | "email" | "lastLogin";
 
@@ -50,6 +53,9 @@ export class CustomPaginatorIntl implements MatPaginatorIntl {
         MatButtonModule,
         MatCheckboxModule,
         MatPaginatorModule,
+        ReactiveFormsModule,
+        MatFormFieldModule,
+        MatInputModule
     ],
     templateUrl: './user-list.component.html',
     styleUrl: './user-list.component.scss',
@@ -59,6 +65,7 @@ export class UserListComponent implements AfterViewInit {
     displayedColumns: Columns[] = ["selection",/* "id", */ "firstname", "lastname", "email", "lastLogin"];
     users: User[] = [];
     sortedUsers: User[] = [];
+    filteredUsers: User[] = [];
 
     dataSource = new MatTableDataSource<User>([]);
 
@@ -67,6 +74,8 @@ export class UserListComponent implements AfterViewInit {
 
     selectedUser = output<User | null>();
     selectedId = "";
+
+    filterControl = new FormControl("");
 
     ngAfterViewInit(): void {
         this.dataSource.paginator = this.paginator;
@@ -81,6 +90,26 @@ export class UserListComponent implements AfterViewInit {
     ) {
         this.dataSource.data = this.users;
         this.getUsersList();
+
+        this.filterControl.valueChanges.subscribe((c) => {
+            if (!c || c.length == 0) {
+                this.dataSource.data = this.users;
+                return;
+            }
+            this.filteredUsers = [];
+            this.users.forEach(u => {
+                if (
+                    u.id.includes(c) ||
+                    u.firstname.includes(c) ||
+                    u.lastname.includes(c) ||
+                    u.email.includes(c)
+                ) {
+                    this.filteredUsers.push(u);
+                }
+            });
+            this.sortedUsers = this.filteredUsers;
+            this.dataSource.data = this.filteredUsers;
+        });
     }
 
     getUsersList() {
