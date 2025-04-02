@@ -123,6 +123,8 @@ export class ServiceManagerComponent {
                 this.com.DomoObjectsAmount = res.total;
                 this.com.DomoAllObjectsUpdate.next(res.objects);
             });
+        } else {
+            this.updateData();
         }
 
         // reset list if we change the other
@@ -161,10 +163,10 @@ export class ServiceManagerComponent {
             if (obj.electricityUsage != undefined &&
                 obj.room.includes(this.filteredRoom.value || '') &&
                 (obj.building || '').includes(this.filteredBuilding.value || '')) {
-                this.electricityData.global += obj.electricityUsage ||100;
+                this.electricityData.global += obj.electricityUsage || 100;
                 this.electricityData.threshold += obj.consomationThreshold || 0;
 
-                series.push(obj.electricityUsage ||100);
+                series.push(obj.electricityUsage || 100);
                 labels.push(obj.name);
             }
             if (obj.battery) {

@@ -14,6 +14,7 @@ import { PopupService } from '../../../services/popup.service';
 import { DateAdapter, provideNativeDateAdapter } from '@angular/material/core';
 import { MatTimepickerModule } from '@angular/material/timepicker';
 import { ErrorComponent } from '../../error/error.component';
+import { User } from '../../../models/api.model';
 
 @Component({
     selector: 'app-edit',
@@ -52,9 +53,11 @@ export class EditComponent {
 
     //#region Forms
     customValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
-        if (this.obj === null) return { no_obj: true };
+        if (this.obj === null) return null
         const e = { subgroupInvalid: true };
         const ctrl = control as FormGroup;
+
+        if (!this.requireAdvanced()) return ctrl.errors === null ? null : ctrl.errors;
 
         switch (this.obj.objectClass) {
             case 'BaseObject':
@@ -142,6 +145,18 @@ export class EditComponent {
 
     //#endregion
 
+    user!: User;
+
+    requireAdvanced() {
+        // need a role greater or equal as advanced
+        return this.user.lvl != "Débutant" && this.user.role != "Administrator";
+    }
+
+    requireExpert() {
+        // need a role greater or equal as advanced
+        return this.user.lvl != "Débutant" && this.user.lvl != "Avancé" && this.user.role != "Administrator";
+    }
+
     constructor(
         private api: APIService,
         private auth: AuthentificationService,
@@ -149,6 +164,8 @@ export class EditComponent {
         private route: ActivatedRoute,
         private popup: PopupService
     ) {
+        this.user = auth.client as User;
+
         // for french date format on time pickers
         this._adapter.setLocale('FR-fr');
         route.params.subscribe(res => {
@@ -335,6 +352,7 @@ export class EditComponent {
     //#endregion
 
     updateObject() {
+        console.log(this.formGroup.errors);
         if (this.formGroup.invalid) return;
 
         const object: AnyObject = {
