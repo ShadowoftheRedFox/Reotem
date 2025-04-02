@@ -26,6 +26,8 @@ export class ObjectComponent {
     doorObj!: DoorObject;
     wifiObj!: WiFiObject;
 
+    display = "";
+
     constructor(
         private route: ActivatedRoute,
         private auth: AuthentificationService,
@@ -38,6 +40,7 @@ export class ObjectComponent {
             api.objects.get(this.requestedObject).subscribe({
                 next: (res) => {
                     this.obj = res;
+                    this.display = JSON.stringify(this.obj);
                     window.document.title = res.name + TITLE_POSTFIX;
 
                     switch (this.obj.objectClass) {
