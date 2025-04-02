@@ -8,13 +8,12 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatPaginator, MatPaginatorIntl, MatPaginatorModule } from '@angular/material/paginator';
 import { Subject } from 'rxjs';
-import { User } from '../../../models/api.model';
-import { toDateTime } from '../../../models/date.model';
+import { AnyObject } from '../../../models/domo.model';
 import { CommunicationService } from '../../../services/communication.service';
 import { PopupService } from '../../../services/popup.service';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 
-type Columns = "selection" | "id" | "firstname" | "lastname" | "email" | "lastLogin";
+type Columns = "selection" | "objectId" | "name" | "userId";
 
 @Injectable()
 export class CustomPaginatorIntl implements MatPaginatorIntl {
@@ -55,17 +54,17 @@ export class CustomPaginatorIntl implements MatPaginatorIntl {
     providers: [{ provide: MatPaginatorIntl, useClass: CustomPaginatorIntl }],
 })
 export class DeletionRequestComponent implements AfterViewInit {
-    displayedColumns: Columns[] = ["selection",/* "id", */ /* "firstname", */ /* "lastname", */ "email", "lastLogin"];
-    users: User[] = [];
-    sortedUsers: User[] = [];
+    displayedColumns: Columns[] = ["selection",/* "objectId", */ "name", "userId"];
+    objects: AnyObject[] = [];
+    sortedObjects: AnyObject[] = [];
 
-    dataSource = new MatTableDataSource<User>([]);
+    dataSource = new MatTableDataSource<AnyObject>([]);
 
     @ViewChild(MatPaginator) paginator!: MatPaginator;
     @ViewChild(MatSort) sort!: MatSort;
 
     amount = output<number>();
-    selectedUser = output<User | null>();
+    selectedAnyObject = output<AnyObject | null>();
     selectedId = "";
 
     ngAfterViewInit(): void {
@@ -79,15 +78,14 @@ export class DeletionRequestComponent implements AfterViewInit {
         private auth: AuthentificationService,
         private popup: PopupService
     ) {
-        this.dataSource.data = this.users;
-        this.getUsersList();
+        this.getObjectsList();
     }
 
-    getUsersList() {
-        this.api.admin.getAllUser(this.auth.clientToken, { validated: false }).subscribe({
+    getObjectsList() {
+        this.api.objects.all({ toDelete: true }).subscribe({
             next: (data) => {
-                this.users = data.users;
-                this.updateUsersContent();
+                this.objects = data.objects;
+                this.updatObjectsContent();
             },
             error: () => {
                 this.popup.openSnackBar({
@@ -97,17 +95,10 @@ export class DeletionRequestComponent implements AfterViewInit {
         });
     }
 
-    updateUsersContent() {
-        this.amount.emit(this.users.length);
-        this.sortedUsers = this.users;
-        this.dataSource.data = this.users;
-    }
-
-    formatDate(date?: string) {
-        if (date == undefined) {
-            return "Aucune connexion"
-        }
-        return toDateTime(date);
+    updatObjectsContent() {
+        this.amount.emit(this.objects.length);
+        this.sortedObjects = this.objects;
+        this.dataSource.data = this.objects;
     }
 
     applyFilter(event: Event) {
@@ -116,26 +107,22 @@ export class DeletionRequestComponent implements AfterViewInit {
     }
 
     sortData(sort: Sort) {
-        const data = this.users.slice();
+        const data = this.objects.slice();
         if (!sort.active || sort.direction === '') {
-            this.sortedUsers = data;
+            this.sortedObjects = data;
             return;
         }
 
-        this.sortedUsers = data.sort((a, b) => {
+        this.sortedObjects = data.sort((a, b) => {
             const isAsc = sort.direction === "asc";
 
             switch (sort.active as Columns) {
-                case "id":
+                case "name":
+                    return this.compare(a.name, b.name, isAsc);
+                case "objectId":
                     return this.compare(a.id, b.id, isAsc);
-                case "email":
-                    return this.compare(a.email, b.email, isAsc);
-                case "firstname":
-                    return this.compare(a.firstname, b.firstname, isAsc);
-                case "lastname":
-                    return this.compare(a.lastname, b.lastname, isAsc);
-                case "lastLogin":
-                    return this.compare(a.lastLogin, b.lastLogin, isAsc);
+                case "userId":
+                    return this.compare(a.toDelete?.id as string, b.toDelete?.id as string, isAsc);
                 default:
                     return 0;
             }
@@ -147,9 +134,12 @@ export class DeletionRequestComponent implements AfterViewInit {
     }
 
     validate(id: string) {
-        this.api.admin.validateUser(this.auth.clientToken, id).subscribe({
+        this.api.objects.delete(id, this.auth.clientToken).subscribe({
             next: () => {
-                this.getUsersList();
+                this.getObjectsList();
+                this.popup.openSnackBar({
+                    message: "Objet supprimé"
+                });
             },
             error: () => {
                 this.popup.openSnackBar({
@@ -159,8 +149,3 @@ export class DeletionRequestComponent implements AfterViewInit {
         });
     }
 }
-
-
-// TODO get the requests and display them
-// use the same route as a normal delete request
-// teh back will check if user is admin and truly delete or make a request

@@ -82,6 +82,10 @@ export interface BaseObject {
     connection: Connection;
     state: ObjectState;
     objectClass: ObjectClass;
+    toDelete?: {
+        id: string;
+        delete: boolean;
+    }
 }
 
 interface BaseObjectError extends BaseObject {

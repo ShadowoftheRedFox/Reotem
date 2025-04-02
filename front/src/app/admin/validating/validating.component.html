@@ -2,8 +2,8 @@
 <div class="h-full flex justify-center items-center">
     <p>Pas d'utilisateur en attente de validation</p>
 </div>
-} @else {
-<div class="mat-elevation-z8 h-full flex flex-col justify-between">
+}
+<div class="mat-elevation-z8 h-full flex flex-col justify-between" [hidden]="users.length === 0">
     <table mat-table class="w-full" [dataSource]="dataSource" matSort (matSortChange)="sortData($event)">
         <ng-container matColumnDef="selection">
             <th mat-header-cell *matHeaderCellDef>
@@ -50,4 +50,3 @@
     </mat-paginator>
 
 </div>
-}
