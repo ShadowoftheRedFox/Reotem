@@ -23,6 +23,7 @@
         "@angular/router": "^19.2.2",
         "@tailwindcss/postcss": "^4.0.14",
         "bcryptjs": "^3.0.2",
+        "fs": "^0.0.1-security",
         "ng-apexcharts": "^1.15.0",
         "rxjs": "~7.8.0",
         "tslib": "^2.3.0",

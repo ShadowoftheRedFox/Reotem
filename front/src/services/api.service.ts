@@ -276,6 +276,15 @@ export class APIService {
         },
         validateUser: (session: string, userId: string) => {
             return this.sendApiRequest("POST", "admin/" + userId, { session: session }, "[ADMIN] Validating user " + userId);
+        },
+        dbDumb: (session: string) => {
+            return this.sendApiRequest("POST", "admin/dump", {session: session}, "[ADMIN] Dumping data from database");
+        },
+        showLogs: (session: string) => {
+            return this.sendApiRequest("GET", "admin/logs", {session: session})
+        },
+        downloadLogs: (session: string) => {
+            return this.sendApiRequest("GET", "admin/downloadlogs", {session: session})
         }
     }
 

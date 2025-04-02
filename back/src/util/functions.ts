@@ -7,8 +7,9 @@ import {
   NotificationQuery,
 } from "../../../front/src/models/api.model";
 import { AnyObject, ObjectSchema } from "~/models/object";
-import { Types } from "mongoose";
+import mongoose, { Types } from "mongoose";
 import logger from "./logger";
+import * as fs from "fs";
 
 const excludes = ["collection", "_doc", "db", "id", "__v", "schema"];
 
@@ -289,6 +290,23 @@ const Reotem = {
     if (data) return data.deleteOne();
     return;
   },
+
+  dataDump: async (id: string) => {
+    const user = await Reotem.getUser(id)
+    if (user?.role !== "Administrator") return 401
+    const db = mongoose.connection.db
+    if (!db) return
+    const collections = await db.listCollections().toArray();
+    const result: Record<string, mongoose.mongo.WithId<mongoose.mongo.BSON.Document>[]> = {};
+    for (const collection of collections) {
+      const collectionName = collection.name;
+      result[collectionName] = await db.collection(collectionName).find({}).toArray();
+    }
+    fs.appendFile('./dump/backup.json', `${JSON.stringify(result, undefined, 4)}`, function (err) {
+      if (err) return 500;
+    });
+    return 200
+  }
 };
 
 export default Reotem;

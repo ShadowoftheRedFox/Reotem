@@ -14,8 +14,8 @@
     </div>
     <div>
         <h2>Logs</h2>
-        <button mat-flat-button>Voir les logs</button>
-        <button mat-flat-button>Télécharger les logs</button>
+        <button mat-flat-button (click)="showLogs()">Voir les logs</button>
+        <button mat-flat-button (click)="downloadLogs()">Télécharger les logs</button>
     </div>
     <div>
         <h2>Rapports</h2>
@@ -23,6 +23,6 @@
     </div>
     <div>
         <h2>Base de donnée</h2>
-        <button mat-flat-button>Faire une sauvegarde</button>
+        <button mat-flat-button (click)="dataDumpLauncher()">Faire une sauvegarde</button>
     </div>
 </div>

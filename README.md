@@ -30,7 +30,7 @@ npm ci
 
 Vous devez créer une copie du fichier [.env.example](back/.env.example), et le renommer en **.env**, afin de remplir le nécéssaire. Un compte [MailJet](https://www.mailjet.com) est nécéssaire pour l'envoie de mail.  
 
-À noté, sur Unix, il faut créer un dossier [logs](./back/logs) afin de créer les fichiers de logs.  
+À noté, sur Unix, il faut créer un dossier [logs](./back/logs) afin de créer les fichiers de logs et un dossier [dump](./back/dump) afin de créer les fichiers de backup de la BDD.  
 
 # Lancer le projet
 

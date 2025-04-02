@@ -16,5 +16,7 @@ export const init = () => {
     };
     mongoose.connect(DBCONNECTION, options);
     mongoose.Promise = global.Promise;
-    mongoose.connection.on("connected", () => logger("[MONGODB] Connected to database."));
+    mongoose.connection.on("connected", async () => {
+        logger("[MONGODB] Connected to database.");
+    });
 }
