@@ -14,6 +14,10 @@ export const getAll = async (query: ObjectQuery = {}) => {
     resultObjects = resultObjects?.filter((o) => o.objectClass == query.type);
   }
 
+  if (query?.toDelete) {
+    resultObjects = resultObjects?.filter((o) => o.toDelete.delete === query.toDelete);
+  }
+
   const n = resultObjects?.length;
 
   if (query?.limit && query.limit > 0) {

@@ -4,7 +4,6 @@ import { NotifSchema, NotificationSchema } from "~/models/notification";
 import {
   LevelAdvanced,
   LevelBeginner,
-  LevelExpert,
   NotificationQuery,
 } from "../../../front/src/models/api.model";
 import { AnyObject, ObjectSchema } from "~/models/object";
