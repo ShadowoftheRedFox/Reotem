@@ -1,43 +1,32 @@
-@if (users.length === 0) {
+@if (objects.length === 0) {
 <div class="h-full flex justify-center items-center">
     <p>Pas de demande de suppression en attente</p>
 </div>
-} @else {
-<div class="mat-elevation-z8 h-full flex flex-col justify-between">
+}
+<div class="mat-elevation-z8 h-full flex flex-col justify-between" [hidden]="objects.length===0">
     <table mat-table class="w-full" [dataSource]="dataSource" matSort (matSortChange)="sortData($event)">
         <ng-container matColumnDef="selection">
             <th mat-header-cell *matHeaderCellDef>
                 Supprimer
             </th>
-            <td mat-cell *matCellDef="let user">
-                <button mat-mini-fab (click)="validate(user.id)"><mat-icon class="symbols">delete</mat-icon></button>
+            <td mat-cell *matCellDef="let obj">
+                <button mat-mini-fab (click)="validate(obj.id)"><mat-icon class="symbols">delete</mat-icon></button>
             </td>
         </ng-container>
 
-        <ng-container matColumnDef="id">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="id">Utilisateur</th>
-            <td mat-cell *matCellDef="let user">{{user.id}}</td>
+        <ng-container matColumnDef="objectId">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="id">Objet ID</th>
+            <td mat-cell *matCellDef="let obj">{{obj.id}}</td>
         </ng-container>
 
-        <ng-container matColumnDef="firstname">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="firstname">Prénom</th>
-            <td mat-cell *matCellDef="let user">{{ user.firstname }}</td>
+        <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="firstname">Nom</th>
+            <td mat-cell *matCellDef="let obj">{{ obj.name }}</td>
         </ng-container>
 
-        <ng-container matColumnDef="lastname">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="lastname">Nom</th>
-            <td mat-cell *matCellDef="let user">{{ user.lastname }}</td>
-        </ng-container>
-
-        <ng-container matColumnDef="email">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="email">Email</th>
-            <td mat-cell *matCellDef="let user">{{ user.email }}</td>
-        </ng-container>
-
-        <ng-container matColumnDef="lastLogin">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="lastLogin">Dernière Connexion</th>
-            <td mat-cell *matCellDef="let user">{{ user.lastLogin ? formatDate(user.lastLogin) : 'Aucune connexion' }}
-            </td>
+        <ng-container matColumnDef="userId">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="lastname">ID Utilisateur</th>
+            <td mat-cell *matCellDef="let obj">{{ obj.toDelete.id }}</td>
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
@@ -45,8 +34,7 @@
 
     </table>
 
-    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons aria-label="Sélection d'une page d'utilisateur">
+    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons aria-label="Sélection d'une page demande">
     </mat-paginator>
 
 </div>
-}

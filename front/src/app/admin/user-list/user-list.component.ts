@@ -88,7 +88,6 @@ export class UserListComponent implements AfterViewInit {
         private auth: AuthentificationService,
         private popup: PopupService
     ) {
-        this.dataSource.data = this.users;
         this.getUsersList();
 
         this.filterControl.valueChanges.subscribe((c) => {
