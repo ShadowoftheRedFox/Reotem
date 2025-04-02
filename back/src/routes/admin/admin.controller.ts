@@ -10,7 +10,7 @@ export default AdminRouter;
 
 AdminRouter.post("/all", async (req, res, next) => {
     try {
-        logger(`[ADMIN] Getting all user ${req.body.query}`);
+        logger(`[ADMIN] Getting all user ${req.body.query != undefined ? JSON.parse(req.body.query) : {}}`);
         const users = await getAll(req.body.session, req.body.query);
         res.status(200).json(users);
     } catch (error) {

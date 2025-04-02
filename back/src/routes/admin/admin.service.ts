@@ -28,8 +28,6 @@ export const getAll = async (session: string, query: AdminQuery) => {
         users = users.filter(u => u.adminValidated === query.validated || u.adminValidated === undefined);
     }
 
-    console.log(users)
-
     return { users: users, number: users.length };
 }
 
@@ -49,8 +47,6 @@ export const adminValidate = async (session: string, id: string) => {
         throw new HttpException(404, { user: 'not found' });
     }
 
-    // FIXME do not change the adminValidated somehow
-    console.log(validatedUser);
     await Reotem.updateUser(id, { adminValidated: true });
     return;
 }
