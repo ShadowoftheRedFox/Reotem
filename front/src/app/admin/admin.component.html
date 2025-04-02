@@ -1,6 +1,13 @@
 <mat-tab-group class="h-full">
     <mat-tab>
         <ng-template mat-tab-label>
+            <mat-icon class="symbols">archive</mat-icon>
+            Logs
+        </ng-template>
+        <app-website-logs class="h-full"></app-website-logs>
+    </mat-tab>
+    <mat-tab>
+        <ng-template mat-tab-label>
             <mat-icon class="symbols">group</mat-icon>
             Utilisateurs
         </ng-template>
@@ -26,12 +33,5 @@
             Effacement
         </ng-template>
         <app-deletion-request class="h-full" (amount)="deletionBadge($event)"></app-deletion-request>
-    </mat-tab>
-    <mat-tab>
-        <ng-template mat-tab-label>
-            <mat-icon class="symbols">archive</mat-icon>
-            Logs
-        </ng-template>
-        <app-website-logs class="h-full"></app-website-logs>
     </mat-tab>
 </mat-tab-group>

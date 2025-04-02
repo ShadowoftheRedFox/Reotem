@@ -138,7 +138,7 @@ export class TestComponent {
 
         tab.forEach(o => {
             this.api.objects.create(o as AnyObject, this.auth.clientToken).subscribe();
-        })
+        });
 
         this.data = JSON.stringify(tab);
     }

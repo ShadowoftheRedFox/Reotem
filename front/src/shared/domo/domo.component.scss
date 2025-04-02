@@ -17,6 +17,10 @@
     justify-content: space-between;
 }
 
+.mat-mdc-card-avatar {
+    border-radius: 0;
+}
+
 .light-header-image {
     background-image: url('/assets/img/objects/light.png');
     background-size: cover;

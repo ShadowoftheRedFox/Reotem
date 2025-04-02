@@ -107,7 +107,7 @@ export class DomoComponent {
     }
 
     objDetail() {
-        this.router.navigate(["/object", "view", this.obj()._id]);
+        this.router.navigate(["object", "view", this.obj()._id]);
     }
 
     objTurnOnOff() {

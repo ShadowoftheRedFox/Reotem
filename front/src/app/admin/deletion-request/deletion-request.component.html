@@ -1,22 +1,21 @@
 @if (users.length === 0) {
 <div class="h-full flex justify-center items-center">
-    <p>Pas d'utilisateur en attente de validation</p>
+    <p>Pas de demande de suppression en attente</p>
 </div>
 } @else {
 <div class="mat-elevation-z8 h-full flex flex-col justify-between">
     <table mat-table class="w-full" [dataSource]="dataSource" matSort (matSortChange)="sortData($event)">
         <ng-container matColumnDef="selection">
             <th mat-header-cell *matHeaderCellDef>
-                Validation
+                Supprimer
             </th>
             <td mat-cell *matCellDef="let user">
-                <button mat-mini-fab (click)="validate(user.id)"><mat-icon
-                        class="symbols">check_circle</mat-icon></button>
+                <button mat-mini-fab (click)="validate(user.id)"><mat-icon class="symbols">delete</mat-icon></button>
             </td>
         </ng-container>
 
         <ng-container matColumnDef="id">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="id"> Id </th>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="id">Utilisateur</th>
             <td mat-cell *matCellDef="let user">{{user.id}}</td>
         </ng-container>
 
