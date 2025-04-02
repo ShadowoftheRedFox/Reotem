@@ -2,6 +2,7 @@ import HttpException from "~/models/HttpException";
 import Reotem from "~/util/functions";
 import { AdminQuery, User, UserRole } from "../../../../front/src/models/api.model";
 import { adminParseUser } from "~/util/parser";
+import logger from "~/util/logger";
 
 export const getAll = async (session: string, query: AdminQuery) => {
     const currentSession = await Reotem.getSession(session);
@@ -17,7 +18,7 @@ export const getAll = async (session: string, query: AdminQuery) => {
     let users: Partial<User>[] = [];
     const reqUsers = (await Reotem.getUsers())
     if (reqUsers === undefined) {
-        console.log("[LOGIC ERROR] found no account but found admin user");
+        logger("[LOGIC ERROR] found no account but found admin user");
         throw new HttpException(500);
     }
 

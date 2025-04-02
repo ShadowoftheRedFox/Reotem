@@ -92,7 +92,7 @@ export class UserComponent {
                     }
 
                     if (this.privateMode) {
-                        this.user.age = `${new Date(Date.now()).getFullYear() - new Date(this.user?.age).getFullYear()}`;
+                        this.user.age = `${new Date().getFullYear() - new Date(this.user?.age).getFullYear()}`;
                         this.sexeGroup.setValue({ sexe: this.user.sexe });
                         this.emailGroup.setValue({ email: this.user.email, password: '' });
                         this.usernameGroup.setValue({ firstname: this.user.firstname, lastname: this.user.lastname });

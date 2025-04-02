@@ -2,6 +2,7 @@
 require("dotenv").config();
 
 import { Client } from "node-mailjet";
+import logger from "./logger";
 
 export const template = {
   // a span in the url to trick the gmail parser
@@ -53,11 +54,11 @@ export const sendMail = (target: string, title: string, description: string, htm
   });
   request
     .then(() => {
-      console.log(`Sent mail to ${target} about ${title}`);
-      // console.log(result.body);
+      logger(`Sent mail to ${target} about ${title}`);
+      // logger(result.body);
     })
     .catch((err: Error) => {
-      console.log("error");
-      console.log(err);
+      logger("error");
+      logger(JSON.stringify(err));
     });
 };

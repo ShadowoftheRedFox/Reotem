@@ -6,6 +6,7 @@ import { parseUser } from "../../util/parser";
 import Reotem from "~/util/functions";
 import { UserSchema } from "~/models/user";
 import { User } from "../../../../front/src/models/api.model";
+import logger from "~/util/logger";
 
 
 export const getSession = async (token: string) => {
@@ -43,7 +44,7 @@ export const createSession = async (email: string, hash?: string) => {
 
         const salt = '$' + password[1] + '$' + password[2] + '$' + password[3].slice(0, 22);
 
-        console.log("Fake challenge fallthrough");
+        logger("Fake challenge fallthrough");
 
         return { challenge: challenge, salt: salt };
     }
@@ -61,7 +62,7 @@ export const createSession = async (email: string, hash?: string) => {
     }
 
     if (hash && user && user.challenge) {
-        console.log("Verifying challenge anwser")
+        logger("Verifying challenge anwser")
 
         const hash_server = crypto.createHash("sha256").update(user.challenge + user.password).digest("hex");
 
@@ -71,7 +72,7 @@ export const createSession = async (email: string, hash?: string) => {
 
             await Reotem.deleteSession(user.id);
             await Reotem.addSession({ id: user.id, token: sessionid });
-            await Reotem.updateUser(user.id, { challenge: undefined, lastLogin: `${new Date(Date.now()).toISOString()}` })
+            await Reotem.updateUser(user.id, { challenge: undefined, lastLogin: `${new Date().toISOString()}` })
 
             return { sessionid: sessionid };
         }

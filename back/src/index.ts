@@ -3,6 +3,7 @@ import { init } from "./util/mongoose";
 import cors from "cors"; // corss origin request
 import routes from "./routes/routes";
 import HttpException from "./models/HttpException";
+import logger from "./util/logger";
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 require("dotenv").config();
@@ -48,12 +49,12 @@ const errorHandler: ErrorRequestHandler = function (err, req, res, next) {
     if (err.internalLog === true) {
       console.error(err);
     } else {
-      console.log("Error for user generated.");
+      logger("Error for user generated.");
     }
     res.status(err.errorCode).json({ message: err.message });
     return;
   } else if (err instanceof Error) {
-    console.log(err);
+    logger(JSON.stringify(err));
     res.status(500).json({ message: err.message });
     return;
   }
@@ -68,5 +69,6 @@ app.use(function (req, res) {
 });
 
 app.listen(port, async () => {
-  console.log(`Server running on http://localhost:${port}/`);
+  logger(`\n|----------------| SERVER START AT ${new Date().toDateString().toUpperCase()} |----------------|`)
+  logger(`Server running on http://localhost:${port}/`);
 });
