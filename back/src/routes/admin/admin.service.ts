@@ -25,7 +25,7 @@ export const getAll = async (session: string, query: AdminQuery) => {
     reqUsers.forEach(u => users.push(adminParseUser(u)));
 
     if (query && query.validated != undefined) {
-        users = users.filter(u => u.validated === false);
+        users = users.filter(u => u.adminValidated === query.validated || u.adminValidated === undefined);
     }
 
     return { users: users, number: users.length };
@@ -47,9 +47,6 @@ export const adminValidate = async (session: string, id: string) => {
         throw new HttpException(404, { user: 'not found' });
     }
 
-    // TODO check why it's not validating the user
-    validatedUser.adminValidated = true;
-
-    await Reotem.updateUser(id, validatedUser);
+    await Reotem.updateUser(id, { adminValidated: true });
     return;
 }

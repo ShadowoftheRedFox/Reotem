@@ -104,7 +104,7 @@ export class MainComponent {
 
         // get the wanted order
         const mainOrder = auth.getCookie("main_order");
-        if (mainOrder.length != OrderItems) {
+        if (mainOrder.length > 0 && JSON.parse(mainOrder).length != OrderItems) {
             auth.setCookie("main_order", JSON.stringify(this.order), CookieTime.Year, "/");
         } else {
             this.order = JSON.parse(mainOrder);

@@ -18,7 +18,7 @@
         </mat-form-field>
         <mat-form-field>
             <mat-label>Type de composant</mat-label>
-            <mat-select [disabled]="true" [tabIndex]="classes.indexOf(obj.objectClass)">
+            <mat-select [disabled]="true" [value]="obj.objectClass">
                 @for (c of classes; track $index) {
                 <mat-option [value]="c" [disabled]="true">{{c}}</mat-option>
                 }
@@ -38,6 +38,7 @@
             <mat-error>{{buildingErrorMessage()}}</mat-error>
             }
         </mat-form-field>
+        @if (requireAdvanced()) {
         <mat-form-field>
             <mat-label>Type de connexion</mat-label>
             <mat-select formControlName="connection">
@@ -60,10 +61,12 @@
             <mat-error>{{stateErrorMessage()}}</mat-error>
             }
         </mat-form-field>
-        @if (obj.objectClass === "BaseObject") {
+        }
+        @if (obj.objectClass === "BaseObject" || !requireAdvanced()) {
         <button mat-raised-button type="submit" [disabled]="formGroup.invalid">Valider</button>
         }
     </form>
+    @if (requireAdvanced()) {
     @if (obj.objectClass === "LightObject") {
     <form [formGroup]="LightObjectGroup" (ngSubmit)="updateObject()" class="flex flex-col">
         <mat-form-field>
@@ -77,6 +80,7 @@
             <mat-error>{{modeErrorMessage(LightObjectGroup.controls.mode)}}</mat-error>
             }
         </mat-form-field>
+        @if (requireExpert()) {
         <mat-form-field>
             <mat-label>Limite de consommation</mat-label>
             <input matInput formControlName="consomationThreshold" type="number" />
@@ -90,6 +94,7 @@
         <div>
             <mat-checkbox [disabled]="true" [checked]="LightObjectGroup.controls.turnedOn">Allumé</mat-checkbox>
         </div>
+        }
         <button mat-raised-button type="submit" [disabled]="formGroup.invalid || LightObjectGroup.invalid"
             class="boom">Valider</button>
     </form>
@@ -106,6 +111,7 @@
             <mat-error>{{modeErrorMessage(ThermostatObjectGroup.controls.mode)}}</mat-error>
             }
         </mat-form-field>
+        @if (requireExpert()) {
         <mat-form-field>
             <mat-label>Limite de consommation</mat-label>
             <input matInput formControlName="consomationThreshold" type="number" />
@@ -127,11 +133,13 @@
             <mat-error>{{targetTempErrorMessage()}}</mat-error>
             }
         </mat-form-field>
+        }
         <button mat-raised-button type="submit" [disabled]="formGroup.invalid || ThermostatObjectGroup.invalid"
             class="boom">Valider</button>
     </form>
     } @else if (obj.objectClass === "SpeakerObject") {
     <form [formGroup]="SpeakerObjectGroup" (ngSubmit)="updateObject()" class="flex flex-col">
+        @if (requireExpert()) {
         <mat-form-field>
             <mat-label>Limite de consommation</mat-label>
             <input matInput formControlName="consomationThreshold" type="number" />
@@ -146,11 +154,13 @@
         <div>
             <mat-checkbox [disabled]="true" [checked]="SpeakerObjectGroup.controls.turnedOn">Allumé</mat-checkbox>
         </div>
+        }
         <button mat-raised-button type="submit" [disabled]="formGroup.invalid || SpeakerObjectGroup.invalid"
             class="boom">Valider</button>
     </form>
     } @else if (obj.objectClass === "VideoProjectorObject") {
     <form [formGroup]="VideoProjectorObjectGroup" (ngSubmit)="updateObject()" class="flex flex-col">
+        @if (requireExpert()) {
         <mat-form-field>
             <mat-label>Limite de consommation</mat-label>
             <input matInput formControlName="consomationThreshold" type="number" />
@@ -162,11 +172,13 @@
             <mat-checkbox [disabled]="true"
                 [checked]="VideoProjectorObjectGroup.controls.turnedOn">Allumé</mat-checkbox>
         </div>
+        }
         <button mat-raised-button type="submit" [disabled]="formGroup.invalid || VideoProjectorObjectGroup.invalid"
             class="boom">Valider</button>
     </form>
     } @else if (obj.objectClass === "ComputerObject") {
     <form [formGroup]="ComputerObjectGroup" (ngSubmit)="updateObject()" class="flex flex-col">
+        @if (requireExpert()) {
         <mat-form-field>
             <mat-label>Limite de consommation</mat-label>
             <input matInput formControlName="consomationThreshold" type="number" />
@@ -181,6 +193,7 @@
         <div>
             <mat-checkbox [disabled]="true" [checked]="ComputerObjectGroup.controls.turnedOn">Allumé</mat-checkbox>
         </div>
+        }
         <button mat-raised-button type="submit" [disabled]="formGroup.invalid || ComputerObjectGroup.invalid"
             class="boom">Valider</button>
     </form>
@@ -267,5 +280,6 @@
     <p>Cette classe est uniquement pour le développement.</p>
     }
     <button mat-flat-button routerLink="/object" class="w-full mt-1">Retour</button>
+    }
 </div>
 }

@@ -29,7 +29,7 @@ export const adminParseUser = (user: UserSchema): Partial<User> => {
         lvl: user.lvl as UserLevel,
         exp: user.exp,
         validated: user.validated ? false : undefined,
-        adminValidated: user.validated ? false : undefined,
+        adminValidated: user.adminValidated === undefined ? false : user.adminValidated,
         lastLogin: user.lastLogin || undefined,
     };
 };

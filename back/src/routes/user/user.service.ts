@@ -108,11 +108,11 @@ export const updateUser = async (id: string, session: string, updatedUser: Parti
 
     if (!sessionUserIsAdmin) {
         // fields user can't update but admin can
-        delete updatedUser.adminValidated;
         delete updatedUser.exp;
         delete updatedUser.lvl;
         delete updatedUser.role;
         delete updatedUser.validated;
+        delete updatedUser.adminValidated;
     }
     if (sessionUserIsAdmin && !userIsOwnAdmin) {
         // fields admin can't change but user can
