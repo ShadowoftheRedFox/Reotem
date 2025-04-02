@@ -1,12 +1,13 @@
 import { Router } from "express";
 import { deleteSession, getSession, createSession } from "./session.service";
+import logger from "~/util/logger";
 
 const SessionRouter = Router();
 export default SessionRouter;
 
 SessionRouter.get('/signin/:id', async (req, res, next) => {
     try {
-        console.log(`getting sessions ${req.params.id}`);
+        logger(`getting sessions ${req.params.id}`);
         const session = await getSession(req.params.id);
 
         if (session != undefined) {
@@ -21,7 +22,7 @@ SessionRouter.get('/signin/:id', async (req, res, next) => {
 
 SessionRouter.post('/signin', async (req, res, next) => {
     try {
-        console.log(`creating sessions ${JSON.stringify(req.body)}`); // expect id and an optional hash
+        logger(`creating sessions ${JSON.stringify(req.body)}`); // expect id and an optional hash
         const session = await createSession(req.body.mail, req.body.hash);
         res.status(201).json({ ...session });
     } catch (error) {

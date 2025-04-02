@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import logger from "./logger";
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 require('dotenv').config();
@@ -15,5 +16,5 @@ export const init = () => {
     };
     mongoose.connect(DBCONNECTION, options);
     mongoose.Promise = global.Promise;
-    mongoose.connection.on("connected", () => console.log("[MONGODB] Connected to database."));
+    mongoose.connection.on("connected", () => logger("[MONGODB] Connected to database."));
 }

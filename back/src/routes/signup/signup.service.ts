@@ -65,7 +65,7 @@ export const createUser = async (input: { [key: string]: string | number }) => {
 
   const hashedPassword = await bcrypt.hash(password, bcrypt.genSaltSync(10));
 
-  const birthDate = new Date(`${new Date(Date.now()).getFullYear() - age}-01-01T00:00:00.000Z`).toISOString();
+  const birthDate = new Date(`${new Date().getFullYear() - age}-01-01T00:00:00.000Z`).toISOString();
 
   let user: Partial<User> = {
     firstname: firstname,
@@ -78,7 +78,7 @@ export const createUser = async (input: { [key: string]: string | number }) => {
     validated: generateToken(10),
     exp: 0,
     lvl: "Débutant",
-    lastLogin: new Date(Date.now()).toISOString()
+    lastLogin: new Date().toISOString()
   };
 
   const sessionid = generateToken(24);

@@ -95,7 +95,7 @@ export const createObject = async (input: { [key: string]: string }) => {
     throw new HttpException(422, { objectClass: "can't be blank" });
   }
 
-  const lastInteraction = new Date(Date.now()).toISOString();
+  const lastInteraction = new Date().toISOString();
 
   const object: Partial<ObjectSchema> = {
     name: name,
@@ -241,7 +241,7 @@ export const dupplicateObject = async (input: ObjectSchema) => {
     throw new HttpException(422, { objectClass: "can't be blank" });
   }
 
-  const lastInteraction = new Date(Date.now()).toISOString();
+  const lastInteraction = new Date().toISOString();
 
   const object: Partial<ObjectSchema> = {
     name: name,

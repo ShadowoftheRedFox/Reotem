@@ -8,6 +8,7 @@ import {
 } from "../../../front/src/models/api.model";
 import { AnyObject, ObjectSchema } from "~/models/object";
 import { Types } from "mongoose";
+import logger from "./logger";
 
 const excludes = ["collection", "_doc", "db", "id", "__v", "schema"];
 
@@ -20,7 +21,7 @@ const Reotem = {
     });
     const newUser = new models.User(merged);
     await newUser.save().then((u) => {
-      console.log(`New user -> ${u.email}`);
+      logger(`New user -> ${u.email}`);
     });
     return newUser;
   },
@@ -70,7 +71,7 @@ const Reotem = {
     const merged = Object.assign(session);
     const newSession = new models.Session(merged);
     await newSession.save().then((u) => {
-      console.log(`New session for user -> ${u.id}`);
+      logger(`New session for user -> ${u.id}`);
     });
     return newSession;
   },
@@ -102,7 +103,7 @@ const Reotem = {
   },
   deleteSession: async (id: string) => {
     const data = await models.Session.findOne({ id: id });
-    console.log(`Deleting session for user -> ${data?.id}`);
+    logger(`Deleting session for user -> ${data?.id}`);
     if (data) return data.deleteOne();
     return;
   },
@@ -111,7 +112,7 @@ const Reotem = {
     const merged = Object.assign(verification);
     const newVerification = new models.Verification(merged);
     await newVerification.save().then((u) => {
-      console.log(`New verification for user -> ${u.id}`);
+      logger(`New verification for user -> ${u.id}`);
     });
     return newVerification;
   },
@@ -138,7 +139,7 @@ const Reotem = {
   },
   deleteVerification: async (id: string) => {
     const data = await models.Verification.findOne({ id: id });
-    console.log(`Deleting verification for user -> ${data?.id}`);
+    logger(`Deleting verification for user -> ${data?.id}`);
     if (data) return data.deleteOne();
     return;
   },
@@ -147,7 +148,7 @@ const Reotem = {
     const merged = Object.assign(notifications);
     const newNotification = new models.Notification(merged);
     await newNotification.save().then((u) => {
-      console.log(`New notification table for user -> ${u.id}`);
+      logger(`New notification table for user -> ${u.id}`);
     });
     return newNotification;
   },
@@ -174,7 +175,7 @@ const Reotem = {
       { id: userId },
       { $push: { notifications: merged } }
     );
-    console.log(`New notifications for user -> ${userId} -> ${notif.id}`);
+    logger(`New notifications for user -> ${userId} -> ${notif.id}`);
   },
   updateNotification: async (userId: string, updated: Partial<NotifSchema>) => {
     const data = await Reotem.getNotification(
@@ -233,7 +234,7 @@ const Reotem = {
     };
     const newObject = await new models.Object(merged);
     await newObject.save().then((o) => {
-      console.log(`New ${o.objectClass} -> ${o.id}`);
+      logger(`New ${o.objectClass} -> ${o.id}`);
     });
     return newObject;
   },
@@ -257,12 +258,12 @@ const Reotem = {
     if (user) {
       user.exp = user.exp + 10;
       if (user.exp >= LevelBeginner && user.lvl === "Débutant") {
-        console.log("Level up Débutant -> Avancé");
+        logger("Level up Débutant -> Avancé");
         user.lvl = "Avancé";
         user.exp = user.exp - LevelBeginner;
       }
       if (user.exp >= LevelAdvanced && user.lvl === "Avancé") {
-        console.log("Level up Avancé -> Expert");
+        logger("Level up Avancé -> Expert");
         user.lvl = "Expert";
         user.exp = user.exp - LevelAdvanced;
       }
@@ -284,10 +285,11 @@ const Reotem = {
   },
   deleteObject: async (id: string) => {
     const data = await models.Object.findOne({ id: id });
-    console.log(`Deleting object -> ${data?.id}`);
+    logger(`Deleting object -> ${data?.id}`);
     if (data) return data.deleteOne();
     return;
   },
 };
 
 export default Reotem;
+
