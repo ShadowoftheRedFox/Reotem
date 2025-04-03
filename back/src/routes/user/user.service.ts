@@ -96,11 +96,11 @@ export const updateUser = async (id: string, session: string, updatedUser: Parti
     }
 
     const currentSession = await Reotem.getSession(session);
+    const adminUser = await Reotem.getUser(currentSession?.id);
 
     // if session user is an admin
-    const sessionUserIsAdmin = (user.role as UserRole) === "Administrator";
+    const sessionUserIsAdmin = (adminUser?.role as UserRole) === "Administrator";
     const userIsOwnAdmin = currentSession?.id == user.id && sessionUserIsAdmin;
-
 
     if (currentSession?.id != user.id && !sessionUserIsAdmin) {
         throw new HttpException(401);
@@ -189,8 +189,8 @@ export const updateUserPassword = async (id: string, session: string, hash?: str
 
             await Reotem.updateUser(id, { password: hashedPassword });
             (await Reotem.getUsers())?.map(async user => {
-                if (user.role === "Administrator") await Reotem.addNotification(user.id, {title: "Un utilisateur a changé son mot de passe", message: `L'utilisateur ${user.id} a changé son mot de passe.`, read: false})
-              })
+                if (user.role === "Administrator") await Reotem.addNotification(user.id, { title: "Un utilisateur a changé son mot de passe", message: `L'utilisateur ${user.id} a changé son mot de passe.`, read: false })
+            })
 
             sendMail(user.email, "Changement de mot de passe", `À l'attention de ${username}`, template.passwordChange(username));
 
