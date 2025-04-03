@@ -180,6 +180,7 @@ export class ObjectManagerComponent {
             res = true;
         }
         if (
+            obj.id.toLowerCase().includes(filter) ||
             obj.room.toLowerCase().includes(filter) ||
             obj.name.toLowerCase().includes(filter) ||
             obj.state.toLowerCase().includes(filter) ||
