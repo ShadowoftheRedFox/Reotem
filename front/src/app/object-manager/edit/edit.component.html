@@ -264,7 +264,7 @@
     <form [formGroup]="WiFiObjectGroup" (ngSubmit)="updateObject()" class="flex flex-col">
         <mat-form-field>
             <mat-label>Type d'objet</mat-label>
-            <mat-select [disabled]="true" [tabIndex]="obj.type">
+            <mat-select [disabled]="true" [value]="obj.type">
                 @for (c of wifis; track $index) {
                 <mat-option [value]="c" [disabled]="true">{{c}}</mat-option>
                 }
