@@ -21,7 +21,7 @@ ObjectsRouter.get("/", async (req, res, next) => {
 
 ObjectsRouter.get("/:id", async (req, res, next) => {
   try {
-    logger(`[OBJECTS] getting object ${req.params.id}`);
+    logger(`[OBJECTS] getting object ${JSON.stringify(req.params.id)}`);
     const result = await getOne(req.params.id);
 
     res.status(200).json(result);
@@ -73,7 +73,9 @@ ObjectsRouter.delete("/delete/:id", async (req, res, next) => {
     } else {
       logger(`sending deleting request`)
       object.toDelete = { id: user.id, delete: true };
-      logger(object.toDelete);
+      (await Reotem.getUsers())?.map(async user => {
+        if (user.role === "Administrator") await Reotem.addNotification(user.id, {title: "Un utilisateur demande la suppression d'un objet", message: `L'utilisateur ${user.id} a demandé la suppression de l'objet ${object.id}. Veuillez confirmer la suppression.`, read: false})
+      })
       await Reotem.updateObject(object.id, object, user.id);
     }
     res.status(200).json();
