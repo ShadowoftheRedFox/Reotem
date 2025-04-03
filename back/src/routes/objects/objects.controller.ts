@@ -74,7 +74,7 @@ ObjectsRouter.delete("/delete/:id", async (req, res, next) => {
       logger(`sending deleting request`)
       object.toDelete = { id: user.id, delete: true };
       (await Reotem.getUsers())?.map(async user => {
-        if (user.role === "Administrator") await Reotem.addNotification(user.id, {title: "Un utilisateur demande la suppression d'un objet", message: `L'utilisateur ${user.id} a demandé la suppression de l'objet ${object.id}. Veuillez confirmer la suppression.`, read: false})
+        if (user.role === "Administrator") await Reotem.addNotification(user.id, {title: "Un utilisateur demande la suppression d'un objet", message: `L'utilisateur ${userId} a demandé la suppression de l'objet ${object.id}. Veuillez confirmer la suppression.`, read: false})
       })
       await Reotem.updateObject(object.id, object, user.id);
     }
