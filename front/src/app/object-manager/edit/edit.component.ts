@@ -149,12 +149,12 @@ export class EditComponent {
 
     requireAdvanced() {
         // need a role greater or equal as advanced
-        return this.user.lvl != "Débutant" && this.user.role != "Administrator";
+        return this.user.lvl != "Débutant" || this.user.role === "Administrator";
     }
 
     requireExpert() {
         // need a role greater or equal as advanced
-        return this.user.lvl != "Débutant" && this.user.lvl != "Avancé" && this.user.role != "Administrator";
+        return (this.user.lvl != "Débutant" && this.user.lvl != "Avancé") || this.user.role !== "Administrator";
     }
 
     constructor(
