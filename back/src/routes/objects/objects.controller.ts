@@ -56,7 +56,7 @@ ObjectsRouter.put("/update/:id", async (req, res, next) => {
 ObjectsRouter.delete("/delete/:id", async (req, res, next) => {
   try {
     logger(`[OBJECTS] deleting object ${req.params.id}`);
-    logger(req.body);
+    logger(JSON.stringify(req.body));
     const object = await Reotem.getObject(req.params.id);
     if (!object) {
       res.status(404).json();
