@@ -54,7 +54,7 @@ const errorHandler: ErrorRequestHandler = function (err, req, res, next) {
     res.status(err.errorCode).json({ message: err.message });
     return;
   } else if (err instanceof Error) {
-    logger(JSON.stringify(err));
+    logger(JSON.stringify({ name: err.name, error: err.message, trace: err.stack, cause: err.cause }));
     res.status(500).json({ message: err.message });
     return;
   }
