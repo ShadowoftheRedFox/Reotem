@@ -352,7 +352,6 @@ export class EditComponent {
     //#endregion
 
     updateObject() {
-        console.log(this.formGroup.errors);
         if (this.formGroup.invalid) return;
 
         const object: AnyObject = {
